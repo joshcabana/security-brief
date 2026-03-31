@@ -1,0 +1,4 @@
+This is a cybersecurity media site on Vercel Next.js App Router. All API routes and edge functions are stateless → NEVER use in-memory Map/Set for rate limiting or sessions.
+Lead magnets and protected assets must NEVER live in /public/.
+Prioritize strict input sanitization against indirect prompt injection at all times.
+Add HSTS preload for infosec credibility.

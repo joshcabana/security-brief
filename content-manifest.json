@@ -1,0 +1,289 @@
+{
+  "articleCount": 14,
+  "categories": [
+    "AI Threats",
+    "Privacy"
+  ],
+  "articles": [
+    {
+      "title": "Claude Extension Flaw Enabled Zero-Click XSS Prompt Injection via Any Website",
+      "slug": "claude-extension-flaw-enabled-zero-click-xss-prompt-injection-via-any-website",
+      "date": "2026-03-30",
+      "author": "AI Security Brief",
+      "excerpt": "A critical vulnerability in Anthropic's Claude Chrome Extension exposes users to zero-click XSS prompt injection attacks, allowing malicious actors to execute commands without user interaction. This article examines the technical details, risks, and defensive strategies for organizations and individuals.",
+      "category": "AI Threats",
+      "featured": false,
+      "metaTitle": "Claude Extension Flaw: Zero-Click XSS Prompt Injection Threatens Chrome Users",
+      "metaDescription": "A newly discovered flaw in the Claude Chrome Extension enables zero-click XSS prompt injection via any website. Learn about the risks, technical details, and mitigation strategies for this high-impact vulnerability.",
+      "keywords": [
+        "Claude extension vulnerability",
+        "zero-click XSS",
+        "prompt injection",
+        "AI security",
+        "Chrome extension flaw"
+      ],
+      "readTime": "5 min",
+      "fileName": "claude-extension-flaw-enabled-zero-click-xss-prompt-injection-via-any-website.md"
+    },
+    {
+      "title": "Security Researchers Sound the Alarm on Vulnerabilities in AI-Generated Code",
+      "slug": "security-researchers-sound-the-alarm-on-vulnerabilities-in-ai-generated-code",
+      "date": "2026-03-30",
+      "author": "AI Security Brief",
+      "excerpt": "A surge in vulnerabilities linked to AI-generated code has prompted security researchers to call for urgent improvements in code review and development practices. This article explores the risks, trends, and defensive strategies for organizations leveraging AI in software development.",
+      "category": "AI Threats",
+      "featured": false,
+      "metaTitle": "AI-Generated Code Under Scrutiny: Security Researchers Warn of Rising Vulnerabilities",
+      "metaDescription": "Security researchers report a significant increase in vulnerabilities tied to AI-generated code. Discover the risks, trends, and best practices for securing AI-assisted software development.",
+      "keywords": [
+        "AI-generated code",
+        "software vulnerabilities",
+        "secure code review",
+        "AI security",
+        "CVE trends"
+      ],
+      "readTime": "5 min",
+      "fileName": "security-researchers-sound-the-alarm-on-vulnerabilities-in-ai-generated-code.md"
+    },
+    {
+      "title": "Best Password Managers for Security Teams 2026",
+      "slug": "best-password-managers-for-security-teams-2026",
+      "date": "2026-03-26",
+      "author": "AI Security Brief",
+      "excerpt": "A security-focused comparison of enterprise password managers — evaluating zero-knowledge architecture, audit history, SSO integration, and secrets management for IT teams.",
+      "category": "Privacy",
+      "featured": false,
+      "metaTitle": "Best Password Managers for Security Teams 2026 — Expert Comparison",
+      "metaDescription": "Compare 1Password, Bitwarden, Dashlane, and NordPass for security teams. Zero-knowledge encryption, SSO integration, audit logs, and enterprise deployment.",
+      "keywords": [
+        "best password manager for teams",
+        "enterprise password manager",
+        "1Password vs Bitwarden",
+        "password manager security",
+        "team password management 2026"
+      ],
+      "readTime": "8 min",
+      "fileName": "best-password-managers-for-security-teams-2026.md"
+    },
+    {
+      "title": "Best VPNs for Cybersecurity Professionals 2026",
+      "slug": "best-vpns-for-cybersecurity-professionals-2026",
+      "date": "2026-03-24",
+      "author": "AI Security Brief",
+      "excerpt": "A data-driven comparison of the best VPNs for security analysts, threat researchers, and IT teams — evaluated on encryption, jurisdiction, audit history, and operational security.",
+      "category": "Privacy",
+      "featured": true,
+      "metaTitle": "Best VPNs for Cybersecurity Professionals 2026 — Expert Comparison",
+      "metaDescription": "Compare NordVPN, ProtonVPN, PureVPN, and Mullvad for cybersecurity work. Pricing, encryption, audit history, and jurisdiction analysis for security professionals.",
+      "keywords": [
+        "best VPN for cybersecurity",
+        "VPN for security professionals",
+        "secure VPN comparison",
+        "VPN for threat analysts",
+        "cybersecurity VPN 2026"
+      ],
+      "readTime": "9 min",
+      "fileName": "best-vpns-for-cybersecurity-professionals-2026.md"
+    },
+    {
+      "title": "NordVPN vs ProtonVPN: A Security Professional's Comparison",
+      "slug": "nordvpn-vs-protonvpn-security-comparison",
+      "date": "2026-03-24",
+      "author": "AI Security Brief",
+      "excerpt": "A head-to-head comparison of NordVPN and ProtonVPN for cybersecurity work — covering encryption, jurisdiction, open-source status, audit history, and pricing.",
+      "category": "Privacy",
+      "featured": false,
+      "metaTitle": "NordVPN vs ProtonVPN 2026 — Security Professional's Head-to-Head",
+      "metaDescription": "NordVPN vs ProtonVPN compared for cybersecurity professionals. Encryption, jurisdiction, audit history, pricing, and which is better for security work.",
+      "keywords": [
+        "NordVPN vs ProtonVPN",
+        "VPN comparison security",
+        "best VPN for security work",
+        "NordVPN ProtonVPN review",
+        "secure VPN 2026"
+      ],
+      "readTime": "7 min",
+      "fileName": "nordvpn-vs-protonvpn-security-comparison.md"
+    },
+    {
+      "title": "AI Flaws in Amazon Bedrock, LangSmith, and SGLang Enable Data Exfiltration and RCE",
+      "slug": "ai-flaws-in-amazon-bedrock-langsmith-and-sglang-enable-data-exfiltration-and-rce",
+      "date": "2026-03-19",
+      "author": "AI Security Brief",
+      "excerpt": "Three independent research teams disclosed critical vulnerabilities across Amazon Bedrock AgentCore, LangSmith, and SGLang in March 2026 — collectively enabling DNS-based data exfiltration, account takeover, and unauthenticated remote code execution against AI infrastructure. One of these flaws remains unpatched, and CERT/CC has issued a public advisory.",
+      "category": "AI Threats",
+      "featured": false,
+      "metaTitle": "AI Flaws in Amazon Bedrock, LangSmith, and SGLang: Data Exfiltration and RCE",
+      "metaDescription": "Critical vulnerabilities in Amazon Bedrock, LangSmith (CVE-2026-25750), and SGLang (CVE-2026-3059, CVE-2026-3060) enable DNS exfiltration, account takeover, and unauthenticated RCE.",
+      "keywords": [
+        "Amazon Bedrock DNS exfiltration",
+        "LangSmith CVE-2026-25750 account takeover",
+        "SGLang RCE CVE-2026-3059",
+        "AI infrastructure vulnerabilities 2026",
+        "pickle deserialization remote code execution"
+      ],
+      "readTime": "7 min",
+      "fileName": "ai-flaws-in-amazon-bedrock-langsmith-and-sglang-enable-data-exfiltration-and-rce.md"
+    },
+    {
+      "title": "CursorJack: How MCP Deeplinks Turn Cursor IDE Into a Code Execution Vector",
+      "slug": "cursorjack-attack-path-exposes-code-execution-risk-in-ai-development-environment",
+      "date": "2026-03-19",
+      "author": "AI Security Brief",
+      "excerpt": "Proofpoint Threat Research has demonstrated that a single crafted deeplink can weaponise Cursor IDE's MCP installation flow to execute arbitrary commands under a developer's full privileges — exposing the structural security gap at the heart of the Model Context Protocol ecosystem.",
+      "category": "AI Threats",
+      "featured": false,
+      "metaTitle": "CursorJack Attack: MCP Deeplinks and Code Execution Risk in Cursor IDE",
+      "metaDescription": "Proofpoint's CursorJack research shows how a single crafted MCP deeplink can execute arbitrary commands in Cursor IDE. What CISOs and security engineers need to know.",
+      "keywords": [
+        "CursorJack MCP deeplink attack",
+        "Cursor IDE security vulnerability",
+        "Model Context Protocol security risks",
+        "MCP server supply chain attack",
+        "AI development tooling threats"
+      ],
+      "readTime": "6 min",
+      "fileName": "cursorjack-attack-path-exposes-code-execution-risk-in-ai-development-environment.md"
+    },
+    {
+      "title": "LLM Guardrails Are Failing: What the 2025–2026 Research Actually Shows",
+      "slug": "researchers-discover-major-security-gaps-in-llm-guardrails",
+      "date": "2026-03-17",
+      "author": "AI Security Brief",
+      "excerpt": "Palo Alto Networks' Unit 42, Oxford researchers, and a Nature Communications study converge on the same finding: the safety layers enterprises rely on to govern generative AI can be bypassed at scale, by automated tools, in under 60 seconds. The attack success rates are not marginal — they are, in several documented cases, approaching 100%.",
+      "category": "AI Threats",
+      "featured": false,
+      "metaTitle": "LLM Guardrails Are Failing — 2025–2026 Research and Attack Success Rates",
+      "metaDescription": "Unit 42, Oxford, and Nature Communications research shows LLM guardrails failing at scale. Named jailbreak techniques, CVEs, attack success rates, and what defenders should actually do.",
+      "keywords": [
+        "LLM guardrails bypass",
+        "jailbreak attack success rates",
+        "generative AI vulnerabilities",
+        "prompt injection",
+        "OWASP LLM security"
+      ],
+      "readTime": "8 min",
+      "fileName": "researchers-discover-major-security-gaps-in-llm-guardrails.md"
+    },
+    {
+      "title": "Hive0163 Deploys AI-Assisted Slopoly Malware for Persistent Access in Ransomware Attacks",
+      "slug": "hive0163-uses-ai-assisted-slopoly-malware-for-persistent-access-in-ransomware-attacks",
+      "date": "2026-03-16",
+      "author": "AI Security Brief",
+      "excerpt": "IBM X-Force discovered Slopoly, an LLM-generated PowerShell backdoor deployed by Hive0163 that maintained persistent access for 7+ days during a live ransomware engagement. The code self-describes as a \"Polymorphic C2 Persistence Client\" — but isn't actually polymorphic. That gap between what AI claims to build and what it actually builds is the story.",
+      "category": "AI Threats",
+      "featured": false,
+      "metaTitle": "Hive0163 Uses AI-Assisted Slopoly Malware for Persistent Access in Ransomware Attacks",
+      "metaDescription": "IBM X-Force analyst Golo Mühr details Slopoly, an LLM-generated PowerShell backdoor used by Hive0163/Interlock. SHA256, C2 IPs, CVE-2026-20131, MITRE ATT&CK techniques, and defender actions inside.",
+      "keywords": [
+        "Hive0163",
+        "Slopoly malware",
+        "AI-generated malware",
+        "Interlock ransomware",
+        "CVE-2026-20131"
+      ],
+      "readTime": "7 min",
+      "fileName": "hive0163-uses-ai-assisted-slopoly-malware-for-persistent-access-in-ransomware-attacks.md"
+    },
+    {
+      "title": "OpenClaw AI Agent Flaws: CVEs, Prompt Injection, and a Government Warning",
+      "slug": "openclaw-ai-agent-flaws-could-enable-prompt-injection-and-data-exfiltration",
+      "date": "2026-03-16",
+      "author": "AI Security Brief",
+      "excerpt": "China's CNCERT issued a formal warning on March 14 about OpenClaw's inherently weak default configurations. With 97+ CVEs tracked, 135,000+ exposed instances, and zero-click data exfiltration demonstrated in the wild, the open-source AI agent has become a case study in what happens when autonomous systems ship without a security baseline.",
+      "category": "AI Threats",
+      "featured": false,
+      "metaTitle": "OpenClaw AI Agent Flaws: CVEs, Prompt Injection, and Government Warnings",
+      "metaDescription": "China's CNCERT warned on March 14, 2026 about OpenClaw's security flaws, including CVE-2026-25253 (CVSS 8.8), CVE-2026-28363 (CVSS 9.9), zero-click data exfiltration via Telegram/Discord, and 135,000+ exposed instances.",
+      "keywords": [
+        "OpenClaw vulnerabilities",
+        "CVE-2026-25253",
+        "AI agent security",
+        "prompt injection",
+        "CNCERT warning"
+      ],
+      "readTime": "8 min",
+      "fileName": "openclaw-ai-agent-flaws-could-enable-prompt-injection-and-data-exfiltration.md"
+    },
+    {
+      "title": "Australia's Privacy Act Reforms 2026: What You Need to Know",
+      "slug": "australias-privacy-act-reforms-2026",
+      "date": "2026-03-14",
+      "author": "AI Security Brief",
+      "excerpt": "Australia's Privacy Act has undergone its most significant overhaul since 1988 — with new penalties reaching $50 million, mandatory disclosure of AI decision-making systems, and a new statutory tort for serious privacy invasions. Here's what changed and what it means for your organisation.",
+      "category": "Privacy",
+      "featured": false,
+      "metaTitle": "Australia's Privacy Act Reforms 2026: Full Breakdown",
+      "metaDescription": "Australia's Privacy Act reforms 2025-2026 explained: $50M penalties, AI automated decision-making rules, new individual rights, GDPR comparison, and compliance deadlines.",
+      "keywords": [
+        "Australia Privacy Act reform 2026",
+        "automated decision making transparency",
+        "OAIC privacy enforcement 2026",
+        "Australian data breach penalties",
+        "Privacy Act AI provisions"
+      ],
+      "readTime": "7 min",
+      "fileName": "australias-privacy-act-reforms-2026.md"
+    },
+    {
+      "title": "Agentic AI Security Risks: What Every Developer Must Know",
+      "slug": "agentic-ai-security-risks",
+      "date": "2026-03-12",
+      "author": "AI Security Brief",
+      "excerpt": "Autonomous AI agents are now embedded in enterprise workflows with privileged access to databases, APIs, and critical systems — but the security infrastructure governing them hasn't kept pace. Here's what developers and security teams need to understand right now.",
+      "category": "AI Threats",
+      "featured": false,
+      "metaTitle": "Agentic AI Security Risks: What Developers Must Know",
+      "metaDescription": "Agentic AI security risks are exploding in 2026. Prompt injection, excessive permissions, data exfiltration, and supply chain attacks in autonomous AI agents explained.",
+      "keywords": [
+        "agentic AI security risks",
+        "autonomous AI agents security",
+        "prompt injection agentic workflows",
+        "AI agent supply chain attacks",
+        "OWASP LLM vulnerabilities"
+      ],
+      "readTime": "7 min",
+      "fileName": "agentic-ai-security-risks.md"
+    },
+    {
+      "title": "How AI Is Being Used to Launch Cyberattacks in 2026",
+      "slug": "how-ai-is-being-used-to-launch-cyberattacks-in-2026",
+      "date": "2026-03-10",
+      "author": "AI Security Brief",
+      "excerpt": "AI has crossed a threshold in 2026 — adversaries are no longer just using it to write phishing emails. Autonomous attack agents, AI-generated malware, and deepfake social engineering are redefining the threat landscape at machine speed.",
+      "category": "AI Threats",
+      "featured": true,
+      "metaTitle": "How AI Is Used to Launch Cyberattacks in 2026",
+      "metaDescription": "AI-powered cyberattacks surged in 2025–2026. Learn how threat actors use AI phishing, deepfakes, autonomous agents, and AI malware — with real stats and examples.",
+      "keywords": [
+        "AI cyberattacks 2026",
+        "AI-generated phishing",
+        "deepfake social engineering",
+        "autonomous attack agents",
+        "AI-powered malware"
+      ],
+      "readTime": "6 min",
+      "fileName": "how-ai-is-being-used-to-launch-cyberattacks-in-2026.md"
+    },
+    {
+      "title": "AI Model Prompt Injection Attacks Explained",
+      "slug": "ai-model-prompt-injection-attacks-explained",
+      "date": "2026-03-08",
+      "author": "AI Security Brief",
+      "excerpt": "Prompt injection is the #1 vulnerability in deployed AI systems — and unlike traditional software flaws, it cannot be patched. Here's how direct and indirect attacks work, real-world exploits from 2024–2026, and the defence strategies that actually reduce risk.",
+      "category": "AI Threats",
+      "featured": false,
+      "metaTitle": "Prompt Injection Attacks Explained: Direct vs Indirect",
+      "metaDescription": "Understand prompt injection attacks in AI models: direct vs indirect types, real-world CVEs, jailbreaking techniques, and proven defence strategies for 2025-2026.",
+      "keywords": [
+        "prompt injection attacks",
+        "AI security vulnerabilities",
+        "indirect prompt injection",
+        "LLM jailbreaking",
+        "AI model security"
+      ],
+      "readTime": "7 min",
+      "fileName": "ai-model-prompt-injection-attacks-explained.md"
+    }
+  ]
+}
