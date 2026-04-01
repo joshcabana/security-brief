@@ -3,13 +3,14 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
+import { buildNewsletterPath } from '@/lib/newsletter-source.mjs';
 import ShieldLogo from './ShieldLogo';
 
 const navLinks = [
   { href: '/', label: 'Home' },
   { href: '/blog', label: 'Blog' },
   { href: '/tools', label: 'Tools' },
-  { href: '/newsletter', label: 'Newsletter' },
+  { href: buildNewsletterPath('header-nav'), label: 'Newsletter', matchPath: '/newsletter' },
 ];
 
 export default function Header() {
@@ -55,7 +56,8 @@ export default function Header() {
 
           <nav className="hidden md:flex items-center gap-1" aria-label="Main navigation">
             {navLinks.map((link) => {
-              const isActive = link.href === '/' ? pathname === '/' : pathname.startsWith(link.href);
+              const activePath = link.matchPath ?? link.href.split('?')[0];
+              const isActive = activePath === '/' ? pathname === '/' : pathname.startsWith(activePath);
               return (
                 <Link
                   key={link.href}
@@ -90,7 +92,7 @@ export default function Header() {
               );
             })}
             <Link
-              href="/newsletter"
+              href={buildNewsletterPath('header-cta')}
               className="ml-4 px-4 py-2 rounded-md text-sm font-semibold transition-all duration-200"
               style={{ background: '#00b4ff', color: '#0d1117', fontWeight: 700 }}
               onMouseEnter={(e) => {
@@ -127,7 +129,8 @@ export default function Header() {
           <nav className="md:hidden py-4 border-t" style={{ borderColor: '#21262d' }} aria-label="Mobile navigation">
             <div className="flex flex-col gap-1">
               {navLinks.map((link) => {
-                const isActive = link.href === '/' ? pathname === '/' : pathname.startsWith(link.href);
+                const activePath = link.matchPath ?? link.href.split('?')[0];
+                const isActive = activePath === '/' ? pathname === '/' : pathname.startsWith(activePath);
                 return (
                   <Link
                     key={link.href}
@@ -142,7 +145,7 @@ export default function Header() {
                 );
               })}
               <Link
-                href="/newsletter"
+                href={buildNewsletterPath('mobile-nav-newsletter')}
                 className="mt-3 px-4 py-2.5 rounded-md text-sm font-bold text-center transition-all duration-200"
                 style={{ background: '#00b4ff', color: '#0d1117' }}
                 onClick={() => setMobileOpen(false)}

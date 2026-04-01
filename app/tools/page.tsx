@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import NewsletterForm from '@/components/NewsletterForm';
 import { getAffiliateUrlByPriority } from '@/lib/affiliate-links';
+import { buildNewsletterPath } from '@/lib/newsletter-source.mjs';
 import { createPageMetadata } from '@/lib/page-metadata.mjs';
 
 export const dynamic = 'force-dynamic';
@@ -272,7 +274,7 @@ export default function ToolsPage() {
           <div className="section-label mb-3">Curated Arsenal</div>
           <h1 className="text-white mb-4">Security Tools &amp; Resources</h1>
           <p className="text-lg max-w-2xl" style={{ color: '#8b949e' }}>
-            Curated tooling picks that line up with the threat and privacy themes covered across the briefing archive.
+            Curated tooling picks that complement the weekly briefings, so you can move from threat analysis to practical defensive action without bouncing between tabs.
           </p>
 
           <div
@@ -426,16 +428,27 @@ export default function ToolsPage() {
                 Get tool reviews in your inbox
               </span>
             </div>
-            <h2 className="text-white mb-4">Pair the tools with the threat briefings</h2>
-            <p className="text-lg mb-8 max-w-xl mx-auto" style={{ color: '#8b949e' }}>
-              Subscribe for weekly briefings, new tooling notes, and practical product recommendations that match the week’s threat briefings.
+            <h2 className="text-white mb-4">Pair the tools with the weekly briefings</h2>
+            <p className="text-lg mb-8 max-w-2xl mx-auto" style={{ color: '#8b949e' }}>
+              Get the low-noise weekly brief with threat analysis, privacy movement, and product recommendations that map directly to this directory.
             </p>
-            <Link
-              href="/newsletter"
-              className="inline-flex items-center gap-2 rounded-md bg-[#00b4ff] px-8 py-3.5 text-sm font-bold text-[#0d1117] transition-all duration-200 hover:bg-[#33c3ff] hover:shadow-[0_0_20px_rgba(0,180,255,0.35)]"
-            >
-              Subscribe free
-            </Link>
+            <NewsletterForm
+              variant="page"
+              placeholder="your@work-email.com"
+              buttonText="Subscribe free"
+              source="tools-footer"
+            />
+            <div className="mt-5">
+              <Link
+                href={buildNewsletterPath('tools-footer-archive')}
+                className="inline-flex items-center gap-2 text-sm font-medium text-[#8b949e] transition-colors duration-200 hover:text-[#00b4ff]"
+              >
+                See recent briefings first
+                <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+                  <path fillRule="evenodd" d="M1 8a.5.5 0 01.5-.5h11.793l-3.147-3.146a.5.5 0 01.708-.708l4 4a.5.5 0 010 .708l-4 4a.5.5 0 01-.708-.708L13.293 8.5H1.5A.5.5 0 011 8z" />
+                </svg>
+              </Link>
+            </div>
           </div>
         </div>
       </div>

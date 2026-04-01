@@ -14,6 +14,7 @@ import {
   writeText,
 } from './common.mjs';
 import { requestJsonFromGitHubModels } from './github-models.mjs';
+import { buildArticleFactoryPrompts } from './prompt-builders.mjs';
 import {
   buildExpectedArticlePlan,
   findRedundantCurrentWeekArticleFiles,
@@ -183,33 +184,17 @@ async function main() {
       ].join('\n'),
     )
     .join('\n\n');
+  const prompts = buildArticleFactoryPrompts({
+    effectiveDate: context.effectiveDate,
+    articlePlan,
+    harvestSourcePack,
+  });
 
   const payload = await requestJsonFromGitHubModels({
     model,
     maxTokens: 7000,
-    systemPrompt:
-      'You are the article generation engine for AI Security Brief. Return strict JSON only. No markdown fences. Use only the supplied weekly harvest source pack. Do not cite URLs that are not in the source pack.',
-    userPrompt: [
-      `Write 2 SEO-ready AI security articles for ${context.effectiveDate}.`,
-      'Use these exact target slugs and topics:',
-      ...articlePlan.map((item) => `- slug: ${item.slug} | category: ${item.category} | finding: ${item.headline}`),
-      '',
-      'Weekly harvest source pack:',
-      harvestSourcePack,
-      '',
-      'Return JSON in this shape:',
-      '{"articles":[{"slug":"string","title":"string","excerpt":"string","meta_title":"string","meta_description":"string","keywords":["a","b","c","d","e"],"intro":["paragraph"],"sections":[{"heading":"string","paragraphs":["paragraph","paragraph"]}],"key_takeaways":["item"],"references":[{"source_name":"string","title":"string","url":"https://..."}]}]}',
-      'Requirements:',
-      '- Exactly 2 articles.',
-      '- Each article should render to roughly 950-1200 words after markdown rendering.',
-      '- Intro must contain exactly 2 substantial paragraphs.',
-      '- 4 or 5 H2 sections.',
-      '- Every section must contain exactly 2 substantial paragraphs.',
-      '- 4 to 5 key takeaways.',
-      '- Include 4 or 5 references, and every reference URL must come from the weekly harvest source pack.',
-      '- Keep tone authoritative, data-driven, and written for tech professionals and IT decision-makers.',
-      '- Do not invent statistics or sources. When the source pack is sparse, prefer careful analysis and defensive guidance over unsupported claims.',
-    ].join('\n'),
+    systemPrompt: prompts.systemPrompt,
+    userPrompt: prompts.userPrompt,
     validate: (value) => validateArticlePayload(value, expectedSlugs, allowedReferences),
   });
 

@@ -169,7 +169,11 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
               <div className="text-xs font-mono uppercase tracking-widest mb-3" style={{ color: '#00b4ff', letterSpacing: '0.12em' }}>Stay Briefed</div>
               <h3 className="text-base font-bold text-white mb-2">Get weekly briefings</h3>
               <p className="text-sm mb-5" style={{ color: '#8b949e' }}>Join the weekly briefing for new threat analysis, privacy updates, and practical tooling notes.</p>
-              <NewsletterForm variant="default" buttonText="Subscribe" source="article-inline" />
+              <NewsletterForm
+                variant="default"
+                buttonText="Subscribe"
+                source={`article-${article.slug}-inline`}
+              />
             </div>
             <div className="p-6 rounded-xl" style={{ background: '#161b22', border: '1px solid #30363d' }}>
               <div className="text-xs font-mono uppercase tracking-widest mb-4" style={{ color: '#8b949e', letterSpacing: '0.12em' }}>Article Stats</div>

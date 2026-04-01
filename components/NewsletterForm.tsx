@@ -82,7 +82,12 @@ export default function NewsletterForm({
   const isPage = variant === 'page';
 
   return (
-    <form onSubmit={handleSubmit} className={`w-full ${isPage ? 'max-w-lg mx-auto' : ''}`} aria-label="Newsletter subscription form">
+    <form
+      onSubmit={handleSubmit}
+      className={`w-full ${isPage ? 'max-w-lg mx-auto' : ''}`}
+      aria-label="Newsletter subscription form"
+      data-newsletter-source={source}
+    >
       <div className={`flex ${isHero || isPage ? 'flex-col sm:flex-row gap-3' : 'flex-row gap-2'}`}>
         <div className="flex-1 relative">
           <label htmlFor={`email-${variant}`} className="sr-only">Email address</label>
@@ -116,6 +121,7 @@ export default function NewsletterForm({
             }}
           />
         </div>
+        <input type="hidden" name="source" value={source} readOnly />
         <div hidden aria-hidden="true">
           <label htmlFor={`website-${variant}`}>Website</label>
           <input

@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { buildNewsletterPath } from '@/lib/newsletter-source.mjs';
 import NewsletterForm from './NewsletterForm';
 import ShieldLogo from './ShieldLogo';
 
@@ -25,7 +26,7 @@ const footerSections = [
     links: [
       { label: 'Home', href: '/' },
       { label: 'About', href: '/about' },
-      { label: 'Newsletter', href: '/newsletter' },
+      { label: 'Newsletter', href: buildNewsletterPath('footer-project') },
       { label: 'Operational status', href: '/status' },
       { label: 'RSS feed', href: '/feed.xml', external: true },
       { label: 'Privacy policy', href: '/privacy' },

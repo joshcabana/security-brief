@@ -4,9 +4,10 @@ import { Inter, JetBrains_Mono } from 'next/font/google';
 import './globals.css';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import { resolveAnalyticsState } from '@/lib/analytics-config.mjs';
 import { getSiteUrl, siteDescription, siteName, siteUrl } from '@/lib/site';
 
-const plausibleDomain = process.env.NEXT_PUBLIC_PLAUSIBLE_DOMAIN ?? '';
+const { plausibleDomain } = resolveAnalyticsState(process.env.NEXT_PUBLIC_PLAUSIBLE_DOMAIN);
 
 const inter = Inter({
   subsets: ['latin'],

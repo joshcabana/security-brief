@@ -2,9 +2,9 @@
 
 import matter from 'gray-matter';
 import path from 'node:path';
+import { buildNewsletterPath } from '../../lib/newsletter-source.mjs';
 import { countWords, escapeRegex, FINDING_CATEGORIES, REPO_ROOT, slugify } from './common.mjs';
 
-const CTA_LINE = '**Stay ahead of AI security threats.** Subscribe to the AI Security Brief newsletter for weekly intelligence. [Subscribe now →](/newsletter)';
 const NEWSLETTER_ISSUE_PATTERN = /^# Newsletter Issue #(\d+) — AI Security Brief$/m;
 
 const CATEGORY_MAP = {
@@ -18,6 +18,12 @@ const CATEGORY_MAP = {
 
 function quote(value) {
   return JSON.stringify(value);
+}
+
+function renderArticleCtaLine(articleSlug) {
+  const newsletterPath = buildNewsletterPath(`article-${articleSlug}-cta`);
+
+  return `**Stay ahead of AI security threats.** Subscribe to the AI Security Brief newsletter for weekly intelligence. [Subscribe now →](${newsletterPath})`;
 }
 
 function renderFrontmatter(frontmatter) {
@@ -133,7 +139,7 @@ export function renderArticleMarkdown({ article, date }) {
     '',
     references.trim(),
     '',
-    CTA_LINE,
+    renderArticleCtaLine(article.slug),
     '',
   ].join('\n');
 
@@ -248,6 +254,7 @@ export function renderNewsletterDraft({
   toolOfWeek,
   nextWeek,
 }) {
+  const forwardedSubscribePath = buildNewsletterPath(`newsletter-issue-${issueNumber}-forwarded`);
   const signalBlocks = signals.map((signal, index) => {
     const block = [
       `### 📡 SIGNAL ${index + 1}: ${signal.headline}`,
@@ -297,6 +304,7 @@ export function renderNewsletterDraft({
     '',
     `### 🛡️ TOOL OF THE WEEK: ${toolOfWeek.program_name}`,
     toolOfWeek.description,
+    `**[Review the full security tools directory →](/tools)**`,
     `**[Try ${toolOfWeek.program_name} → ${toolOfWeek.placeholder}](/tools)**`,
     '',
     '---',
@@ -311,7 +319,7 @@ export function renderNewsletterDraft({
     '',
     'AI Security Brief publishes every Monday. Forward this to a colleague who should be reading it.',
     '',
-    'Was this forwarded to you? **[Subscribe here →](/newsletter)**',
+    `Was this forwarded to you? **[Subscribe here →](${forwardedSubscribePath})**`,
     '',
     '---',
     '',
