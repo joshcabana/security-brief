@@ -58,6 +58,13 @@ test('verify:pr script runs the canonical PR QA gate in sequence', () => {
   );
 });
 
+test('verify:live:matrix script points at the local matrix runner', () => {
+  assert.equal(
+    packageJson.scripts?.['verify:live:matrix'],
+    'node scripts/verify-live-matrix.mjs',
+  );
+});
+
 test('eslint flat config exists and extends next core web vitals', () => {
   assert.equal(existsSync(eslintConfigPath), true);
 

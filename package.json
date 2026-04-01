@@ -21,6 +21,7 @@
     "test:smoke": "node scripts/smoke-test.mjs",
     "verify:pr": "pnpm lint && pnpm verify:release && pnpm verify:ops:contract && pnpm audit --prod",
     "verify:live": "node scripts/verify-live.mjs",
+    "verify:live:matrix": "node scripts/verify-live-matrix.mjs",
     "verify:ops": "node scripts/verify-ops.mjs",
     "verify:ops:contract": "node scripts/verify-ops.mjs --contract-only",
     "verify:status-doc": "node scripts/verify-status-doc.mjs",
