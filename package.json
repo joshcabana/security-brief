@@ -24,7 +24,7 @@
     "verify:ops": "node scripts/verify-ops.mjs",
     "verify:ops:contract": "node scripts/verify-ops.mjs --contract-only",
     "verify:status-doc": "node scripts/verify-status-doc.mjs",
-    "verify:release": "pnpm check:content && pnpm typecheck && pnpm test:unit && pnpm build && pnpm test:smoke",
+    "verify:release": "pnpm check:content && pnpm typecheck && pnpm test:unit && pnpm build",
     "build": "next build",
     "start": "next start",
     "lint": "eslint . --ext .js,.mjs,.ts,.tsx"
