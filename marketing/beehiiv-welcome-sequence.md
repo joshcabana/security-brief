@@ -13,8 +13,8 @@ This sequence is designed to trigger immediately when a free subscriber joins vi
 
 Welcome to the Brief. 
 
-As promised, here is your 2026 Agentic AI Threat PDF download:
-**[Secure Download: /assets/2026-ai-threat-landscape.pdf](https://aithreatbrief.com/assets/2026-ai-threat-landscape.pdf)**
+As promised, here is your 2026 Agentic AI Threat Baseline briefing:
+**[Secure Access: /report/2026-ai-threat-landscape](https://aithreatbrief.com/report/2026-ai-threat-landscape)**
 *(Link expires in 48 hours for security purposes).*
 
 If you're reading this, you are already aware that we are in the middle of a massive perimeter shift. Agentic AI workflows can now execute code, browse the web, and make decisions autonomously. While that's great for productivity, they are leaving gaping attack surfaces across your enterprise. 
@@ -45,8 +45,8 @@ AI Security Brief Intelligence Operations
 **Subject:** The payload was invisible (your 2026 Briefing inside)
 **Preview Text:** What happens when your WAF misses a context-window injection?
 
-Welcome to the Brief. Here is your 2026 Agentic AI Threat PDF download:
-**[Secure Download: /assets/2026-ai-threat-landscape.pdf](https://aithreatbrief.com/assets/2026-ai-threat-landscape.pdf)**
+Welcome to the Brief. Here is your 2026 Agentic AI Threat Baseline briefing:
+**[Secure Access: /report/2026-ai-threat-landscape](https://aithreatbrief.com/report/2026-ai-threat-landscape)**
 *(Do not share this link. Internal use only).*
 
 What happens when an autonomous agent reads a resume containing an invisible prompt injection that tells it to exfiltrate an AWS key?
