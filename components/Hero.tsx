@@ -3,7 +3,7 @@ import NewsletterForm from '@/components/NewsletterForm';
 
 export default function Hero() {
   return (
-    <section className="relative overflow-hidden bg-white dark:bg-slate-950 pt-24 pb-32">
+    <section className="relative overflow-hidden bg-white dark:bg-slate-950 pt-20 pb-20">
       {/* Background Cyber Texture */}
       <div className="absolute inset-0 bg-[url('/grid-pattern.svg')] opacity-[0.03] dark:opacity-[0.05]"></div>
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-4xl h-64 bg-cyan-500/20 blur-[100px] rounded-full pointer-events-none"></div>

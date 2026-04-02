@@ -4,7 +4,6 @@ import NewsletterForm from '@/components/NewsletterForm';
 import { createPageMetadata } from '@/lib/page-metadata.mjs';
 import { Target, ServerCrash, ShieldCheck, Award } from 'lucide-react';
 import React from 'react';
-import Image from 'next/image';
 
 export const metadata: Metadata = createPageMetadata({
   canonicalPath: '/about',
@@ -19,7 +18,7 @@ export default function AboutPage() {
       {/* 
         Hero Section 
       */}
-      <div className="relative overflow-hidden pt-24 pb-16 border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-[linear-gradient(to_bottom,#020617,#0f172a)]">
+      <div className="relative overflow-hidden pt-20 pb-12 border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-[linear-gradient(to_bottom,#020617,#0f172a)]">
         <div className="absolute inset-0 bg-[url('/grid-pattern.svg')] opacity-[0.03] dark:opacity-[0.05] pointer-events-none" aria-hidden="true" />
         <div className="absolute top-0 right-0 w-2/3 h-full pointer-events-none bg-[radial-gradient(ellipse_at_80%_0%,rgba(6,182,212,0.06)_0%,transparent_60%)]" aria-hidden="true" />
         
@@ -44,17 +43,14 @@ export default function AboutPage() {
       {/* 
         Author / Founder Profile Section 
       */}
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div className="grid md:grid-cols-[1fr_2fr] gap-12 items-start">
           <div className="relative">
             {/* Visual placeholder for Author Image */}
-            <div className="aspect-square bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden relative shadow-[0_0_40px_rgba(6,182,212,0.1)]">
-              <Image 
-                src="https://github.com/joshcabana.png" 
-                alt="Josh Cabana" 
-                fill
-                className="object-cover grayscale opacity-90 hover:grayscale-0 transition-all duration-500"
-              />
+            <div className="aspect-square bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden relative shadow-[0_0_40px_rgba(6,182,212,0.1)] flex items-center justify-center bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-800 dark:to-slate-950">
+              <div className="text-7xl font-extrabold font-mono tracking-tighter text-transparent bg-clip-text bg-gradient-to-br from-cyan-400 to-blue-600 drop-shadow-[0_0_25px_rgba(6,182,212,0.5)]">
+                JC
+              </div>
             </div>
             <div className="absolute -bottom-6 -right-6 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-4 shadow-2xl">
               <div className="flex flex-col gap-3">
@@ -103,7 +99,7 @@ export default function AboutPage() {
       {/* 
         Methodology & Coverage Matrix
       */}
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-2 text-center">Our Intelligence Matrix</h2>
         <p className="text-slate-600 dark:text-slate-400 text-center mb-12 max-w-2xl mx-auto">The three pillars of coverage delivered exclusively to your inbox.</p>
         

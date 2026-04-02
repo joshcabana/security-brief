@@ -26,7 +26,7 @@ export default async function HomePage() {
       <div className="h-px bg-gradient-to-r from-transparent via-cyan-500/50 to-transparent" aria-hidden="true" />
 
       {/* Latest Briefings Section */}
-      <section className="py-20 bg-slate-50 dark:bg-slate-900/30" aria-label="Latest briefings">
+      <section className="pt-12 pb-20 bg-slate-50 dark:bg-slate-900/30" aria-label="Latest briefings">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-end justify-between mb-12">
             <div>

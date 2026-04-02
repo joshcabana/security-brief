@@ -69,7 +69,7 @@ export default function ArticleCard({ article, variant = 'default', index = 0 }:
           className="relative h-full p-8 rounded-xl transition-all duration-300 overflow-hidden bg-gradient-to-br from-slate-900 to-slate-950 border border-slate-800 hover:border-cyan-500/40 hover:shadow-[0_8px_32px_rgba(0,0,0,0.5),0_0_0_1px_rgba(34,211,238,0.15)] hover:-translate-y-1"
         >
           <div className="absolute top-0 right-0 w-24 h-24 opacity-10 bg-[radial-gradient(circle_at_top_right,var(--tw-gradient-stops))] from-cyan-400 to-transparent pointer-events-none" aria-hidden="true" />
-          <div className="relative">
+          <div className="relative h-full flex flex-col">
             <div className="flex items-center gap-2 mb-4">
               <span className={`text-xs font-mono font-semibold px-2.5 py-1 rounded border ${colors.bg} ${colors.text} ${colors.border}`}>
                 {article.category}
@@ -84,7 +84,7 @@ export default function ArticleCard({ article, variant = 'default', index = 0 }:
               <span className="group-hover:text-cyan-400 transition-colors duration-200">{article.title}</span>
             </h3>
             <p className="text-sm leading-relaxed mb-6 line-clamp-3 text-slate-400">{article.excerpt}</p>
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between mt-auto pt-4">
               <div className="flex items-center gap-3">
                 <span className="text-xs text-slate-500">{formatDate(article.date)}</span>
                 <span className="text-slate-800" aria-hidden="true">·</span>
@@ -106,7 +106,7 @@ export default function ArticleCard({ article, variant = 'default', index = 0 }:
   return (
     <Link href={`/blog/${article.slug}`} className="block group h-full" aria-label={article.title}>
       <article
-        className="h-full p-6 rounded-xl transition-all duration-300 bg-slate-900 border border-slate-800 hover:border-cyan-500/35 hover:shadow-[0_4px_20px_rgba(0,0,0,0.4),0_0_0_1px_rgba(34,211,238,0.1)] hover:-translate-y-0.5"
+        className="h-full p-6 flex flex-col rounded-xl transition-all duration-300 bg-slate-900 border border-slate-800 hover:border-cyan-500/35 hover:shadow-[0_4px_20px_rgba(0,0,0,0.4),0_0_0_1px_rgba(34,211,238,0.1)] hover:-translate-y-0.5"
       >
         <div className="mb-4">
           <span className={`text-xs font-mono font-semibold px-2.5 py-1 rounded border ${colors.bg} ${colors.text} ${colors.border}`}>
@@ -117,7 +117,7 @@ export default function ArticleCard({ article, variant = 'default', index = 0 }:
           <span className="group-hover:text-cyan-400 transition-colors duration-200">{article.title}</span>
         </h3>
         <p className="text-sm leading-relaxed mb-5 line-clamp-2 text-slate-400">{article.excerpt}</p>
-        <div className="flex items-center gap-3 pt-4 border-t border-slate-800">
+        <div className="flex items-center gap-3 pt-4 border-t border-slate-800 mt-auto">
           <time dateTime={article.date} className="text-xs text-slate-500">{formatDate(article.date)}</time>
           <span className="text-slate-800" aria-hidden="true">·</span>
           <span className="text-xs font-mono text-slate-500">{article.readTime}</span>
