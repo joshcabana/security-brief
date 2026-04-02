@@ -21,13 +21,13 @@ interface ArticleCardProps {
 }
 
 const categoryColors: Record<string, { bg: string; text: string; border: string }> = {
-  'AI Threats': { bg: 'rgba(248, 81, 73, 0.08)', text: '#f85149', border: 'rgba(248, 81, 73, 0.2)' },
-  'Privacy': { bg: 'rgba(0, 180, 255, 0.08)', text: '#00b4ff', border: 'rgba(0, 180, 255, 0.2)' },
-  'Endpoint Security': { bg: 'rgba(63, 185, 80, 0.08)', text: '#3fb950', border: 'rgba(63, 185, 80, 0.2)' },
-  'Zero Trust': { bg: 'rgba(210, 153, 34, 0.08)', text: '#d29922', border: 'rgba(210, 153, 34, 0.2)' },
-  'Deepfakes': { bg: 'rgba(188, 140, 255, 0.08)', text: '#bc8cff', border: 'rgba(188, 140, 255, 0.2)' },
-  'Ransomware': { bg: 'rgba(248, 81, 73, 0.08)', text: '#f85149', border: 'rgba(248, 81, 73, 0.2)' },
-  'Vulnerability': { bg: 'rgba(210, 153, 34, 0.08)', text: '#d29922', border: 'rgba(210, 153, 34, 0.2)' },
+  'AI Threats': { bg: 'bg-red-500/10', text: 'text-red-400', border: 'border-red-500/20' },
+  'Privacy': { bg: 'bg-cyan-500/10', text: 'text-cyan-400', border: 'border-cyan-500/20' },
+  'Endpoint Security': { bg: 'bg-emerald-500/10', text: 'text-emerald-400', border: 'border-emerald-500/20' },
+  'Zero Trust': { bg: 'bg-amber-500/10', text: 'text-amber-400', border: 'border-amber-500/20' },
+  'Deepfakes': { bg: 'bg-purple-500/10', text: 'text-purple-400', border: 'border-purple-500/20' },
+  'Ransomware': { bg: 'bg-red-500/10', text: 'text-red-400', border: 'border-red-500/20' },
+  'Vulnerability': { bg: 'bg-amber-500/10', text: 'text-amber-400', border: 'border-amber-500/20' },
 };
 
 function formatDate(dateStr: string): string {
@@ -44,17 +44,17 @@ export default function ArticleCard({ article, variant = 'default', index = 0 }:
   if (variant === 'compact') {
     return (
       <Link href={`/blog/${article.slug}`} className="block group" aria-label={article.title}>
-        <article className="flex gap-4 py-4 transition-all duration-200" style={{ borderBottom: '1px solid #21262d' }}>
-          <span className="flex-shrink-0 text-2xl font-mono font-bold" style={{ color: '#21262d' }} aria-hidden="true">
+        <article className="flex gap-4 py-4 transition-all duration-200 border-b border-slate-800">
+          <span className="flex-shrink-0 text-2xl font-mono font-bold text-slate-800" aria-hidden="true">
             {String(index + 1).padStart(2, '0')}
           </span>
           <div className="min-w-0">
-            <h3 className="text-sm font-semibold leading-snug mb-1 transition-colors duration-200" style={{ color: '#e6edf3' }}>
-              <span className="group-hover:text-[#00b4ff] transition-colors duration-200">{article.title}</span>
+            <h3 className="text-sm font-semibold leading-snug mb-1 text-slate-200 transition-colors duration-200">
+              <span className="group-hover:text-cyan-400">{article.title}</span>
             </h3>
             <div className="flex items-center gap-3">
-              <span className="text-xs" style={{ color: '#484f58' }}>{formatDate(article.date)}</span>
-              <span className="text-xs" style={{ color: '#484f58' }}>{article.readTime}</span>
+              <span className="text-xs text-slate-500">{formatDate(article.date)}</span>
+              <span className="text-xs text-slate-500">{article.readTime}</span>
             </div>
           </div>
         </article>
@@ -66,38 +66,31 @@ export default function ArticleCard({ article, variant = 'default', index = 0 }:
     return (
       <Link href={`/blog/${article.slug}`} className="block group h-full" aria-label={article.title}>
         <article
-          className="relative h-full p-8 rounded-xl transition-all duration-300 overflow-hidden"
-          style={{ background: 'linear-gradient(135deg, #161b22 0%, #1a2030 100%)', border: '1px solid #30363d' }}
-          onMouseEnter={(e) => {
-            (e.currentTarget as HTMLElement).style.borderColor = 'rgba(0,180,255,0.4)';
-            (e.currentTarget as HTMLElement).style.boxShadow = '0 8px 32px rgba(0,0,0,0.5), 0 0 0 1px rgba(0,180,255,0.15)';
-            (e.currentTarget as HTMLElement).style.transform = 'translateY(-3px)';
-          }}
-          onMouseLeave={(e) => {
-            (e.currentTarget as HTMLElement).style.borderColor = '#30363d';
-            (e.currentTarget as HTMLElement).style.boxShadow = 'none';
-            (e.currentTarget as HTMLElement).style.transform = 'translateY(0)';
-          }}
+          className="relative h-full p-8 rounded-xl transition-all duration-300 overflow-hidden bg-gradient-to-br from-slate-900 to-slate-950 border border-slate-800 hover:border-cyan-500/40 hover:shadow-[0_8px_32px_rgba(0,0,0,0.5),0_0_0_1px_rgba(34,211,238,0.15)] hover:-translate-y-1"
         >
-          <div className="absolute top-0 right-0 w-24 h-24 opacity-10" style={{ background: 'radial-gradient(circle at top right, #00b4ff, transparent)', pointerEvents: 'none' }} aria-hidden="true" />
+          <div className="absolute top-0 right-0 w-24 h-24 opacity-10 bg-[radial-gradient(circle_at_top_right,var(--tw-gradient-stops))] from-cyan-400 to-transparent pointer-events-none" aria-hidden="true" />
           <div className="relative">
             <div className="flex items-center gap-2 mb-4">
-              <span className="text-xs font-mono font-semibold px-2.5 py-1 rounded" style={{ background: colors.bg, color: colors.text, border: `1px solid ${colors.border}` }}>{article.category}</span>
+              <span className={`text-xs font-mono font-semibold px-2.5 py-1 rounded border ${colors.bg} ${colors.text} ${colors.border}`}>
+                {article.category}
+              </span>
               {article.featured && (
-                <span className="text-xs font-mono font-semibold px-2 py-1 rounded" style={{ background: 'rgba(0,180,255,0.1)', color: '#00b4ff', border: '1px solid rgba(0,180,255,0.2)' }}>FEATURED</span>
+                <span className="text-xs font-mono font-semibold px-2 py-1 rounded bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">
+                  FEATURED
+                </span>
               )}
             </div>
-            <h3 className="text-xl font-bold mb-3 leading-snug transition-colors duration-200" style={{ color: '#ffffff' }}>
-              <span className="group-hover:text-[#00b4ff] transition-colors duration-200">{article.title}</span>
+            <h3 className="text-xl font-bold mb-3 leading-snug text-white transition-colors duration-200">
+              <span className="group-hover:text-cyan-400 transition-colors duration-200">{article.title}</span>
             </h3>
-            <p className="text-sm leading-relaxed mb-6 line-clamp-3" style={{ color: '#8b949e' }}>{article.excerpt}</p>
+            <p className="text-sm leading-relaxed mb-6 line-clamp-3 text-slate-400">{article.excerpt}</p>
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <span className="text-xs" style={{ color: '#484f58' }}>{formatDate(article.date)}</span>
-                <span style={{ color: '#30363d' }} aria-hidden="true">·</span>
-                <span className="text-xs font-mono" style={{ color: '#484f58' }}>{article.readTime}</span>
+                <span className="text-xs text-slate-500">{formatDate(article.date)}</span>
+                <span className="text-slate-800" aria-hidden="true">·</span>
+                <span className="text-xs font-mono text-slate-500">{article.readTime}</span>
               </div>
-              <span className="text-xs font-semibold flex items-center gap-1 transition-all duration-200" style={{ color: '#484f58' }}>
+              <span className="text-xs font-semibold flex items-center gap-1 text-slate-500 transition-all duration-200">
                 Read
                 <svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor" className="group-hover:translate-x-1 transition-transform duration-200" aria-hidden="true">
                   <path fillRule="evenodd" d="M1 8a.5.5 0 01.5-.5h11.793l-3.147-3.146a.5.5 0 01.708-.708l4 4a.5.5 0 010 .708l-4 4a.5.5 0 01-.708-.708L13.293 8.5H1.5A.5.5 0 011 8z" />
@@ -113,34 +106,25 @@ export default function ArticleCard({ article, variant = 'default', index = 0 }:
   return (
     <Link href={`/blog/${article.slug}`} className="block group h-full" aria-label={article.title}>
       <article
-        className="h-full p-6 rounded-xl transition-all duration-300"
-        style={{ background: '#161b22', border: '1px solid #30363d' }}
-        onMouseEnter={(e) => {
-          (e.currentTarget as HTMLElement).style.borderColor = 'rgba(0,180,255,0.35)';
-          (e.currentTarget as HTMLElement).style.boxShadow = '0 4px 20px rgba(0,0,0,0.4), 0 0 0 1px rgba(0,180,255,0.1)';
-          (e.currentTarget as HTMLElement).style.transform = 'translateY(-2px)';
-        }}
-        onMouseLeave={(e) => {
-          (e.currentTarget as HTMLElement).style.borderColor = '#30363d';
-          (e.currentTarget as HTMLElement).style.boxShadow = 'none';
-          (e.currentTarget as HTMLElement).style.transform = 'translateY(0)';
-        }}
+        className="h-full p-6 rounded-xl transition-all duration-300 bg-slate-900 border border-slate-800 hover:border-cyan-500/35 hover:shadow-[0_4px_20px_rgba(0,0,0,0.4),0_0_0_1px_rgba(34,211,238,0.1)] hover:-translate-y-0.5"
       >
         <div className="mb-4">
-          <span className="text-xs font-mono font-semibold px-2.5 py-1 rounded" style={{ background: colors.bg, color: colors.text, border: `1px solid ${colors.border}` }}>{article.category}</span>
+          <span className={`text-xs font-mono font-semibold px-2.5 py-1 rounded border ${colors.bg} ${colors.text} ${colors.border}`}>
+            {article.category}
+          </span>
         </div>
-        <h3 className="text-base font-bold leading-snug mb-3 transition-colors duration-200" style={{ color: '#ffffff' }}>
-          <span className="group-hover:text-[#00b4ff] transition-colors duration-200">{article.title}</span>
+        <h3 className="text-base font-bold leading-snug mb-3 text-white transition-colors duration-200">
+          <span className="group-hover:text-cyan-400 transition-colors duration-200">{article.title}</span>
         </h3>
-        <p className="text-sm leading-relaxed mb-5 line-clamp-2" style={{ color: '#8b949e' }}>{article.excerpt}</p>
-        <div className="flex items-center gap-3 pt-4" style={{ borderTop: '1px solid #21262d' }}>
-          <time dateTime={article.date} className="text-xs" style={{ color: '#484f58' }}>{formatDate(article.date)}</time>
-          <span style={{ color: '#30363d' }} aria-hidden="true">·</span>
-          <span className="text-xs font-mono" style={{ color: '#484f58' }}>{article.readTime}</span>
+        <p className="text-sm leading-relaxed mb-5 line-clamp-2 text-slate-400">{article.excerpt}</p>
+        <div className="flex items-center gap-3 pt-4 border-t border-slate-800">
+          <time dateTime={article.date} className="text-xs text-slate-500">{formatDate(article.date)}</time>
+          <span className="text-slate-800" aria-hidden="true">·</span>
+          <span className="text-xs font-mono text-slate-500">{article.readTime}</span>
           {article.author && (
             <>
-              <span style={{ color: '#30363d' }} aria-hidden="true">·</span>
-              <span className="text-xs" style={{ color: '#484f58' }}>{article.author}</span>
+              <span className="text-slate-800" aria-hidden="true">·</span>
+              <span className="text-xs text-slate-500">{article.author}</span>
             </>
           )}
         </div>
