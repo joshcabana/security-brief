@@ -6,7 +6,7 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { getSiteUrl, siteDescription, siteName, siteUrl } from '@/lib/site';
 
-const plausibleDomain = process.env.NEXT_PUBLIC_PLAUSIBLE_DOMAIN ?? '';
+
 
 const inter = Inter({
   subsets: ['latin'],
@@ -110,14 +110,12 @@ export default function RootLayout({
         <Header />
         <main className="flex-1">{children}</main>
         <Footer />
-        {plausibleDomain && (
-          <Script
-            defer
-            data-domain={plausibleDomain}
-            src="https://plausible.io/js/script.js"
-            strategy="afterInteractive"
-          />
-        )}
+        <Script
+          defer
+          data-domain="aithreatbrief.com"
+          src="https://plausible.io/js/script.js"
+          strategy="afterInteractive"
+        />
       </body>
     </html>
   );

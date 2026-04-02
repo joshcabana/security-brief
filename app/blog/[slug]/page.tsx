@@ -3,6 +3,8 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import ArticleCard from '@/components/ArticleCard';
 import NewsletterForm from '@/components/NewsletterForm';
+import RepurposeCTA from '@/components/RepurposeCTA';
+import { generateArticleSchema } from '@/lib/seo';
 import ShareButtons from '@/components/ShareButtons';
 import PaywallCTA from '@/components/PaywallCTA';
 import { getAllArticles, getArticleBySlug } from '@/lib/articles';
@@ -83,30 +85,21 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
   const colors = categoryColors[article.category] || categoryColors.Privacy;
   const tags = [article.category, ...article.keywords.slice(0, 2)];
 
-  const articleJsonLd = {
-    '@context': 'https://schema.org',
-    '@type': 'Article',
-    headline: article.title,
+  const articleUrl = `${siteUrl}/blog/${article.slug}`;
+
+  const articleJsonLd = generateArticleSchema({
+    title: article.title,
     description: article.excerpt,
     datePublished: article.date,
-    author: {
-      '@type': 'Organization',
-      name: article.author,
-      url: siteUrl,
-    },
-    publisher: {
-      '@type': 'Organization',
-      name: siteName,
-      url: siteUrl,
-    },
-    mainEntityOfPage: {
-      '@type': 'WebPage',
-      '@id': `${siteUrl}/blog/${article.slug}`,
-    },
-    keywords: article.keywords.join(', '),
-    articleSection: article.category,
+    authorName: article.author,
+    authorUrl: siteUrl,
+    publisherName: siteName,
+    publisherUrl: siteUrl,
+    url: articleUrl,
+    category: article.category,
+    keywords: article.keywords,
     wordCount: article.body.split(/\s+/).length,
-  };
+  });
 
   return (
     <div className="bg-slate-900 dark:bg-slate-950 min-h-screen">
@@ -163,6 +156,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
               </Link>
               <ShareButtons title={article.title} slug={article.slug} />
             </div>
+            <RepurposeCTA title={article.title} url={articleUrl} />
           </article>
 
           <aside className="space-y-6" aria-label="Article sidebar">

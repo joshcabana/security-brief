@@ -1,45 +1,34 @@
 import React from 'react';
 import Link from 'next/link';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, Tag } from 'lucide-react';
 
 export default function ToolsMatrix() {
   const tools = [
-    {
-      id: 'lakera',
-      abbr: 'LG',
-      name: 'Lakera Guard',
-      category: 'LLM Firewall',
-      strength: 'Prompt Inj. Blocking',
-      pricing: 'Enterprise',
-      link: '/tools#lakera'
-    },
-    {
-      id: 'protectai',
-      abbr: 'PAI',
-      name: 'ProtectAI Radar',
-      category: 'SAST / DAST',
-      strength: 'MLSecOps Scanning',
-      pricing: 'Free Tier',
-      link: '/tools#protectai'
-    },
-    {
-      id: '1password',
-      abbr: '1P',
-      name: '1Password',
-      category: 'Password Managers',
-      strength: 'Zero-knowledge',
-      pricing: 'Paid / Business',
-      link: '/tools#password-managers'
-    },
-    {
-      id: 'mullvad',
-      abbr: 'MV',
-      name: 'Mullvad',
-      category: 'VPN & Network',
-      strength: 'No Logging, Wireguard',
-      pricing: 'Paid ($5/mo)',
-      link: '/tools#vpns'
-    }
+    // LLM Firewalls & MLSecOps
+    { id: 'lakera', abbr: 'LG', name: 'Lakera Guard', category: 'LLM Firewall', strength: 'Prompt Inj. Blocking', pricing: 'Enterprise', hasProDiscount: true, link: 'https://lakera.ai/?utm_source=aisb&utm_medium=matrix&utm_campaign=affiliate' },
+    { id: 'protectai', abbr: 'PAI', name: 'ProtectAI Radar', category: 'SAST / DAST', strength: 'MLSecOps Scanning', pricing: 'Free Tier', hasProDiscount: false, link: 'https://protectai.com/?utm_source=aisb&utm_medium=matrix&utm_campaign=affiliate' },
+    { id: 'hiddenlayer', abbr: 'HL', name: 'HiddenLayer', category: 'LLM Firewall', strength: 'Adversarial ML Gen', pricing: 'Enterprise', hasProDiscount: false, link: 'https://hiddenlayer.com/?utm_source=aisb&utm_medium=matrix&utm_campaign=affiliate' },
+    
+    // Privacy, Network & Zero-Trust
+    { id: 'mullvad', abbr: 'MV', name: 'Mullvad', category: 'VPN & Network', strength: 'No Logging, Wireguard', pricing: 'Paid ($5/mo)', hasProDiscount: true, link: 'https://mullvad.net/?utm_source=aisb&utm_medium=matrix&utm_campaign=affiliate' },
+    { id: 'tailscale', abbr: 'TS', name: 'Tailscale', category: 'VPN & Network', strength: 'Zero-Trust Mesh', pricing: 'Freemium', hasProDiscount: false, link: 'https://tailscale.com/?utm_source=aisb&utm_medium=matrix&utm_campaign=affiliate' },
+    { id: 'proton', abbr: 'PM', name: 'ProtonMail', category: 'Email & Comms', strength: 'E2E Encryption', pricing: 'Freemium', hasProDiscount: true, link: 'https://proton.me/?utm_source=aisb&utm_medium=matrix&utm_campaign=affiliate' },
+    
+    // Identity, Auth & Secrets
+    { id: '1password', abbr: '1P', name: '1Password', category: 'Identity & Auth', strength: 'Zero-knowledge', pricing: 'Paid', hasProDiscount: true, link: 'https://1password.com/?utm_source=aisb&utm_medium=matrix&utm_campaign=affiliate' },
+    { id: 'yubico', abbr: 'YK', name: 'YubiKey', category: 'Identity & Auth', strength: 'Hardware FIDO2', pricing: 'One-time hardware', hasProDiscount: true, link: 'https://yubico.com/?utm_source=aisb&utm_medium=matrix&utm_campaign=affiliate' },
+    { id: 'auth0', abbr: 'A0', name: 'Auth0', category: 'Identity & Auth', strength: 'B2B/B2C Auth', pricing: 'Freemium', hasProDiscount: false, link: 'https://auth0.com/?utm_source=aisb&utm_medium=matrix&utm_campaign=affiliate' },
+    
+    // DAST/SAST & Vulnerability
+    { id: 'snyk', abbr: 'SNY', name: 'Snyk', category: 'SAST / DAST', strength: 'Container & Dep Scan', pricing: 'Freemium', hasProDiscount: true, link: 'https://snyk.io/?utm_source=aisb&utm_medium=matrix&utm_campaign=affiliate' },
+    { id: 'wiz', abbr: 'WIZ', name: 'Wiz', category: 'Cloud Security', strength: 'Agentless CSPM', pricing: 'Enterprise', hasProDiscount: false, link: 'https://wiz.io/?utm_source=aisb&utm_medium=matrix&utm_campaign=affiliate' },
+    { id: 'pangea', abbr: 'PGA', name: 'Pangea', category: 'API Security', strength: 'Security Platform API', pricing: 'Pay-as-you-go', hasProDiscount: true, link: 'https://pangea.cloud/?utm_source=aisb&utm_medium=matrix&utm_campaign=affiliate' },
+    
+    // Endpoints & Compliance
+    { id: 'crowdstrike', abbr: 'CS', name: 'CrowdStrike', category: 'Endpoint & XDR', strength: 'NGAV + EDR', pricing: 'Enterprise', hasProDiscount: false, link: 'https://crowdstrike.com/?utm_source=aisb&utm_medium=matrix&utm_campaign=affiliate' },
+    { id: 'vanta', abbr: 'VAN', name: 'Vanta', category: 'Compliance', strength: 'SOC2/ISO27001 Auto', pricing: 'Enterprise', hasProDiscount: true, link: 'https://vanta.com/?utm_source=aisb&utm_medium=matrix&utm_campaign=affiliate' },
+    { id: 'sentinelone', abbr: 'S1', name: 'SentinelOne', category: 'Endpoint & XDR', strength: 'Autonomous AI EDR', pricing: 'Enterprise', hasProDiscount: false, link: 'https://sentinelone.com/?utm_source=aisb&utm_medium=matrix&utm_campaign=affiliate' },
+    { id: 'drata', abbr: 'DR', name: 'Drata', category: 'Compliance', strength: 'Continuous Audit', pricing: 'Enterprise', hasProDiscount: true, link: 'https://drata.com/?utm_source=aisb&utm_medium=matrix&utm_campaign=affiliate' },
   ];
 
   return (
@@ -66,7 +55,7 @@ export default function ToolsMatrix() {
         
         {/* Filters */}
         <div className="flex flex-wrap gap-3 mb-8">
-          {['All categories', 'SAST / DAST', 'Red Teaming', 'LLM Firewalls', 'Monitoring'].map((tag, i) => (
+          {['All categories', 'SAST / DAST', 'Cloud Security', 'LLM Firewalls', 'VPN & Network', 'Identity & Auth', 'Compliance'].map((tag, i) => (
             <button key={tag} className={`px-4 py-1.5 rounded-full border text-sm font-semibold transition-colors ${i === 0 ? 'bg-cyan-600 text-white border-cyan-600' : 'border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 text-slate-700 dark:text-slate-300 hover:border-cyan-500 dark:hover:border-cyan-500'}`}>
               {tag}
             </button>
@@ -93,7 +82,14 @@ export default function ToolsMatrix() {
                       <div className="flex items-center gap-4">
                         <div className="w-10 h-10 rounded-lg bg-cyan-900/10 dark:bg-cyan-900/30 flex items-center justify-center text-cyan-600 dark:text-cyan-400 font-bold border border-cyan-200 dark:border-cyan-800">{tool.abbr}</div>
                         <div>
-                          <div className="font-bold text-slate-900 dark:text-white text-base">{tool.name}</div>
+                          <div className="font-bold text-slate-900 dark:text-white text-base flex items-center gap-2">
+                            {tool.name}
+                            {tool.hasProDiscount && (
+                              <span className="flex items-center gap-1 bg-amber-100 dark:bg-amber-500/20 text-amber-700 dark:text-amber-400 text-[10px] uppercase font-bold tracking-wider px-1.5 py-0.5 rounded border border-amber-200 dark:border-amber-500/30">
+                                <Tag size={10} /> Pro Discount
+                              </span>
+                            )}
+                          </div>
                           <div className="text-xs text-slate-500 md:hidden mt-1">{tool.category}</div>
                         </div>
                       </div>
@@ -104,8 +100,8 @@ export default function ToolsMatrix() {
                     </td>
                     <td className="px-6 py-5 text-slate-600 dark:text-slate-300 font-medium">{tool.pricing}</td>
                     <td className="px-6 py-5 text-right">
-                      <a href={tool.link} className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded border border-slate-300 dark:border-slate-700 hover:border-cyan-600 hover:text-cyan-600 dark:hover:border-cyan-400 dark:hover:text-cyan-400 font-semibold transition-colors bg-white dark:bg-transparent">
-                        Get Details
+                      <a href={tool.link} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded border border-slate-300 dark:border-slate-700 hover:border-cyan-600 hover:text-cyan-600 dark:hover:border-cyan-400 dark:hover:text-cyan-400 font-semibold transition-colors bg-white dark:bg-transparent">
+                        View Vendor
                         <ArrowRight size={14} className="opacity-0 -ml-4 group-hover:opacity-100 group-hover:ml-0 transition-all" />
                       </a>
                     </td>
@@ -113,6 +109,9 @@ export default function ToolsMatrix() {
                 ))}
               </tbody>
             </table>
+          </div>
+          <div className="p-4 bg-slate-50 dark:bg-slate-800/40 border-t border-slate-200 dark:border-slate-800 text-center text-xs text-slate-500 dark:text-slate-400">
+            Affiliate links support our independent threat vulnerability research. To access our proprietary Pro Discounts (up to 40% off), <Link href="https://aithreatbrief.beehiiv.com/upgrade" className="text-cyan-600 dark:text-cyan-400 hover:underline font-semibold">upgrade to Pro Intelligence</Link>.
           </div>
         </div>
       </div>
