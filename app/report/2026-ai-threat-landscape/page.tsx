@@ -30,7 +30,7 @@ export default function ReportPage() {
         <div className="bg-slate-900 border border-slate-800 rounded-lg p-6 mb-10">
           <h2 className="text-2xl font-bold text-slate-100 mt-0 mb-4">Executive Summary</h2>
           <p className="text-slate-300 m-0">
-            The security perimeter has structurally changed. We are no longer defending against static scripts, brute force, or isolated human adversaries. The release of autonomous "Agentic AI"—models capable of recursive reasoning, executing code, and navigating complex networks independently—has shifted the offensive landscape from "tool-assisted" to "autonomous."
+          The security perimeter has structurally changed. We are no longer defending against static scripts, brute force, or isolated human adversaries. The release of autonomous &quot;Agentic AI&quot;&mdash;models capable of recursive reasoning, executing code, and navigating complex networks independently&mdash;has shifted the offensive landscape from &quot;tool-assisted&quot; to &quot;autonomous.&quot;
           </p>
           <p className="text-slate-300 mt-4 mb-0">
             This report outlines the <strong>three primary threat vectors</strong> specific to Agentic AI and exactly how modern security teams are re-architecting their defenses to mitigate them. If your WAF and EDR are configured for 2024, your environment is highly vulnerable to autonomous traversal today.
@@ -66,7 +66,7 @@ export default function ReportPage() {
 
         <h3>The Mitigation Protocol</h3>
         <ol>
-          <li><strong>Behavioral Telemetry:</strong> Transition from threshold-based alerting (e.g., "50 requests in 1 minute") to sequence-based anomaly detection (e.g., "This session is testing specific permutations of the user-auth mutation that no legitimate frontend client ever calls").</li>
+          <li><strong>Behavioral Telemetry:</strong> Transition from threshold-based alerting (e.g., &quot;50 requests in 1 minute&quot;) to sequence-based anomaly detection (e.g., &quot;This session is testing specific permutations of the user-auth mutation that no legitimate frontend client ever calls&quot;).</li>
           <li><strong>Honeypot Endpoints:</strong> Plant high-value-looking, undocumented API endpoints that no legitimate traffic should ever hit. Set critical alerts for any access. Agentic crawlers will index and attempt to exploit them.</li>
           <li><strong>Strict Schema Enforcements:</strong> Deny-by-default all GraphQL introspection and enforce strict input validation for REST payloads at the edge.</li>
         </ol>
@@ -85,7 +85,7 @@ export default function ReportPage() {
         <h3>The Mitigation Protocol</h3>
         <ol>
           <li><strong>Provenance Enforcement:</strong> Only allow dependencies with verifiable SLSA provenance or cryptographic signing (e.g., Sigstore).</li>
-          <li><strong>Dependency Pinning & Auditing:</strong> Never use <code>^</code> or <code>~</code> in package managers. Pin to exact hashes.</li>
+          <li><strong>Dependency Pinning &amp; Auditing:</strong> Never use <code>^</code> or <code>~</code> in package managers. Pin to exact hashes.</li>
           <li><strong>Behavioral CI/CD:</strong> Your CI/CD pipeline must be completely ephemeral, stripped of unnecessary outbound network access, and monitored for unusual child-process spawning during the build phase.</li>
         </ol>
 
