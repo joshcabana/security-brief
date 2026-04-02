@@ -29,21 +29,20 @@
 - [x] Add Plausible privacy-first analytics directly to `app/layout.tsx`.
 - [x] Create `marketing/distribution-playbook.md` (Repurposing, Swapstack, Ads).
 
-### Month 1–3 Revenue Ramp Strategy
-1. **Month 1 (Activation & Affiliates): $1,000 – $2,500/mo**
-   With Plausible live and the new `/tools` + `/lead-magnet` funnel tested, distribute all historical briefings via X and LinkedIn Carousels. Expect immediate organic conversion into affiliate trials (1Password, VPNs, Lakera).
-2. **Month 2 (Direct Output & Sponsorships): $3,000 – $5,000/mo**
-   Begin executing the 3 templates in `sponsorship-pitch.md`. With a baseline of verified tracking data and 4.5k CISO subscribers, close 1-2 sponsored technical deep-dives per month at $1,500-$2,000/issue.
-3. **Month 3 (The Funnel Flywheel): $5,000 – $8,000+/mo**
-   Run the $500 LinkedIn ads test. As CPA drops below $15 for verified B2B security leads, the auto-responder and `[beehiiv:paywall]` natively drive "Pro Upgrade" conversions ($9/mo) at a positive ROI. Scale paid acquisition.
+### Month 1 Revenue Ramp Strategy (Immediate Activation)
+Now that the funnel is perfectly live, expectations shift to direct traffic mapping.
+1. **Month 1 (Activation & Affiliates): $1,000 – $3,000/mo**
+   Executing the `marketing/linkedin-ads-campaign.md` with a $500 budget. Combined with cross-platform organic distribution (`marketing/repurposing-calendar.md`), we project initial positive yield on "Pro Upgrade" MRR and immediate CPA returns from VPN and password manager enterprise affiliate sign-ups via the `/tools` matrix.
+2. **Month 2 (Direct Sponsor Outreach): $3,000 – $6,000/mo**
+   Pipeline closure using the 10 target vendors identified in `marketing/outreach-tracker.md`. Pitching our 4.5k list targeting 1-2 sponsored technical deep-dives.
+3. **Month 3 (The Flywheel): $8,000+/mo**
+   Reinvesting affiliate padding into persistent LinkedIn ad automation to scale volume rapidly past 10,000 CISO decision-makers.
 
 ## Phase 5: Traffic & Distribution Engine (Final)
 - [x] Create `lib/seo.ts` with Article/FAQ JSON-LD schemas and target Long-Tail keywords.
 - [x] Inject dynamic JSON-LD and Schema into `app/blog/[slug]/page.tsx`.
 - [x] Integrate `RepurposeCTA.tsx` for X/LinkedIn amplifier triggers.
 - [x] Complete `marketing/traffic-playbook.md`.
-
-### Month 3–6 Ramp (Scale Out)
-With our infrastructure completely solved, the business shifts entirely to traffic and volume:
-- **3k – 8k New Subscribers**: Driven via the daily repurposing templates and scaled LinkedIn campaigns.
-- **$3k – $8k/mo Sustained Revenue**: Supported through the backend high-ticket sponsorship pipeline and automated "Pro" upsells across the 16 Tool partners.
+- [x] Complete `linkedin-ads-campaign.md` ($500 direct CPA testing strategy).
+- [x] Complete `outreach-tracker.md` (Top 10 tier-1 vendor tracking parameters).
+- [x] Complete `repurposing-calendar.md` (30-day algorithmic cadence templates).
