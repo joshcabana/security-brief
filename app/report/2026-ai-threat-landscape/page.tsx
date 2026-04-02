@@ -49,7 +49,7 @@ export default function ReportPage() {
         <h3>The Mitigation Protocol</h3>
         <ol>
           <li><strong>Semantic Firewalls:</strong> Deploy strict input and output sanitization specific to LLM patterns (e.g., Lakera Guard). Traditional WAFs looking for SQLi or XSS will miss English-language jailbreaks completely.</li>
-          <li><strong>Data-Store Isolation:</strong> The data your LLM reads must be segregated from the identity context under which it executes tools. Never give an internal LLM agent "write" access to a database that holds the same records it uses for "read" context.</li>
+          <li><strong>Data-Store Isolation:</strong> The data your LLM reads must be segregated from the identity context under which it executes tools. Never give an internal LLM agent &ldquo;write&rdquo; access to a database that holds the same records it uses for &ldquo;read&rdquo; context.</li>
           <li><strong>Execution Sandboxing:</strong> For any code-interpreter tools, ensure execution happens in ephemeral, network-isolated micro-VMs.</li>
         </ol>
 
@@ -58,11 +58,11 @@ export default function ReportPage() {
         <h2 className="text-2xl font-bold text-cyan-400 border-l-4 border-cyan-500 pl-4">Threat Vector 2: Multi-Step Logic Exploits (Algorithmic Patience)</h2>
         <div className="my-6 text-sm bg-slate-900/50 p-4 rounded border border-slate-800">
           <p><strong>The Old Way:</strong> An automated script runs through the OWASP Top 10 payloads sequentially, triggering rate limits and IPS alerts within seconds.</p>
-          <p><strong>The Agentic Way:</strong> An adversarial agent acts like a human researcher. It maps the terrain, tests an edge case, waits 6 hours, tests another, logs the results, synthesizes a novel exploit based on the application's unique business logic, and executes entirely under the radar.</p>
+          <p><strong>The Agentic Way:</strong> An adversarial agent acts like a human researcher. It maps the terrain, tests an edge case, waits 6 hours, tests another, logs the results, synthesizes a novel exploit based on the application&apos;s unique business logic, and executes entirely under the radar.</p>
         </div>
 
         <h3>The Mechanism</h3>
-        <p>Offensive agents (like the open-source "OpenClaw" or modified AutoGPT variants) use "Chain of Thought" reasoning. They do not spam servers. They understand context. They can reverse-engineer an undocumented GraphQL schema by carefully observing error codes over a 72-hour period, completely avoiding threshold-based rate limiting.</p>
+        <p>Offensive agents (like the open-source &ldquo;OpenClaw&rdquo; or modified AutoGPT variants) use &ldquo;Chain of Thought&rdquo; reasoning. They do not spam servers. They understand context. They can reverse-engineer an undocumented GraphQL schema by carefully observing error codes over a 72-hour period, completely avoiding threshold-based rate limiting.</p>
 
         <h3>The Mitigation Protocol</h3>
         <ol>
@@ -73,7 +73,7 @@ export default function ReportPage() {
 
         <hr className="border-slate-800 my-12" />
 
-        <h2 className="text-2xl font-bold text-cyan-400 border-l-4 border-cyan-500 pl-4">Threat Vector 3: The "Sleeper Agent" Dependency Swap</h2>
+        <h2 className="text-2xl font-bold text-cyan-400 border-l-4 border-cyan-500 pl-4">Threat Vector 3: The &ldquo;Sleeper Agent&rdquo; Dependency Swap</h2>
         <div className="my-6 text-sm bg-slate-900/50 p-4 rounded border border-slate-800">
           <p><strong>The Old Way:</strong> Typo-squatting a popular npm package.</p>
           <p><strong>The Agentic Way:</strong> A specialized agent autonomously generates thousands of hyper-niche, actually useful code libraries, publishes them to package managers, slowly gains organic adoption from developers, and coordinates a simultaneous payload activation via a central C2 server after 6 months.</p>
