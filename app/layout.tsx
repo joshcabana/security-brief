@@ -80,7 +80,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${inter.variable} ${jetbrainsMono.variable}`}
+      className={`${inter.variable} ${jetbrainsMono.variable} dark`}
       suppressHydrationWarning
     >
       <head>
@@ -105,8 +105,7 @@ export default function RootLayout({
         />
       </head>
       <body
-        className="min-h-screen flex flex-col"
-        style={{ background: '#0d1117', color: '#e6edf3' }}
+        className="min-h-screen flex flex-col bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-200 antialiased selection:bg-cyan-500/30"
       >
         <Header />
         <main className="flex-1">{children}</main>

@@ -7,6 +7,7 @@ import ShieldLogo from './ShieldLogo';
 
 const navLinks = [
   { href: '/', label: 'Home' },
+  { href: '/about', label: 'About' },
   { href: '/blog', label: 'Blog' },
   { href: '/tools', label: 'Tools' },
   { href: '/newsletter', label: 'Newsletter' },

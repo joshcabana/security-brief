@@ -9,3 +9,10 @@ export const siteDescription =
 export function getSiteUrl(): URL {
   return new URL(siteUrl);
 }
+
+export const siteConfig = {
+  beehiiv: {
+    upgradeUrl: 'https://aithreatbrief.beehiiv.com/upgrade',
+    loginUrl: 'https://aithreatbrief.beehiiv.com/login',
+  }
+};
