@@ -24,16 +24,13 @@ jobs:
           node-version: '20'
           cache: 'pnpm'
 
-      - name: Verify STATUS.md baseline
-        env:
-          EXPECTED_STATUS_BASELINE_SHA: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || github.sha }}
-        run: pnpm verify:status-doc
-
-      - name: Verify env contract (warn only)
-        run: pnpm verify:ops:contract
-
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
+
+      - name: Verify STATUS.md baseline
+        env:
+          EXPECTED_STATUS_BASELINE_SHA: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || github.event.before }}
+        run: pnpm verify:status-doc
 
       - name: Lint
         run: pnpm lint
