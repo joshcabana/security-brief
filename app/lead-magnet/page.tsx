@@ -6,7 +6,7 @@ import React from 'react';
 
 export const metadata: Metadata = createPageMetadata({
   canonicalPath: '/lead-magnet',
-  title: '2026 AI Threat Landscape — Free Research PDF',
+  title: '2026 AI Threat Landscape — Free Research Briefing',
   description: 'Download the definitive briefing on agentic AI threats, context-window injections, and escaping isolation.',
 });
 
@@ -75,7 +75,7 @@ export default function LeadMagnetPage() {
             <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-8 shadow-2xl relative">
               <div className="absolute -top-4 -right-4 w-24 h-24 bg-cyan-500/20 blur-2xl rounded-full pointer-events-none"></div>
               
-              <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">Where should we send the PDF?</h3>
+              <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">Where should we send the Briefing?</h3>
               <p className="text-slate-600 dark:text-slate-400 mb-8 text-sm">
                 Enter your work email to receive the briefing immediately. You will also get our weekly intelligence feed.
               </p>

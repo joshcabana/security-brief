@@ -11,6 +11,15 @@ const nextConfig = {
       },
     ];
   },
+  async redirects() {
+    return [
+      {
+        source: '/assets/2026-ai-threat-landscape.pdf',
+        destination: '/report/2026-ai-threat-landscape',
+        permanent: true,
+      },
+    ];
+  },
 };
 
 export default nextConfig;

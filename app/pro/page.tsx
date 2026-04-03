@@ -45,7 +45,7 @@ const proFeatures = [
     icon: FileText,
     title: 'Exclusive Research Reports',
     description:
-      'Quarterly PDF reports covering the AI threat landscape. Structured for exec briefings or direct import into your threat register.',
+      'Quarterly research reports covering the AI threat landscape. Structured for exec briefings or direct import into your threat register.',
   },
   {
     icon: Lock,
@@ -67,7 +67,7 @@ const freeVsPro = [
   { feature: 'Technical deep-dives & architecture analysis', free: false, pro: true },
   { feature: 'Full briefing archive (searchable)', free: false, pro: true },
   { feature: 'AI Stack Matrix (rated & updated weekly)', free: 'Partial', pro: true },
-  { feature: 'Quarterly research reports (PDF)', free: false, pro: true },
+  { feature: 'Quarterly research reports', free: false, pro: true },
   { feature: 'No affiliate recommendations', free: false, pro: true },
   { feature: 'Founding member pricing lock', free: false, pro: true },
 ];
