@@ -26,3 +26,14 @@
  GET /tools 200 in 1015ms
  ✓ Compiled in 923ms (267 modules)
  ✓ Compiled in 297ms (268 modules)
+ ○ Compiling /archive ...
+ ✓ Compiled /archive in 679ms (764 modules)
+ GET /archive 200 in 1697ms
+ ✓ Compiled in 1033ms (268 modules)
+ ⚠ Found a change in next.config.mjs. Restarting the server to apply the changes...
+   ▲ Next.js 15.5.14
+   - Local:        http://localhost:3000
+   - Network:      http://192.168.50.196:3000
+
+ ✓ Starting...
+ ✓ Ready in 1416ms
