@@ -18,9 +18,7 @@ export default function PaywallCTA() {
         
         <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
           <Link
-            href={siteConfig.beehiiv.upgradeUrl}
-            target="_blank"
-            rel="noopener noreferrer"
+            href="/upgrade"
             className="inline-flex items-center justify-center gap-2 px-8 py-3 rounded-lg bg-cyan-600 hover:bg-cyan-500 text-white font-bold transition-all shadow-[0_0_15px_rgba(0,180,255,0.4)]"
           >
             Upgrade to Pro

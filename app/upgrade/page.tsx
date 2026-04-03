@@ -2,8 +2,9 @@
 
 import { useEffect, useState } from 'react';
 import { Shield, Lock, Check, Zap } from 'lucide-react';
+import { siteConfig } from '@/lib/site';
 
-const BEEHIIV_CHECKOUT_URL = 'https://app.beehiiv.com/subscribe/ai-security-brief-pro';
+const BEEHIIV_CHECKOUT_URL = siteConfig.beehiiv.upgradeUrl;
 
 const INCLUDED = [
   'Priority threat advisories — 48h before mainstream press',
