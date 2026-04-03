@@ -37,4 +37,4 @@ By embedding subtle "sleeper agent" triggers in Confluence pages or Jira tickets
 Implement strict access controls on any data source feeding a fine-tuning pipeline. Utilize adversarial robustness screening on all custom-trained models prior to staging deployment.
 
 ---
-**Upgrade to Pro Intelligence** to access the exact Proof of Concept `.py` scripts and deployable regex filters for these vulnerabilities at [aithreatbrief.beehiiv.com/upgrade](https://aithreatbrief.beehiiv.com/upgrade).
+**Upgrade to Pro Intelligence** to access the exact Proof of Concept `.py` scripts and deployable regex filters for these vulnerabilities at [aisec.beehiiv.com/upgrade](https://aisec.beehiiv.com/upgrade).

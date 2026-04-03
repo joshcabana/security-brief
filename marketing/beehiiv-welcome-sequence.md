@@ -2,7 +2,7 @@
 
 This sequence is designed to trigger immediately when a free subscriber joins via `aithreatbrief.com` (e.g., downloading the 2026 Threat PDF or subscribing from the homepage). This completes the free-to-paid funnel designed in Phase 2 Monetization Architecture.
 
-**Target Action:** Click-through to [https://aithreatbrief.beehiiv.com/upgrade](https://aithreatbrief.beehiiv.com/upgrade)
+**Target Action:** Click-through to [https://aisec.beehiiv.com/upgrade](https://aisec.beehiiv.com/upgrade)
 **Goal:** Convert free subs to the $9/mo Pro Intelligence tier on autopilot using urgency, exclusivity, and fear of falling behind on agentic exploit vectors.
 
 ---
@@ -34,7 +34,7 @@ Pro subscribers get access to the actual exploit scripts, the zero-day proofs of
 
 Join 4,500+ elite security professionals who don't leave their perimeters to chance.
 
-**[Arm Your Endpoint: Unlock Pro Intelligence ($9/mo) >>](https://aithreatbrief.beehiiv.com/upgrade)**
+**[Arm Your Endpoint: Unlock Pro Intelligence ($9/mo) >>](https://aisec.beehiiv.com/upgrade)**
 
 Stay ruthless,
 AI Security Brief Intelligence Operations
@@ -57,7 +57,7 @@ While free subscribers read summaries about this, our **Pro Intelligence** membe
 
 If your job is to secure the perimeter, you can't afford to be blind.
 
-**[Get the PoCs & Playbooks: Upgrade to Pro ($9/mo) >>](https://aithreatbrief.beehiiv.com/upgrade)**
+**[Get the PoCs & Playbooks: Upgrade to Pro ($9/mo) >>](https://aisec.beehiiv.com/upgrade)**
 
 ---
 
@@ -82,7 +82,7 @@ Free subscribers saw the alert.
 
 Relying on high-level summaries won't patch your production endpoints. Access the technical playbooks before your agents act against you.
 
-**[Access the Patches: Unlock the Pro Archive ($9/mo) >>](https://aithreatbrief.beehiiv.com/upgrade)**
+**[Access the Patches: Unlock the Pro Archive ($9/mo) >>](https://aisec.beehiiv.com/upgrade)**
 
 ---
 
@@ -100,7 +100,7 @@ If you want our exclusive vendor discount codes, strict deployment configuration
 
 Don't wait until a rogue agent leaks your internal Slack history to validate your tooling. 
 
-**[Get the Blueprints: Upgrade to Pro Intelligence ($9/mo) >>](https://aithreatbrief.beehiiv.com/upgrade)**
+**[Get the Blueprints: Upgrade to Pro Intelligence ($9/mo) >>](https://aisec.beehiiv.com/upgrade)**
 
 *P.S. You can expense this subscription as a security training resource. Send this to your finance team today.*
 
@@ -120,7 +120,7 @@ If you are tasked with securing your company's AI initiatives, $9/month is the h
 
 Join 4,500+ proactive security professionals.
 
-**[Stop the Breach: Upgrade to Pro Intelligence Now >>](https://aithreatbrief.beehiiv.com/upgrade)**
+**[Stop the Breach: Upgrade to Pro Intelligence Now >>](https://aisec.beehiiv.com/upgrade)**
 
 ---
 
@@ -138,4 +138,4 @@ Which list do you need to be on when your CISO asks if your environment is vulne
 
 This is your last chance to upgrade before the brief is dispatched. Secure your access now.
 
-**[Final Call: Secure Pro Intelligence ($9/mo) >>](https://aithreatbrief.beehiiv.com/upgrade)**
+**[Final Call: Secure Pro Intelligence ($9/mo) >>](https://aisec.beehiiv.com/upgrade)**

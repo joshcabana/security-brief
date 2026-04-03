@@ -12,7 +12,7 @@ export function getSiteUrl(): URL {
 
 export const siteConfig = {
   beehiiv: {
-    upgradeUrl: 'https://aithreatbrief.beehiiv.com/upgrade',
-    loginUrl: 'https://aithreatbrief.beehiiv.com/login',
+    upgradeUrl: 'https://aisec.beehiiv.com/upgrade',
+    loginUrl: 'https://aisec.beehiiv.com/login',
   }
 };
