@@ -5,30 +5,30 @@ import { ArrowRight, Tag } from 'lucide-react';
 export default function ToolsMatrix() {
   const tools = [
     // LLM Firewalls & MLSecOps
-    { id: 'lakera', abbr: 'LG', name: 'Lakera Guard', category: 'LLM Firewall', strength: 'Prompt Inj. Blocking', pricing: 'Enterprise', hasProDiscount: true, link: 'https://lakera.ai/?utm_source=aisb&utm_medium=matrix&utm_campaign=affiliate' },
-    { id: 'protectai', abbr: 'PAI', name: 'ProtectAI Radar', category: 'SAST / DAST', strength: 'MLSecOps Scanning', pricing: 'Free Tier', hasProDiscount: false, link: 'https://protectai.com/?utm_source=aisb&utm_medium=matrix&utm_campaign=affiliate' },
-    { id: 'hiddenlayer', abbr: 'HL', name: 'HiddenLayer', category: 'LLM Firewall', strength: 'Adversarial ML Gen', pricing: 'Enterprise', hasProDiscount: false, link: 'https://hiddenlayer.com/?utm_source=aisb&utm_medium=matrix&utm_campaign=affiliate' },
+    { id: 'lakera', abbr: 'LG', name: 'Lakera Guard', category: 'LLM Firewall', strength: 'Prompt Inj. Blocking', pricing: 'Enterprise', hasProDiscount: true, link: 'https://lakera.ai/' },
+    { id: 'protectai', abbr: 'PAI', name: 'ProtectAI Radar', category: 'SAST / DAST', strength: 'MLSecOps Scanning', pricing: 'Free Tier', hasProDiscount: false, link: 'https://protectai.com/' },
+    { id: 'hiddenlayer', abbr: 'HL', name: 'HiddenLayer', category: 'LLM Firewall', strength: 'Adversarial ML Gen', pricing: 'Enterprise', hasProDiscount: false, link: 'https://hiddenlayer.com/' },
     
     // Privacy, Network & Zero-Trust
-    { id: 'mullvad', abbr: 'MV', name: 'Mullvad', category: 'VPN & Network', strength: 'No Logging, Wireguard', pricing: 'Paid ($5/mo)', hasProDiscount: true, link: 'https://mullvad.net/?utm_source=aisb&utm_medium=matrix&utm_campaign=affiliate' },
-    { id: 'tailscale', abbr: 'TS', name: 'Tailscale', category: 'VPN & Network', strength: 'Zero-Trust Mesh', pricing: 'Freemium', hasProDiscount: false, link: 'https://tailscale.com/?utm_source=aisb&utm_medium=matrix&utm_campaign=affiliate' },
-    { id: 'proton', abbr: 'PM', name: 'ProtonMail', category: 'Email & Comms', strength: 'E2E Encryption', pricing: 'Freemium', hasProDiscount: true, link: 'https://proton.me/?utm_source=aisb&utm_medium=matrix&utm_campaign=affiliate' },
+    { id: 'mullvad', abbr: 'MV', name: 'Mullvad', category: 'VPN & Network', strength: 'No Logging, Wireguard', pricing: 'Paid ($5/mo)', hasProDiscount: true, link: 'https://mullvad.net/' },
+    { id: 'tailscale', abbr: 'TS', name: 'Tailscale', category: 'VPN & Network', strength: 'Zero-Trust Mesh', pricing: 'Freemium', hasProDiscount: false, link: 'https://tailscale.com/' },
+    { id: 'proton', abbr: 'PM', name: 'ProtonMail', category: 'Email & Comms', strength: 'E2E Encryption', pricing: 'Freemium', hasProDiscount: true, link: 'https://proton.me/' },
     
     // Identity, Auth & Secrets
-    { id: '1password', abbr: '1P', name: '1Password', category: 'Identity & Auth', strength: 'Zero-knowledge', pricing: 'Paid', hasProDiscount: true, link: 'https://1password.com/?utm_source=aisb&utm_medium=matrix&utm_campaign=affiliate' },
-    { id: 'yubico', abbr: 'YK', name: 'YubiKey', category: 'Identity & Auth', strength: 'Hardware FIDO2', pricing: 'One-time hardware', hasProDiscount: true, link: 'https://yubico.com/?utm_source=aisb&utm_medium=matrix&utm_campaign=affiliate' },
-    { id: 'auth0', abbr: 'A0', name: 'Auth0', category: 'Identity & Auth', strength: 'B2B/B2C Auth', pricing: 'Freemium', hasProDiscount: false, link: 'https://auth0.com/?utm_source=aisb&utm_medium=matrix&utm_campaign=affiliate' },
+    { id: '1password', abbr: '1P', name: '1Password', category: 'Identity & Auth', strength: 'Zero-knowledge', pricing: 'Paid', hasProDiscount: true, link: 'https://1password.com/' },
+    { id: 'yubico', abbr: 'YK', name: 'YubiKey', category: 'Identity & Auth', strength: 'Hardware FIDO2', pricing: 'One-time hardware', hasProDiscount: true, link: 'https://yubico.com/' },
+    { id: 'auth0', abbr: 'A0', name: 'Auth0', category: 'Identity & Auth', strength: 'B2B/B2C Auth', pricing: 'Freemium', hasProDiscount: false, link: 'https://auth0.com/' },
     
     // DAST/SAST & Vulnerability
-    { id: 'snyk', abbr: 'SNY', name: 'Snyk', category: 'SAST / DAST', strength: 'Container & Dep Scan', pricing: 'Freemium', hasProDiscount: true, link: 'https://snyk.io/?utm_source=aisb&utm_medium=matrix&utm_campaign=affiliate' },
-    { id: 'wiz', abbr: 'WIZ', name: 'Wiz', category: 'Cloud Security', strength: 'Agentless CSPM', pricing: 'Enterprise', hasProDiscount: false, link: 'https://wiz.io/?utm_source=aisb&utm_medium=matrix&utm_campaign=affiliate' },
-    { id: 'pangea', abbr: 'PGA', name: 'Pangea', category: 'API Security', strength: 'Security Platform API', pricing: 'Pay-as-you-go', hasProDiscount: true, link: 'https://pangea.cloud/?utm_source=aisb&utm_medium=matrix&utm_campaign=affiliate' },
+    { id: 'snyk', abbr: 'SNY', name: 'Snyk', category: 'SAST / DAST', strength: 'Container & Dep Scan', pricing: 'Freemium', hasProDiscount: true, link: 'https://snyk.io/' },
+    { id: 'wiz', abbr: 'WIZ', name: 'Wiz', category: 'Cloud Security', strength: 'Agentless CSPM', pricing: 'Enterprise', hasProDiscount: false, link: 'https://wiz.io/' },
+    { id: 'pangea', abbr: 'PGA', name: 'Pangea', category: 'API Security', strength: 'Security Platform API', pricing: 'Pay-as-you-go', hasProDiscount: true, link: 'https://pangea.cloud/' },
     
     // Endpoints & Compliance
-    { id: 'crowdstrike', abbr: 'CS', name: 'CrowdStrike', category: 'Endpoint & XDR', strength: 'NGAV + EDR', pricing: 'Enterprise', hasProDiscount: false, link: 'https://crowdstrike.com/?utm_source=aisb&utm_medium=matrix&utm_campaign=affiliate' },
-    { id: 'vanta', abbr: 'VAN', name: 'Vanta', category: 'Compliance', strength: 'SOC2/ISO27001 Auto', pricing: 'Enterprise', hasProDiscount: true, link: 'https://vanta.com/?utm_source=aisb&utm_medium=matrix&utm_campaign=affiliate' },
-    { id: 'sentinelone', abbr: 'S1', name: 'SentinelOne', category: 'Endpoint & XDR', strength: 'Autonomous AI EDR', pricing: 'Enterprise', hasProDiscount: false, link: 'https://sentinelone.com/?utm_source=aisb&utm_medium=matrix&utm_campaign=affiliate' },
-    { id: 'drata', abbr: 'DR', name: 'Drata', category: 'Compliance', strength: 'Continuous Audit', pricing: 'Enterprise', hasProDiscount: true, link: 'https://drata.com/?utm_source=aisb&utm_medium=matrix&utm_campaign=affiliate' },
+    { id: 'crowdstrike', abbr: 'CS', name: 'CrowdStrike', category: 'Endpoint & XDR', strength: 'NGAV + EDR', pricing: 'Enterprise', hasProDiscount: false, link: 'https://crowdstrike.com/' },
+    { id: 'vanta', abbr: 'VAN', name: 'Vanta', category: 'Compliance', strength: 'SOC2/ISO27001 Auto', pricing: 'Enterprise', hasProDiscount: true, link: 'https://vanta.com/' },
+    { id: 'sentinelone', abbr: 'S1', name: 'SentinelOne', category: 'Endpoint & XDR', strength: 'Autonomous AI EDR', pricing: 'Enterprise', hasProDiscount: false, link: 'https://sentinelone.com/' },
+    { id: 'drata', abbr: 'DR', name: 'Drata', category: 'Compliance', strength: 'Continuous Audit', pricing: 'Enterprise', hasProDiscount: true, link: 'https://drata.com/' },
   ];
 
   return (
@@ -65,7 +65,7 @@ export default function ToolsMatrix() {
         {/* Matrix Table */}
         <div className="overflow-hidden rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm bg-white dark:bg-slate-900/50">
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-sm whitespace-nowrap">
+            <table className="min-w-full divide-y divide-gray-300 table-auto md:table-fixed text-left text-sm whitespace-nowrap">
               <thead className="bg-slate-50 dark:bg-slate-800/80 border-b border-slate-200 dark:border-slate-800 text-slate-900 dark:text-slate-200">
                 <tr>
                   <th className="px-6 py-4 font-bold sticky left-0 z-10 bg-slate-50 dark:bg-slate-800/80 shadow-[1px_0_0_0_#e2e8f0] dark:shadow-[1px_0_0_0_#1e293b]">Tool Name</th>

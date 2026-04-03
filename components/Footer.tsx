@@ -6,6 +6,7 @@ const footerSections = [
   {
     title: 'Briefings',
     links: [
+      { label: 'Archive', href: '/archive' },
       { label: 'Latest articles', href: '/blog' },
       { label: 'AI Threats', href: `/blog?category=${encodeURIComponent('AI Threats')}` },
       { label: 'Privacy', href: `/blog?category=${encodeURIComponent('Privacy')}` },
@@ -24,9 +25,10 @@ const footerSections = [
     title: 'Project',
     links: [
       { label: 'Home', href: '/' },
+      { label: 'Methodology', href: '/methodology' },
       { label: 'About', href: '/about' },
-      { label: 'Newsletter', href: '/newsletter' },
-      { label: 'Pro membership', href: '/pro' },
+      { label: 'Subscribe Free', href: '/subscribe' },
+      { label: 'Upgrade to Pro', href: '/upgrade' },
       { label: 'Operational status', href: '/status' },
       { label: 'RSS feed', href: '/feed.xml', external: true },
       { label: 'Privacy policy', href: '/privacy' },
