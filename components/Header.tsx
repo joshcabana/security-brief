@@ -59,9 +59,17 @@ export default function Header() {
             })}
             <Link
               href="/newsletter"
-              className="ml-4 px-4 py-2 rounded-md text-sm font-bold bg-cyan-500 text-slate-950 hover:bg-cyan-400 hover:shadow-[0_0_16px_rgba(34,211,238,0.35)] transition-all duration-200"
+              className="ml-2 px-4 py-2 rounded-md text-sm font-semibold text-slate-400 hover:text-cyan-400 transition-colors duration-200"
             >
               Subscribe
+            </Link>
+            <Link
+              href="/pro"
+              id="header-pro-cta"
+              className="ml-1 px-4 py-2 rounded-md text-sm font-bold transition-all duration-200 hover:shadow-[0_0_16px_rgba(212,160,23,0.35)]"
+              style={{ background: '#d29922', color: '#0d1117' }}
+            >
+              Go Pro
             </Link>
           </nav>
 
@@ -102,10 +110,19 @@ export default function Header() {
               })}
               <Link
                 href="/newsletter"
-                className="mt-3 px-4 py-2.5 rounded-md text-sm font-bold text-center bg-cyan-500 text-slate-950 transition-all duration-200"
+                className="mt-3 px-4 py-2.5 rounded-md text-sm font-semibold text-center text-slate-200 hover:bg-slate-800 transition-all duration-200"
                 onClick={() => setMobileOpen(false)}
               >
                 Subscribe Free
+              </Link>
+              <Link
+                href="/pro"
+                id="header-pro-cta-mobile"
+                className="mt-1 px-4 py-2.5 rounded-md text-sm font-bold text-center transition-all duration-200"
+                style={{ background: '#d29922', color: '#0d1117' }}
+                onClick={() => setMobileOpen(false)}
+              >
+                Go Pro
               </Link>
             </div>
           </nav>

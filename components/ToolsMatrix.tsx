@@ -111,7 +111,8 @@ export default function ToolsMatrix() {
             </table>
           </div>
           <div className="p-4 bg-slate-50 dark:bg-slate-800/40 border-t border-slate-200 dark:border-slate-800 text-center text-xs text-slate-500 dark:text-slate-400">
-            Affiliate links support our independent threat vulnerability research. To access our proprietary Pro Discounts (up to 40% off), <Link href="https://aithreatbrief.beehiiv.com/upgrade" className="text-cyan-600 dark:text-cyan-400 hover:underline font-semibold">upgrade to Pro Intelligence</Link>.
+            Affiliate links support our independent threat research. Tools marked <strong className="text-amber-600 dark:text-amber-400">Pro Discount</strong> include exclusive pricing for Pro members.{' '}
+            <Link href="/pro" className="text-cyan-600 dark:text-cyan-400 hover:underline font-semibold">Upgrade to Pro →</Link>
           </div>
         </div>
       </div>

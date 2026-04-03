@@ -54,11 +54,21 @@ export default function ToolsDirectoryPage() {
         <div className="p-10 rounded-3xl relative overflow-hidden text-center border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/50 shadow-xl dark:shadow-none">
           <div className="absolute inset-0 bg-gradient-to-b from-cyan-50 dark:from-cyan-900/20 to-transparent pointer-events-none" />
           <div className="relative z-10">
-            <h2 className="text-3xl font-extrabold text-slate-900 dark:text-white mb-4">Pair the tools with the briefing.</h2>
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full mb-5 text-xs font-mono font-bold uppercase tracking-widest" style={{ background: 'rgba(0,180,255,0.08)', border: '1px solid rgba(0,180,255,0.2)', color: 'var(--accent)' }}>
+              Pro members get exclusive tool discounts
+            </div>
+            <h2 className="text-3xl font-extrabold text-slate-900 dark:text-white mb-4">Pair the tools with the intelligence.</h2>
             <p className="text-slate-600 dark:text-slate-400 text-lg mb-8 max-w-2xl mx-auto">
-              Join 4,500+ professionals receiving weekly vulnerability briefings that match this exact tooling matrix.
+              Pro members get priority threat advisories, deep-dive technical briefings, and exclusive discounts on the tools listed above. No vendor noise.
             </p>
-            <div className="max-w-md mx-auto">
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+              <a
+                href="/pro"
+                id="tools-page-pro-cta"
+                className="pro-cta-btn inline-flex items-center gap-2 px-8 py-3 rounded-lg font-bold text-sm"
+              >
+                Get Pro Access →
+              </a>
               <NewsletterForm variant="page" buttonText="Subscribe Free" source="tools-page" />
             </div>
           </div>

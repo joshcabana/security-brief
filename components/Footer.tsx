@@ -26,6 +26,7 @@ const footerSections = [
       { label: 'Home', href: '/' },
       { label: 'About', href: '/about' },
       { label: 'Newsletter', href: '/newsletter' },
+      { label: 'Pro membership', href: '/pro' },
       { label: 'Operational status', href: '/status' },
       { label: 'RSS feed', href: '/feed.xml', external: true },
       { label: 'Privacy policy', href: '/privacy' },
