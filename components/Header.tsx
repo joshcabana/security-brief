@@ -7,9 +7,9 @@ import ShieldLogo from './ShieldLogo';
 
 const navLinks = [
   { href: '/', label: 'Home' },
-  { href: '/about', label: 'About' },
-  { href: '/blog', label: 'Blog' },
+  { href: '/blog', label: 'Briefings' },
   { href: '/tools', label: 'Tools' },
+  { href: '/archive', label: 'Archive' },
 ];
 
 export default function Header() {
@@ -26,12 +26,9 @@ export default function Header() {
             <div className="transition-all duration-300 group-hover:drop-shadow-[0_0_8px_rgba(34,211,238,0.6)]">
               <ShieldLogo />
             </div>
-            <div className="flex flex-col leading-none">
-              <span className="font-bold text-base text-white tracking-tight font-sans">
+            <div className="flex flex-col leading-none justify-center">
+              <span className="font-bold text-lg text-white tracking-tight font-sans">
                 AI Security Brief
-              </span>
-              <span className="text-[0.6rem] tracking-[0.18em] uppercase text-cyan-400 font-mono">
-                AI SECURITY BRIEFINGS
               </span>
             </div>
           </Link>
@@ -58,16 +55,15 @@ export default function Header() {
               );
             })}
             <Link
-              href="/newsletter"
+              href="/subscribe"
               className="ml-2 px-4 py-2 rounded-md text-sm font-semibold text-slate-400 hover:text-cyan-400 transition-colors duration-200"
             >
-              Subscribe
+              Subscribe Free
             </Link>
             <Link
               href="/pro"
               id="header-pro-cta"
-              className="ml-1 px-4 py-2 rounded-md text-sm font-bold transition-all duration-200 hover:shadow-[0_0_16px_rgba(212,160,23,0.35)]"
-              style={{ background: '#d29922', color: '#0d1117' }}
+              className="ml-1 px-4 py-2 rounded-md text-sm font-bold transition-all duration-200 bg-cyan-500 hover:bg-cyan-400 text-slate-900 shadow-[0_0_15px_rgba(34,211,238,0.3)] hover:shadow-[0_0_20px_rgba(34,211,238,0.5)]"
             >
               Go Pro
             </Link>
@@ -109,7 +105,7 @@ export default function Header() {
                 );
               })}
               <Link
-                href="/newsletter"
+                href="/subscribe"
                 className="mt-3 px-4 py-2.5 rounded-md text-sm font-semibold text-center text-slate-200 hover:bg-slate-800 transition-all duration-200"
                 onClick={() => setMobileOpen(false)}
               >
@@ -118,8 +114,7 @@ export default function Header() {
               <Link
                 href="/pro"
                 id="header-pro-cta-mobile"
-                className="mt-1 px-4 py-2.5 rounded-md text-sm font-bold text-center transition-all duration-200"
-                style={{ background: '#d29922', color: '#0d1117' }}
+                className="mt-1 px-4 py-2.5 rounded-md text-sm font-bold text-center transition-all duration-200 bg-cyan-500 text-slate-900"
                 onClick={() => setMobileOpen(false)}
               >
                 Go Pro

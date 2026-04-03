@@ -68,7 +68,7 @@ export default function ToolsMatrix() {
             <table className="w-full text-left text-sm whitespace-nowrap">
               <thead className="bg-slate-50 dark:bg-slate-800/80 border-b border-slate-200 dark:border-slate-800 text-slate-900 dark:text-slate-200">
                 <tr>
-                  <th className="px-6 py-4 font-bold">Tool Name</th>
+                  <th className="px-6 py-4 font-bold sticky left-0 z-10 bg-slate-50 dark:bg-slate-800/80 shadow-[1px_0_0_0_#e2e8f0] dark:shadow-[1px_0_0_0_#1e293b]">Tool Name</th>
                   <th className="px-6 py-4 font-bold hidden md:table-cell">Category</th>
                   <th className="px-6 py-4 font-bold hidden lg:table-cell">Strengths</th>
                   <th className="px-6 py-4 font-bold">Pricing</th>
@@ -78,9 +78,9 @@ export default function ToolsMatrix() {
               <tbody className="divide-y divide-slate-200 dark:divide-slate-800">
                 {tools.map((tool) => (
                   <tr key={tool.id} className="hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors group">
-                    <td className="px-6 py-5">
+                    <td className="px-6 py-5 sticky left-0 z-10 bg-white dark:bg-slate-900 shadow-[1px_0_0_0_#e2e8f0] dark:shadow-[1px_0_0_0_#1e293b] group-hover:bg-slate-50 dark:group-hover:bg-slate-800 transition-colors">
                       <div className="flex items-center gap-4">
-                        <div className="w-10 h-10 rounded-lg bg-cyan-900/10 dark:bg-cyan-900/30 flex items-center justify-center text-cyan-600 dark:text-cyan-400 font-bold border border-cyan-200 dark:border-cyan-800">{tool.abbr}</div>
+                        <div className="shrink-0 w-10 h-10 rounded-lg bg-cyan-900/10 dark:bg-cyan-900/30 flex items-center justify-center text-cyan-600 dark:text-cyan-400 font-bold border border-cyan-200 dark:border-cyan-800">{tool.abbr}</div>
                         <div>
                           <div className="font-bold text-slate-900 dark:text-white text-base flex items-center gap-2">
                             {tool.name}
@@ -100,7 +100,7 @@ export default function ToolsMatrix() {
                     </td>
                     <td className="px-6 py-5 text-slate-600 dark:text-slate-300 font-medium">{tool.pricing}</td>
                     <td className="px-6 py-5 text-right">
-                      <a href={tool.link} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded border border-slate-300 dark:border-slate-700 hover:border-cyan-600 hover:text-cyan-600 dark:hover:border-cyan-400 dark:hover:text-cyan-400 font-semibold transition-colors bg-white dark:bg-transparent">
+                      <a href={tool.link} target="_blank" rel="noopener noreferrer sponsored nofollow" className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded border border-slate-300 dark:border-slate-700 hover:border-cyan-600 hover:text-cyan-600 dark:hover:border-cyan-400 dark:hover:text-cyan-400 font-semibold transition-colors bg-white dark:bg-transparent">
                         View Vendor
                         <ArrowRight size={14} className="opacity-0 -ml-4 group-hover:opacity-100 group-hover:ml-0 transition-all" />
                       </a>

@@ -37,67 +37,57 @@ export default function ReportPage() {
           </p>
         </div>
 
-        <h2 className="text-2xl font-bold text-cyan-400 border-l-4 border-cyan-500 pl-4">Threat Vector 1: Autonomous Prompt Injection (Zero-Click Traversal)</h2>
-        <div className="my-6 text-sm bg-slate-900/50 p-4 rounded border border-slate-800">
-          <p><strong>The Old Way:</strong> A human attacker types a malicious prompt into a chatbot window.</p>
-          <p><strong>The Agentic Way:</strong> An autonomous agent scours your public-facing APIs, support channels, and ingested emails to quietly whisper adversarial payloads into the data context window of <em>your</em> internal AI tools.</p>
-        </div>
-        
-        <h3>The Mechanism</h3>
-        <p>Agentic AI relies on Retrieval-Augmented Generation (RAG) and tool-use. When an adversarial payload is placed in a document that your internal AI agent later reads (e.g., an applicant tracking system parsing a poisoned resume), the payload executes <em>as</em> the internal AI.</p>
+        {/* --- PAYWALL START --- */}
+        <div className="relative">
+          {/* Blurred / Locked Content */}
+          <div className="select-none blur-sm opacity-40 pointer-events-none" aria-hidden="true">
+            <h2 className="text-2xl font-bold text-cyan-400 border-l-4 border-cyan-500 pl-4">Threat Vector 1: Autonomous Prompt Injection (Zero-Click Traversal)</h2>
+            <div className="my-6 text-sm bg-slate-900/50 p-4 rounded border border-slate-800">
+              <p><strong>The Old Way:</strong> A human attacker types a malicious prompt into a chatbot window.</p>
+              <p><strong>The Agentic Way:</strong> An autonomous agent scours your public-facing APIs, support channels, and ingested emails...</p>
+            </div>
+            
+            <h3>The Mechanism</h3>
+            <p>Agentic AI relies on Retrieval-Augmented Generation (RAG) and tool-use. When an adversarial payload is placed in a document that your internal AI agent later reads...</p>
 
-        <h3>The Mitigation Protocol</h3>
-        <ol>
-          <li><strong>Semantic Firewalls:</strong> Deploy strict input and output sanitization specific to LLM patterns (e.g., Lakera Guard). Traditional WAFs looking for SQLi or XSS will miss English-language jailbreaks completely.</li>
-          <li><strong>Data-Store Isolation:</strong> The data your LLM reads must be segregated from the identity context under which it executes tools. Never give an internal LLM agent &ldquo;write&rdquo; access to a database that holds the same records it uses for &ldquo;read&rdquo; context.</li>
-          <li><strong>Execution Sandboxing:</strong> For any code-interpreter tools, ensure execution happens in ephemeral, network-isolated micro-VMs.</li>
-        </ol>
+            <h3>The Mitigation Protocol</h3>
+            <ol>
+              <li><strong>Semantic Firewalls:</strong> Deploy strict input and output sanitization specific to LLM patterns...</li>
+              <li><strong>Data-Store Isolation:</strong> The data your LLM reads must be segregated...</li>
+            </ol>
+            
+            <hr className="border-slate-800 my-12" />
+            <h2 className="text-2xl font-bold text-cyan-400 border-l-4 border-cyan-500 pl-4">Threat Vector 2: Multi-Step Logic Exploits</h2>
+            <p>...</p>
+          </div>
 
-        <hr className="border-slate-800 my-12" />
-
-        <h2 className="text-2xl font-bold text-cyan-400 border-l-4 border-cyan-500 pl-4">Threat Vector 2: Multi-Step Logic Exploits (Algorithmic Patience)</h2>
-        <div className="my-6 text-sm bg-slate-900/50 p-4 rounded border border-slate-800">
-          <p><strong>The Old Way:</strong> An automated script runs through the OWASP Top 10 payloads sequentially, triggering rate limits and IPS alerts within seconds.</p>
-          <p><strong>The Agentic Way:</strong> An adversarial agent acts like a human researcher. It maps the terrain, tests an edge case, waits 6 hours, tests another, logs the results, synthesizes a novel exploit based on the application&apos;s unique business logic, and executes entirely under the radar.</p>
-        </div>
-
-        <h3>The Mechanism</h3>
-        <p>Offensive agents (like the open-source &ldquo;OpenClaw&rdquo; or modified AutoGPT variants) use &ldquo;Chain of Thought&rdquo; reasoning. They do not spam servers. They understand context. They can reverse-engineer an undocumented GraphQL schema by carefully observing error codes over a 72-hour period, completely avoiding threshold-based rate limiting.</p>
-
-        <h3>The Mitigation Protocol</h3>
-        <ol>
-          <li><strong>Behavioral Telemetry:</strong> Transition from threshold-based alerting (e.g., &quot;50 requests in 1 minute&quot;) to sequence-based anomaly detection (e.g., &quot;This session is testing specific permutations of the user-auth mutation that no legitimate frontend client ever calls&quot;).</li>
-          <li><strong>Honeypot Endpoints:</strong> Plant high-value-looking, undocumented API endpoints that no legitimate traffic should ever hit. Set critical alerts for any access. Agentic crawlers will index and attempt to exploit them.</li>
-          <li><strong>Strict Schema Enforcements:</strong> Deny-by-default all GraphQL introspection and enforce strict input validation for REST payloads at the edge.</li>
-        </ol>
-
-        <hr className="border-slate-800 my-12" />
-
-        <h2 className="text-2xl font-bold text-cyan-400 border-l-4 border-cyan-500 pl-4">Threat Vector 3: The &ldquo;Sleeper Agent&rdquo; Dependency Swap</h2>
-        <div className="my-6 text-sm bg-slate-900/50 p-4 rounded border border-slate-800">
-          <p><strong>The Old Way:</strong> Typo-squatting a popular npm package.</p>
-          <p><strong>The Agentic Way:</strong> A specialized agent autonomously generates thousands of hyper-niche, actually useful code libraries, publishes them to package managers, slowly gains organic adoption from developers, and coordinates a simultaneous payload activation via a central C2 server after 6 months.</p>
-        </div>
-
-        <h3>The Mechanism</h3>
-        <p>Why break into the network when the developers will invite you in? Agentic AI can generate high-quality, fully documented repositories, answer GitHub issues, and pass code reviews. The payloads are obfuscated not as malware, but as complex recursive logic that only triggers under specific environment variables (like a production CI/CD pipeline).</p>
-
-        <h3>The Mitigation Protocol</h3>
-        <ol>
-          <li><strong>Provenance Enforcement:</strong> Only allow dependencies with verifiable SLSA provenance or cryptographic signing (e.g., Sigstore).</li>
-          <li><strong>Dependency Pinning &amp; Auditing:</strong> Never use <code>^</code> or <code>~</code> in package managers. Pin to exact hashes.</li>
-          <li><strong>Behavioral CI/CD:</strong> Your CI/CD pipeline must be completely ephemeral, stripped of unnecessary outbound network access, and monitored for unusual child-process spawning during the build phase.</li>
-        </ol>
-
-        <div className="mt-16 bg-gradient-to-r from-cyan-900/30 to-slate-900 border border-cyan-500/20 p-8 rounded-xl text-center">
-          <h3 className="text-xl font-bold text-white mt-0 mb-3">The Go-Forward Strategy</h3>
-          <p className="text-slate-300 mb-6 max-w-2xl mx-auto">
-            Defending against AI requires AI. The integration of automated reasoning into the defense layer is no longer a luxury; it is the baseline. 
-          </p>
-          <Link href="/" className="inline-block bg-cyan-500 hover:bg-cyan-400 text-slate-950 px-8 py-3 rounded-full font-bold transition-all relative overflow-hidden group">
-            <span className="relative z-10 transition-colors">Access the Full Tools Matrix</span>
-            <div className="absolute inset-0 bg-cyan-300 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out z-0"></div>
-          </Link>
+          {/* Paywall Overlay */}
+          <div className="absolute inset-0 z-10 flex flex-col items-center justify-center pt-10">
+            <div className="bg-slate-900/95 backdrop-blur-xl border border-cyan-500/30 rounded-2xl p-8 max-w-lg mx-auto text-center shadow-[0_0_50px_rgba(34,211,238,0.1)]">
+              <div className="w-16 h-16 bg-slate-800 rounded-full flex items-center justify-center mx-auto mb-6 border border-slate-700 text-cyan-400">
+                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              </div>
+              <h3 className="text-2xl font-extrabold text-white mb-3 tracking-tight">Unlock the Full Report</h3>
+              <p className="text-slate-300 mb-8 leading-relaxed">
+                The rest of this classified briefing is restricted to Pro members. Get the full $49 report for free when you upgrade to Pro.
+              </p>
+              
+              <div className="flex flex-col gap-4">
+                <Link href="/upgrade" className="w-full px-6 py-4 rounded-xl bg-cyan-500 border border-cyan-400 text-slate-950 font-extrabold shadow-[0_0_20px_rgba(34,211,238,0.2)] hover:shadow-[0_0_30px_rgba(34,211,238,0.4)] hover:bg-cyan-400 transition-all flex items-center justify-center gap-2">
+                  Upgrade to Pro ($9/mo)
+                </Link>
+                <div className="relative flex items-center py-2">
+                  <div className="flex-grow border-t border-slate-700"></div>
+                  <span className="flex-shrink-0 text-xs text-slate-500 px-4 font-mono uppercase tracking-widest">or</span>
+                  <div className="flex-grow border-t border-slate-700"></div>
+                </div>
+                <Link href="/upgrade?product=report-2026" className="w-full px-6 py-3.5 rounded-xl bg-slate-800 border border-slate-700 text-slate-300 font-semibold hover:bg-slate-700 transition-all flex items-center justify-center">
+                  Buy Report Only ($49.00)
+                </Link>
+              </div>
+              <p className="mt-6 text-xs text-slate-500 font-mono">Instant digital access. Secure checkout.</p>
+            </div>
+          </div>
         </div>
 
       </div>

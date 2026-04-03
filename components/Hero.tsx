@@ -1,7 +1,11 @@
 import React from 'react';
-import NewsletterForm from '@/components/NewsletterForm';
+import Link from 'next/link';
+import { getAllArticles } from '@/lib/articles';
 
-export default function Hero() {
+export default async function Hero() {
+  const articles = await getAllArticles();
+  const latestArticle = articles[0];
+
   return (
     <section className="relative overflow-hidden bg-white dark:bg-slate-950 pt-20 pb-20">
       {/* Background Cyber Texture */}
@@ -10,13 +14,20 @@ export default function Hero() {
       
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         {/* Threat Level Indicator */}
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/50 text-sm font-bold text-slate-800 dark:text-slate-300 mb-8 mx-auto shadow-sm">
-          <span className="relative flex h-2.5 w-2.5">
+        <Link 
+          href={`/blog/${latestArticle.slug}`}
+          className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/50 text-xs sm:text-sm font-bold text-slate-800 dark:text-slate-300 mb-8 mx-auto shadow-sm hover:border-cyan-500/50 transition-colors"
+        >
+          <span className="relative flex h-2.5 w-2.5 shrink-0">
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
             <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-500"></span>
           </span>
-          Latest: Autonomous Agent Sandbox Escape Zero-Day
-        </div>
+          <span className="truncate max-w-[280px] sm:max-w-md">
+            <span className="text-cyan-600 dark:text-cyan-400 mr-2">Latest:</span>
+            {latestArticle.title}
+          </span>
+          <span className="text-slate-400 ml-1">&rarr;</span>
+        </Link>
         
         <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight text-slate-900 dark:text-white mb-6">
           Intelligence for the <br className="hidden md:block" />
@@ -27,21 +38,22 @@ export default function Hero() {
           Get the briefing that actually matters. Actionable threat intel, vulnerability research, and defense strategies for teams navigating AI risks in production.
         </p>
         
-        <div className="max-w-xl mx-auto relative group flex flex-col sm:flex-row items-center gap-4 justify-center">
-          <div className="relative w-full sm:w-auto flex-1">
-            <NewsletterForm
-              variant="hero"
-              placeholder="Enter your email address"
-              buttonText="Subscribe Free"
-              source="homepage-hero"
-            />
-          </div>
-          <a href="/report/2026-ai-threat-landscape" className="w-full sm:w-auto px-6 py-3 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-white font-semibold transition-all flex items-center justify-center gap-2 whitespace-nowrap shadow-[0_0_15px_rgba(0,180,255,0.15)]">
-             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-file-down"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M12 18v-6"/><path d="M9 15l3 3 3-3"/></svg>
-             Access 2026 Threat Report
-          </a>
+        <div className="max-w-xl mx-auto flex flex-col sm:flex-row justify-center gap-4">
+          <Link 
+            href="/subscribe" 
+            className="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white font-bold hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
+          >
+            Subscribe Free
+          </Link>
+          <Link 
+            href="/upgrade" 
+            className="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-cyan-500 border border-cyan-400 text-slate-950 font-extrabold shadow-[0_0_20px_rgba(34,211,238,0.3)] hover:shadow-[0_0_30px_rgba(34,211,238,0.5)] hover:bg-cyan-400 transition-all flex items-center justify-center gap-2"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-zap"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+            Unlock Pro Access
+          </Link>
         </div>
-        <p className="mt-5 text-sm font-medium text-slate-500 dark:text-slate-500">Join 4,500+ security professionals. No fluff, just signal.</p>
+        <p className="mt-6 text-sm font-medium text-slate-500 dark:text-slate-500">Join 4,500+ security professionals. No fluff, just signal.</p>
       </div>
     </section>
   );

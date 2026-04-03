@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import ProCTAButton from '@/components/ProCTAButton';
 import { createPageMetadata } from '@/lib/page-metadata.mjs';
 import {
   Shield,
@@ -8,7 +9,6 @@ import {
   FileText,
   Bell,
   Users,
-  ChevronRight,
   Check,
   Brain,
   Database,
@@ -143,25 +143,12 @@ export default function ProPage() {
 
           {/* CTA block */}
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-6">
-            <a
-              href="https://app.beehiiv.com/subscribe/ai-security-brief-pro"
-              id="pro-cta-hero"
-              className="pro-cta-btn inline-flex items-center gap-2 px-8 py-4 rounded-lg font-bold text-base transition-all duration-200 group"
-            >
-              Get Pro Access
-              <ChevronRight size={18} className="transition-transform group-hover:translate-x-1" />
-            </a>
-            <Link
-              href="/blog"
-              id="pro-cta-sample"
-              className="inline-flex items-center gap-2 px-6 py-4 rounded-lg font-semibold text-sm transition-all duration-200"
-              style={{
-                border: '1px solid var(--border)',
-                color: 'var(--text-muted)',
-              }}
-            >
+            <ProCTAButton id="pro-cta-hero" variant="primary">
+              Get Pro Access — $9/mo
+            </ProCTAButton>
+            <ProCTAButton id="pro-cta-sample" variant="ghost" href="/blog">
               Read sample briefings first
-            </Link>
+            </ProCTAButton>
           </div>
 
           <p className="text-xs font-mono" style={{ color: 'var(--text-faint)' }}>
@@ -410,18 +397,13 @@ export default function ProPage() {
               ))}
             </ul>
 
-            <a
-              href="https://app.beehiiv.com/subscribe/ai-security-brief-pro"
+            <ProCTAButton
               id="pro-cta-pricing"
-              className="block w-full py-4 rounded-lg font-bold text-base text-center transition-all duration-200"
-              style={{
-                background: 'var(--accent)',
-                color: '#0d1117',
-                boxShadow: '0 0 24px rgba(0,180,255,0.3)',
-              }}
+              variant="primary"
+              className="block w-full py-4 rounded-lg font-bold text-base text-center transition-all duration-200 justify-center"
             >
               Get Pro Access — $9/mo
-            </a>
+            </ProCTAButton>
             <p className="mt-4 text-xs" style={{ color: 'var(--text-faint)' }}>
               Secure checkout. Cancel from your account anytime.
             </p>
@@ -440,7 +422,7 @@ export default function ProPage() {
 
           <p className="mt-10 text-sm" style={{ color: 'var(--text-faint)' }}>
             Already subscribed to the free brief?{' '}
-            <Link href="/newsletter" style={{ color: 'var(--accent)' }}>
+            <Link href="/upgrade" style={{ color: 'var(--accent)' }}>
               Upgrade here →
             </Link>
           </p>

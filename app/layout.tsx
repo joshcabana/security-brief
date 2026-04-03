@@ -4,6 +4,7 @@ import { Inter, JetBrains_Mono } from 'next/font/google';
 import './globals.css';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import AffiliateBanner from '@/components/AffiliateBanner';
 import { getSiteUrl, siteDescription, siteName, siteUrl } from '@/lib/site';
 
 
@@ -107,6 +108,7 @@ export default function RootLayout({
       <body
         className="min-h-screen flex flex-col bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-200 antialiased selection:bg-cyan-500/30"
       >
+        <AffiliateBanner />
         <Header />
         <main className="flex-1">{children}</main>
         <Footer />
