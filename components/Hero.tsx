@@ -36,9 +36,9 @@ export default function Hero() {
               source="homepage-hero"
             />
           </div>
-          <a href="#" className="w-full sm:w-auto px-6 py-3 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-white font-semibold transition-all flex items-center justify-center gap-2 whitespace-nowrap shadow-[0_0_15px_rgba(0,180,255,0.15)]">
+          <a href="/report/2026-ai-threat-landscape" className="w-full sm:w-auto px-6 py-3 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-white font-semibold transition-all flex items-center justify-center gap-2 whitespace-nowrap shadow-[0_0_15px_rgba(0,180,255,0.15)]">
              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-file-down"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M12 18v-6"/><path d="M9 15l3 3 3-3"/></svg>
-             Download 2026 Threat PDF
+             Access 2026 Threat Report
           </a>
         </div>
         <p className="mt-5 text-sm font-medium text-slate-500 dark:text-slate-500">Join 4,500+ security professionals. No fluff, just signal.</p>
