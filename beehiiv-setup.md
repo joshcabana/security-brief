@@ -224,3 +224,62 @@ BEEHIIV_PUBLICATION_ID=your_pub_id_here
 ```
 
 These are used by the site subscribe route and by Skill 5 (Performance Logger) to pull newsletter stats automatically. Do not commit them to Git.
+
+## B2B Lead Capture Setup
+
+The `/api/lead-capture` endpoint captures enterprise leads with work-email gating and job-title segmentation. It writes leads into Beehiiv with custom fields so you can segment by role when pitching sponsors.
+
+### 1. Create Beehiiv Custom Fields
+
+In your Beehiiv publication settings, create these three custom fields:
+
+| Field Name | Type | Purpose |
+| --- | --- | --- |
+| `job_title` | Text | CISO / CSO, Security Engineer, etc. |
+| `lead_source` | Text | Which page or form captured the lead |
+| `asset_requested` | Text | Which gated asset they downloaded |
+
+### 2. Create a Lead Capture Automation
+
+1. Go to **Automations** → **Create Automation**
+2. Name it: **Lead Capture — AI Security Matrix PDF**
+3. Trigger: **Subscriber is created** (or use API enrollment)
+4. Add a **Send Email** step with:
+   - Subject: "Your AI Security Tools Matrix is ready"
+   - Body: Include the PDF download link (hosted on S3, Vercel Blob, or similar)
+   - Stamp **"AI Threat Brief — Q2 2026"** and `aithreatbrief.com` on the PDF
+5. Copy the automation ID (starts with `aut_`)
+
+### 3. Add Environment Variable
+
+```bash
+# Add to .env.local or hosting environment
+BEEHIIV_LEAD_AUTOMATION_ID=aut_your-lead-automation-id
+```
+
+If `BEEHIIV_LEAD_AUTOMATION_ID` is not set, the route falls back to `BEEHIIV_WELCOME_AUTOMATION_ID`. If neither is set, Beehiiv sends its default welcome email.
+
+### 4. Test the Lead Capture Flow
+
+```bash
+# Should be rejected (personal email)
+curl -s -X POST https://aithreatbrief.com/api/lead-capture \
+  -H 'Content-Type: application/json' \
+  -H 'Origin: https://aithreatbrief.com' \
+  -d '{"email":"test@gmail.com","jobTitle":"CISO / CSO","source":"test","asset":"test"}'
+
+# Should succeed (work email)
+curl -s -X POST https://aithreatbrief.com/api/lead-capture \
+  -H 'Content-Type: application/json' \
+  -H 'Origin: https://aithreatbrief.com' \
+  -d '{"email":"you@yourcompany.com","jobTitle":"Security Engineer","source":"tools-matrix","asset":"ai-security-tools-matrix"}'
+```
+
+### Custom Field Value in Beehiiv
+
+After a successful lead capture, you can segment subscribers in Beehiiv by:
+
+- `job_title = "CISO / CSO"` → Pitch as "150 CISOs on your list"
+- `lead_source = "tools-matrix"` → Attribute conversions per page
+- `asset_requested = "ai-security-tools-matrix"` → Track which content converts
+

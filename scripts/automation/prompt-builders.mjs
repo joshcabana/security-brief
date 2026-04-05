@@ -9,7 +9,7 @@
 export function buildArticleFactoryPrompts(input) {
   return {
     systemPrompt:
-      'You are the article generation engine for AI Security Brief. Return strict JSON only. No markdown fences. Use only the supplied weekly harvest source pack. Do not cite URLs that are not in the source pack.',
+      'You are the article generation engine for AI Security Brief. Return strict JSON only. No markdown fences. Use only the supplied weekly harvest source pack. Do not cite URLs that are not in the source pack. Every article must include a named human author object and explicit primary sources. Brand-level bylines are forbidden.',
     userPrompt: [
       `Write 2 SEO-ready AI security articles for ${input.effectiveDate}.`,
       'Use these exact target slugs and topics:',
@@ -21,15 +21,16 @@ export function buildArticleFactoryPrompts(input) {
       input.harvestSourcePack,
       '',
       'Return JSON in this shape:',
-      '{"articles":[{"slug":"string","title":"string","excerpt":"string","meta_title":"string","meta_description":"string","keywords":["a","b","c","d","e"],"intro":["paragraph"],"sections":[{"heading":"string","paragraphs":["paragraph","paragraph"]}],"key_takeaways":["item"],"references":[{"source_name":"string","title":"string","url":"https://..."}]}]}',
+      '{"articles":[{"slug":"string","title":"string","excerpt":"string","meta_title":"string","meta_description":"string","keywords":["a","b","c","d","e"],"author":{"name":"Josh Cabana","role":"Editor & Publisher","profileUrl":"https://...","bio":"optional"},"intro":["paragraph"],"sections":[{"heading":"string","paragraphs":["paragraph","paragraph"]}],"key_takeaways":["item"],"primarySources":[{"url":"https://...","title":"string","date":"optional","excerpt":"optional"}]}]}',
       'Requirements:',
       '- Exactly 2 articles.',
       '- Each article should render to roughly 950-1200 words after markdown rendering.',
+      '- The author object is required on every article. Use the named human byline Josh Cabana with the role Editor & Publisher unless explicitly instructed otherwise. Do not use AI Security Brief or any brand name as the author.',
       '- Intro must contain exactly 2 substantial paragraphs.',
       '- 4 or 5 H2 sections.',
       '- Every section must contain exactly 2 substantial paragraphs.',
       '- 4 to 5 key takeaways.',
-      '- Include 4 or 5 references, and every reference URL must come from the weekly harvest source pack.',
+      '- Include at least 3 primarySources, and every primary source URL must come from the weekly harvest source pack.',
       '- Keep tone authoritative, data-driven, and written for tech professionals and IT decision-makers.',
       '- Do not invent statistics or sources. When the source pack is sparse, prefer careful analysis and defensive guidance over unsupported claims.',
       '- The rendered article template appends one newsletter CTA using the exact path pattern /newsletter?source=article-<slug>-cta. Write body copy that leads naturally into that CTA and do not add extra CTA blocks or promotional sections.',

@@ -11,6 +11,42 @@ import {
   parseArticleSource,
 } from '../lib/articles';
 
+function buildArticleSource(body: string, category = 'AI Threats'): string {
+  return [
+    '---',
+    'title: "Alpha"',
+    'slug: "alpha"',
+    'date: "2026-03-17"',
+    'author:',
+    '  name: "Josh Cabana"',
+    '  role: "Editor & Publisher"',
+    'excerpt: "Alpha excerpt."',
+    `category: "${category}"`,
+    'featured: false',
+    'meta_title: "Alpha Meta Title"',
+    'meta_description: "Alpha meta description."',
+    'keywords:',
+    '  - one',
+    '  - two',
+    '  - three',
+    '  - four',
+    '  - five',
+    'read_time: "5 min"',
+    'primarySources:',
+    '  - url: "https://example.com/source-one"',
+    '    title: "Primary source one"',
+    '  - url: "https://example.com/source-two"',
+    '    title: "Primary source two"',
+    '  - url: "https://example.com/source-three"',
+    '    title: "Primary source three"',
+    '---',
+    '',
+    '# Alpha',
+    '',
+    body,
+  ].join('\n');
+}
+
 test('getAffiliateUrl returns null for missing and blank environment values', () => {
   assert.equal(getAffiliateUrl('NORDVPN', {}), null);
   assert.equal(getAffiliateUrl('NORDVPN', { AFFILIATE_NORDVPN: '   ' }), null);
@@ -73,30 +109,7 @@ test('getArticleSourceCacheKey changes when article content changes', async () =
   try {
     await writeFile(
       articlePath,
-      [
-        '---',
-        'title: "Alpha"',
-        'slug: "alpha"',
-        'date: "2026-03-17"',
-        'author: "AI Security Brief"',
-        'excerpt: "Alpha excerpt."',
-        'category: "AI Threats"',
-        'featured: false',
-        'meta_title: "Alpha Meta Title"',
-        'meta_description: "Alpha meta description."',
-        'keywords:',
-        '  - one',
-        '  - two',
-        '  - three',
-        '  - four',
-        '  - five',
-        'read_time: "5 min"',
-        '---',
-        '',
-        '# Alpha',
-        '',
-        'Alpha content.',
-      ].join('\n'),
+      buildArticleSource('Alpha content.'),
     );
 
     const initialKey = await getArticleSourceCacheKey(tempDir);
@@ -105,30 +118,7 @@ test('getArticleSourceCacheKey changes when article content changes', async () =
 
     await writeFile(
       articlePath,
-      [
-        '---',
-        'title: "Alpha"',
-        'slug: "alpha"',
-        'date: "2026-03-17"',
-        'author: "AI Security Brief"',
-        'excerpt: "Alpha excerpt."',
-        'category: "AI Threats"',
-        'featured: false',
-        'meta_title: "Alpha Meta Title"',
-        'meta_description: "Alpha meta description."',
-        'keywords:',
-        '  - one',
-        '  - two',
-        '  - three',
-        '  - four',
-        '  - five',
-        'read_time: "5 min"',
-        '---',
-        '',
-        '# Alpha',
-        '',
-        'Bravo content update.',
-      ].join('\n'),
+      buildArticleSource('Bravo content update.'),
     );
     await utimes(articlePath, fixedTimestamp, fixedTimestamp);
 
@@ -146,30 +136,7 @@ test('getArticleCacheSignature keeps source and affiliate invalidation explicit'
   try {
     await writeFile(
       path.join(tempDir, 'alpha.md'),
-      [
-        '---',
-        'title: "Alpha"',
-        'slug: "alpha"',
-        'date: "2026-03-17"',
-        'author: "AI Security Brief"',
-        'excerpt: "Alpha excerpt."',
-        'category: "AI Threats"',
-        'featured: false',
-        'meta_title: "Alpha Meta Title"',
-        'meta_description: "Alpha meta description."',
-        'keywords:',
-        '  - one',
-        '  - two',
-        '  - three',
-        '  - four',
-        '  - five',
-        'read_time: "5 min"',
-        '---',
-        '',
-        '# Alpha',
-        '',
-        'Alpha content.',
-      ].join('\n'),
+      buildArticleSource('Alpha content.'),
     );
 
     const signature = await getArticleCacheSignature(tempDir, {
@@ -194,30 +161,7 @@ test('getArticleCacheSignature changes when affiliate env values change', async 
   try {
     await writeFile(
       path.join(tempDir, 'alpha.md'),
-      [
-        '---',
-        'title: "Alpha"',
-        'slug: "alpha"',
-        'date: "2026-03-17"',
-        'author: "AI Security Brief"',
-        'excerpt: "Alpha excerpt."',
-        'category: "AI Threats"',
-        'featured: false',
-        'meta_title: "Alpha Meta Title"',
-        'meta_description: "Alpha meta description."',
-        'keywords:',
-        '  - one',
-        '  - two',
-        '  - three',
-        '  - four',
-        '  - five',
-        'read_time: "5 min"',
-        '---',
-        '',
-        '# Alpha',
-        '',
-        'Alpha content.',
-      ].join('\n'),
+      buildArticleSource('Alpha content.'),
     );
 
     const baseSignature = await getArticleCacheSignature(tempDir, {
@@ -279,29 +223,13 @@ test('parseArticleSource renders resolved affiliate links into article html for 
   try {
     const article = await parseArticleSource(
       'example.md',
-      `---
-title: "Example"
-slug: "example"
-date: "2026-03-17"
-author: "AI Security Brief"
-excerpt: "Example excerpt."
-category: "Privacy Tools"
-featured: false
-meta_title: "Example Meta Title"
-meta_description: "Example meta description."
-keywords:
-  - one
-  - two
-  - three
-  - four
-  - five
-read_time: "5 min"
----
-
-# Example
-
-Use [NordVPN]([AFFILIATE:NORDVPN]) when you need it.
-`,
+      buildArticleSource('Use [NordVPN]([AFFILIATE:NORDVPN]) when you need it.', 'Privacy Tools')
+        .replace('# Alpha', '# Example')
+        .replace('title: "Alpha"', 'title: "Example"')
+        .replace('slug: "alpha"', 'slug: "example"')
+        .replace('excerpt: "Alpha excerpt."', 'excerpt: "Example excerpt."')
+        .replace('meta_title: "Alpha Meta Title"', 'meta_title: "Example Meta Title"')
+        .replace('meta_description: "Alpha meta description."', 'meta_description: "Example meta description."'),
     );
 
     assert.match(article.body, /\[NordVPN\]\(https:\/\/example\.com\/nordvpn\)/);
@@ -322,29 +250,13 @@ test('parseArticleSource strips affiliate links for AI Threats category', async 
   try {
     const article = await parseArticleSource(
       'example.md',
-      `---
-title: "Example"
-slug: "example"
-date: "2026-03-17"
-author: "AI Security Brief"
-excerpt: "Example excerpt."
-category: "AI Threats"
-featured: false
-meta_title: "Example Meta Title"
-meta_description: "Example meta description."
-keywords:
-  - one
-  - two
-  - three
-  - four
-  - five
-read_time: "5 min"
----
-
-# Example
-
-Use [NordVPN]([AFFILIATE:NORDVPN]) when you need it.
-`,
+      buildArticleSource('Use [NordVPN]([AFFILIATE:NORDVPN]) when you need it.')
+        .replace('# Alpha', '# Example')
+        .replace('title: "Alpha"', 'title: "Example"')
+        .replace('slug: "alpha"', 'slug: "example"')
+        .replace('excerpt: "Alpha excerpt."', 'excerpt: "Example excerpt."')
+        .replace('meta_title: "Alpha Meta Title"', 'meta_title: "Example Meta Title"')
+        .replace('meta_description: "Alpha meta description."', 'meta_description: "Example meta description."'),
     );
 
     assert.equal(article.body, '# Example\n\nUse NordVPN when you need it.');

@@ -65,6 +65,17 @@ test('verify:live:matrix script points at the local matrix runner', () => {
   );
 });
 
+test('trust and production verification scripts point at the new repo-local runners', () => {
+  assert.equal(
+    packageJson.scripts?.['verify:trust'],
+    'node scripts/verify-trust.mjs',
+  );
+  assert.equal(
+    packageJson.scripts?.['verify:production'],
+    'node scripts/verify-production.mjs',
+  );
+});
+
 test('eslint flat config exists and extends next core web vitals', () => {
   assert.equal(existsSync(eslintConfigPath), true);
 

@@ -1,6 +1,7 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import matter from 'gray-matter';
+import { validateAuthorObject, validatePrimarySources } from './article-trust.mjs';
 
 const root = process.cwd();
 const blogDir = path.join(root, 'blog');
@@ -17,6 +18,7 @@ const requiredFields = [
   'meta_description',
   'keywords',
   'read_time',
+  'primarySources',
 ];
 const readTimePattern = /^\d+\s+min$/;
 
@@ -68,7 +70,7 @@ async function buildManifest() {
       title: assertNonEmptyString(data.title, 'title', fileName),
       slug,
       date: assertValidDate(data.date, 'date', fileName),
-      author: assertNonEmptyString(data.author, 'author', fileName),
+      author: validateAuthorObject(data.author, fileName),
       excerpt: assertNonEmptyString(data.excerpt, 'excerpt', fileName),
       category: assertNonEmptyString(data.category, 'category', fileName),
       featured: data.featured,
@@ -76,6 +78,7 @@ async function buildManifest() {
       metaDescription: assertNonEmptyString(data.meta_description, 'meta_description', fileName),
       keywords: data.keywords.map((item) => item.trim()),
       readTime: data.read_time.trim(),
+      primarySources: validatePrimarySources(data.primarySources, fileName),
       fileName,
     });
   }

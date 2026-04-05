@@ -48,7 +48,15 @@ test('content-manifest writes a sorted manifest for a valid workspace', async ()
     await runManifest(workspace.workspaceDir, '--write');
     const manifest = JSON.parse(
       await readFile(path.join(workspace.workspaceDir, 'content-manifest.json'), 'utf8'),
-    ) as { articleCount: number; categories: string[]; articles: Array<{ slug: string }> };
+    ) as {
+      articleCount: number;
+      categories: string[];
+      articles: Array<{
+        slug: string;
+        author: { name: string; role: string };
+        primarySources: Array<{ url: string; title: string }>;
+      }>;
+    };
 
     assert.equal(manifest.articleCount, 2);
     assert.deepEqual(manifest.categories, ['AI Threats', 'Privacy']);
@@ -56,6 +64,11 @@ test('content-manifest writes a sorted manifest for a valid workspace', async ()
       manifest.articles.map((article) => article.slug),
       ['alpha', 'beta'],
     );
+    assert.deepEqual(manifest.articles[0].author, {
+      name: 'Josh Cabana',
+      role: 'Editor & Publisher',
+    });
+    assert.equal(manifest.articles[0].primarySources.length >= 3, true);
   } finally {
     await workspace.cleanup();
   }
@@ -146,6 +159,51 @@ test('content-manifest rejects empty category values', async () => {
     await assert.rejects(
       () => runManifest(workspace.workspaceDir, '--write'),
       rejectedWithStderr(/category/),
+    );
+  } finally {
+    await workspace.cleanup();
+  }
+});
+
+test('content-manifest rejects brand-level author names', async () => {
+  const workspace = await createWorkspace([
+    {
+      fileName: 'brand-author.md',
+      source: buildArticleMarkdown({
+        slug: 'brand-author',
+        author: {
+          name: 'AI Security Brief',
+          role: 'Editor & Publisher',
+        },
+      }),
+    },
+  ]);
+
+  try {
+    await assert.rejects(
+      () => runManifest(workspace.workspaceDir, '--write'),
+      rejectedWithStderr(/named human/i),
+    );
+  } finally {
+    await workspace.cleanup();
+  }
+});
+
+test('content-manifest rejects missing primary sources', async () => {
+  const workspace = await createWorkspace([
+    {
+      fileName: 'missing-primary-sources.md',
+      source: buildArticleMarkdown({
+        slug: 'missing-primary-sources',
+        primarySources: [],
+      }),
+    },
+  ]);
+
+  try {
+    await assert.rejects(
+      () => runManifest(workspace.workspaceDir, '--write'),
+      rejectedWithStderr(/primarySources/i),
     );
   } finally {
     await workspace.cleanup();

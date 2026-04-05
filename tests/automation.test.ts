@@ -338,6 +338,17 @@ test('affiliate placeholder injection only annotates the first matching vendor m
   assert.equal(result.injected.length, 2);
 });
 
+test('affiliate placeholder injection ignores unsupported legacy vendors', () => {
+  const placeholders = parseAffiliatePlaceholderMap(`
+[AFFILIATE:NORDVPN] → Replace with your NordVPN affiliate link
+`);
+
+  const result = injectAffiliatePlaceholders('1Password and NordVPN both appear in this copy.', placeholders);
+
+  assert.match(result.markdown, /NordVPN \(\[AFFILIATE:NORDVPN\]\)/);
+  assert.doesNotMatch(result.markdown, /1Password \(\[AFFILIATE:/);
+});
+
 test('affiliate program parser derives deterministic rotation names and placeholder keys', () => {
   const programs = parseAffiliatePrograms(`
 | 1 | **NordVPN** | VPN / Privacy | ... |
@@ -386,6 +397,10 @@ test('article renderer appends a slug-specific newsletter CTA link', () => {
       meta_description: 'Weekly analysis of agentic AI abuse paths.',
       category: 'AI Threats',
       keywords: ['agentic ai', 'ai security', 'prompt injection', 'ai abuse', 'defence'],
+      author: {
+        name: 'Josh Cabana',
+        role: 'Editor & Publisher',
+      },
       intro: ['Paragraph one.', 'Paragraph two.'],
       sections: [
         { heading: 'Threat Model', paragraphs: ['Paragraph three.', 'Paragraph four.'] },
@@ -394,15 +409,16 @@ test('article renderer appends a slug-specific newsletter CTA link', () => {
         { heading: 'Governance', paragraphs: ['Paragraph nine.', 'Paragraph ten.'] },
       ],
       key_takeaways: ['One', 'Two', 'Three', 'Four'],
-      references: [
-        { source_name: 'Example', title: 'Reference One', url: 'https://example.com/one' },
-        { source_name: 'Example', title: 'Reference Two', url: 'https://example.com/two' },
-        { source_name: 'Example', title: 'Reference Three', url: 'https://example.com/three' },
-        { source_name: 'Example', title: 'Reference Four', url: 'https://example.com/four' },
+      primarySources: [
+        { title: 'Reference One', url: 'https://example.com/one' },
+        { title: 'Reference Two', url: 'https://example.com/two' },
+        { title: 'Reference Three', url: 'https://example.com/three' },
       ],
     },
   });
 
+  assert.match(markdown, /author:\n  name: "Josh Cabana"\n  role: "Editor & Publisher"/);
+  assert.match(markdown, /primarySources:/);
   assert.match(markdown, /\/newsletter\?source=article-agentic-ai-security-risks-cta/);
 });
 
@@ -488,6 +504,9 @@ test('prompt builders preserve JSON contracts while adding funnel and CTR instru
     bodyExcerpt: 'Body excerpt.',
   });
 
+  assert.match(articlePrompts.userPrompt, /author/);
+  assert.match(articlePrompts.userPrompt, /primarySources/);
+  assert.match(articlePrompts.userPrompt, /Josh Cabana/);
   assert.match(articlePrompts.userPrompt, /\/newsletter\?source=article-<slug>-cta/);
   assert.match(newsletterPrompts.userPrompt, /deliberately different angles/i);
   assert.match(newsletterPrompts.userPrompt, /Return JSON in this shape:/);
