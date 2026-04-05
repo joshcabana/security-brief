@@ -11,6 +11,11 @@ import {
   guardedText,
   requestJsonFromGitHubModels,
 } from '../scripts/automation/github-models.mjs';
+import {
+  buildArticleFactoryPrompts,
+  buildNewsletterCompilerPrompts,
+  buildSeoOptimiserPrompts,
+} from '../scripts/automation/prompt-builders.mjs';
 import { countActiveSubscriptions, derivePerformanceSnapshot } from '../scripts/automation/run-performance-logger.mjs';
 import {
   buildExpectedArticlePlan,
@@ -21,7 +26,9 @@ import {
   parseAffiliatePrograms,
   parseHarvestMarkdown,
   parseAffiliatePlaceholderMap,
+  renderArticleMarkdown,
   renderHarvestMarkdown,
+  renderNewsletterDraft,
   upsertPerformanceLog,
 } from '../scripts/automation/renderers.mjs';
 
@@ -331,6 +338,17 @@ test('affiliate placeholder injection only annotates the first matching vendor m
   assert.equal(result.injected.length, 2);
 });
 
+test('affiliate placeholder injection ignores unsupported legacy vendors', () => {
+  const placeholders = parseAffiliatePlaceholderMap(`
+[AFFILIATE:NORDVPN] → Replace with your NordVPN affiliate link
+`);
+
+  const result = injectAffiliatePlaceholders('1Password and NordVPN both appear in this copy.', placeholders);
+
+  assert.match(result.markdown, /NordVPN \(\[AFFILIATE:NORDVPN\]\)/);
+  assert.doesNotMatch(result.markdown, /1Password \(\[AFFILIATE:/);
+});
+
 test('affiliate program parser derives deterministic rotation names and placeholder keys', () => {
   const programs = parseAffiliatePrograms(`
 | 1 | **NordVPN** | VPN / Privacy | ... |
@@ -366,6 +384,134 @@ test('newsletter issue helper preserves the existing issue number on force-regen
     }),
     3,
   );
+});
+
+test('article renderer appends a slug-specific newsletter CTA link', () => {
+  const markdown = renderArticleMarkdown({
+    date: '2026-03-16',
+    article: {
+      slug: 'agentic-ai-security-risks',
+      title: 'Agentic AI Security Risks',
+      excerpt: 'Weekly analysis of agentic AI abuse paths.',
+      meta_title: 'Agentic AI Security Risks',
+      meta_description: 'Weekly analysis of agentic AI abuse paths.',
+      category: 'AI Threats',
+      keywords: ['agentic ai', 'ai security', 'prompt injection', 'ai abuse', 'defence'],
+      author: {
+        name: 'Josh Cabana',
+        role: 'Editor & Publisher',
+      },
+      intro: ['Paragraph one.', 'Paragraph two.'],
+      sections: [
+        { heading: 'Threat Model', paragraphs: ['Paragraph three.', 'Paragraph four.'] },
+        { heading: 'Detection', paragraphs: ['Paragraph five.', 'Paragraph six.'] },
+        { heading: 'Response', paragraphs: ['Paragraph seven.', 'Paragraph eight.'] },
+        { heading: 'Governance', paragraphs: ['Paragraph nine.', 'Paragraph ten.'] },
+      ],
+      key_takeaways: ['One', 'Two', 'Three', 'Four'],
+      primarySources: [
+        { title: 'Reference One', url: 'https://example.com/one' },
+        { title: 'Reference Two', url: 'https://example.com/two' },
+        { title: 'Reference Three', url: 'https://example.com/three' },
+      ],
+    },
+  });
+
+  assert.match(markdown, /author:\n  name: "Josh Cabana"\n  role: "Editor & Publisher"/);
+  assert.match(markdown, /primarySources:/);
+  assert.match(markdown, /\/newsletter\?source=article-agentic-ai-security-risks-cta/);
+});
+
+test('newsletter renderer tags the forwarded subscribe CTA with the issue source', () => {
+  const markdown = renderNewsletterDraft({
+    date: '2026-03-16',
+    issueNumber: 7,
+    subjectLines: ['Threat-led angle', 'Operator-led angle'],
+    previewText: 'Weekly AI security briefing.',
+    intro: ['Paragraph one.', 'Paragraph two.'],
+    signals: [
+      {
+        headline: 'Signal One',
+        summary: 'Summary one.',
+        article_slug: 'article-one',
+        article_title: 'Article One',
+        source_name: null,
+        source_url: null,
+      },
+      {
+        headline: 'Signal Two',
+        summary: 'Summary two.',
+        article_slug: 'article-two',
+        article_title: 'Article Two',
+        source_name: null,
+        source_url: null,
+      },
+      {
+        headline: 'Signal Three',
+        summary: 'Summary three.',
+        article_slug: null,
+        article_title: null,
+        source_name: 'Example Source',
+        source_url: 'https://example.com/source',
+      },
+    ],
+    toolOfWeek: {
+      program_name: 'NordVPN',
+      description: 'Tool description.',
+      placeholder: '[AFFILIATE:NORDVPN]',
+    },
+    nextWeek: ['One', 'Two', 'Three'],
+  });
+
+  assert.match(markdown, /\/newsletter\?source=newsletter-issue-7-forwarded/);
+  assert.match(markdown, /Review the full security tools directory/);
+});
+
+test('prompt builders preserve JSON contracts while adding funnel and CTR instructions', () => {
+  const articlePrompts = buildArticleFactoryPrompts({
+    effectiveDate: '2026-03-16',
+    articlePlan: [{ slug: 'agentic-ai-security-risks', category: 'AI Threats', headline: 'Agentic AI Security Risks' }],
+    harvestSourcePack: '1. Example finding',
+  });
+  const newsletterPrompts = buildNewsletterCompilerPrompts({
+    effectiveDate: '2026-03-16',
+    issueNumber: 7,
+    harvestFindings: [
+      {
+        headline: 'Signal One',
+        summary: 'Summary one.',
+        source_name: 'Example Source',
+        source_url: 'https://example.com/source',
+      },
+      {
+        headline: 'Signal Two',
+        summary: 'Summary two.',
+        source_name: 'Example Source',
+        source_url: 'https://example.com/source-two',
+      },
+    ],
+    datedArticles: [
+      { slug: 'article-one', title: 'Article One', excerpt: 'Excerpt one.' },
+      { slug: 'article-two', title: 'Article Two', excerpt: 'Excerpt two.' },
+    ],
+    selectedProgram: { name: 'NordVPN' },
+    toolPlaceholder: '[AFFILIATE:NORDVPN]',
+  });
+  const seoPrompts = buildSeoOptimiserPrompts({
+    title: 'Article One',
+    slug: 'article-one',
+    excerpt: 'Excerpt one.',
+    bodyExcerpt: 'Body excerpt.',
+  });
+
+  assert.match(articlePrompts.userPrompt, /author/);
+  assert.match(articlePrompts.userPrompt, /primarySources/);
+  assert.match(articlePrompts.userPrompt, /Josh Cabana/);
+  assert.match(articlePrompts.userPrompt, /\/newsletter\?source=article-<slug>-cta/);
+  assert.match(newsletterPrompts.userPrompt, /deliberately different angles/i);
+  assert.match(newsletterPrompts.userPrompt, /Return JSON in this shape:/);
+  assert.match(seoPrompts.userPrompt, /Optimise for click-through rate/i);
+  assert.match(seoPrompts.userPrompt, /affiliate-placeholder behavior/i);
 });
 
 test('performance log upsert replaces placeholder row and updates same-date entries', () => {

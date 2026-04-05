@@ -1,21 +1,25 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import NewsletterForm from '@/components/NewsletterForm';
+import LeadCaptureForm from '@/components/LeadCaptureForm';
+import SponsorSlot from '@/components/SponsorSlot';
 import { getAffiliateUrlByPriority } from '@/lib/affiliate-links';
+import { buildNewsletterPath } from '@/lib/newsletter-source.mjs';
 import { createPageMetadata } from '@/lib/page-metadata.mjs';
 
 export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = createPageMetadata({
   canonicalPath: '/tools',
-  title: 'Security Tools & Resources — Vetted VPNs, Password Managers & More',
+  title: 'AI Security Tools Matrix & Security Resources — Enterprise & Personal',
   description:
-    'Curated security tools for AI-era defence: VPNs, password managers, encrypted email, and endpoint protection — with clear affiliate disclosure.',
-  openGraphTitle: 'Security Tools & Resources — Vetted VPNs, Password Managers & More',
+    'The definitive AI security tools directory: LLM firewalls, AI-SPM, prompt injection defence, plus vetted VPNs, password managers, and endpoint protection.',
+  openGraphTitle: 'AI Security Tools Matrix & Security Resources',
   openGraphDescription:
-    'Curated security tools for AI-era defence: VPNs, password managers, encrypted email, and endpoint protection — with clear affiliate disclosure.',
-  twitterTitle: 'Security Tools & Resources',
+    'The definitive AI security tools directory: LLM firewalls, AI-SPM, prompt injection defence, plus vetted VPNs, password managers, and endpoint protection.',
+  twitterTitle: 'AI Security Tools Matrix',
   twitterDescription:
-    'Curated security tools for AI-era defence: VPNs, password managers, encrypted email, and endpoint protection.',
+    'LLM firewalls, AI-SPM, prompt injection defence, plus vetted VPNs, password managers, and endpoint protection.',
 });
 
 interface Tool {
@@ -39,6 +43,75 @@ interface ToolCategory {
 }
 
 const toolCategories: ToolCategory[] = [
+  {
+    id: 'ai-security',
+    icon: '🤖',
+    title: 'AI & LLM Security',
+    description:
+      'Purpose-built tools for securing AI applications in production: LLM firewalls, prompt injection detection, AI security posture management, and model threat intelligence.',
+    tools: [
+      {
+        name: 'Lakera',
+        description:
+          'Real-time LLM firewall that detects and blocks prompt injection, data leakage, and toxic content before it reaches your model. Deploys as an API gateway in front of any LLM.',
+        highlight: 'LLM Firewall, prompt injection detection, real-time',
+        price: 'Free tier available',
+        url: 'https://lakera.ai',
+        badge: 'LLM Firewall',
+        badgeColor: '#bc8cff',
+      },
+      {
+        name: 'HiddenLayer',
+        description:
+          'AI threat detection platform that monitors ML models for adversarial attacks, model theft, and supply chain compromise. $56M+ in funding. Enterprise-focused runtime defence.',
+        highlight: 'Model threat detection, adversarial ML defence',
+        price: 'Enterprise pricing',
+        url: 'https://hiddenlayer.com',
+        badge: 'Enterprise',
+        badgeColor: '#d29922',
+      },
+      {
+        name: 'Protect AI',
+        description:
+          'AI Security Posture Management (AI-SPM) covering your entire ML pipeline — from model scanning to supply chain integrity. Previously valued at $400M; acquisition talks with Palo Alto Networks.',
+        highlight: 'AI-SPM, ML supply chain, model scanning',
+        price: 'Enterprise pricing',
+        url: 'https://protectai.com',
+        badge: 'AI-SPM',
+        badgeColor: '#d29922',
+      },
+      {
+        name: 'Prompt Security',
+        description:
+          'Enterprise guardrails for GenAI adoption. Provides visibility and control over LLM usage across your organisation — shadow AI detection, DLP for prompts, and compliance policy enforcement.',
+        highlight: 'Shadow AI detection, prompt DLP, compliance',
+        price: 'Enterprise pricing',
+        url: 'https://prompt.security',
+        badge: 'GenAI Governance',
+        badgeColor: '#bc8cff',
+      },
+      {
+        name: 'Rebuff',
+        description:
+          'Open-source prompt injection detection framework. Multi-layered defence using heuristics, LLM-based detection, and a vector database of known attacks. Self-hostable.',
+        highlight: 'Open source, multi-layer detection, self-hostable',
+        price: 'Free (open source)',
+        url: 'https://github.com/protectai/rebuff',
+        badge: 'Open source',
+        badgeColor: '#3fb950',
+      },
+      {
+        name: 'Garak',
+        description:
+          'LLM vulnerability scanner from NVIDIA. Probes language models for hallucination, prompt injection, data leakage, and jailbreak vulnerabilities. The "nmap for LLMs."',
+        highlight: 'LLM red-teaming, vulnerability scanning, NVIDIA',
+        price: 'Free (open source)',
+        url: 'https://github.com/NVIDIA/garak',
+        badge: 'Open source',
+        badgeColor: '#3fb950',
+      },
+    ],
+  },
   {
     id: 'vpns',
     icon: '🛡️',
@@ -210,17 +283,20 @@ const toolCategories: ToolCategory[] = [
 
 function generateToolsJsonLd() {
   const items = [
+    { name: 'Lakera', description: 'Real-time LLM firewall for prompt injection detection.', category: 'AI Security', rating: 4.8, price: '$0' },
+    { name: 'HiddenLayer', description: 'AI/ML threat detection and model security platform.', category: 'AI Security', rating: 4.7, price: 'Enterprise' },
+    { name: 'Protect AI', description: 'AI Security Posture Management for ML pipelines.', category: 'AI Security', rating: 4.7, price: 'Enterprise' },
+    { name: 'Garak', description: 'LLM vulnerability scanner from NVIDIA.', category: 'AI Security', rating: 4.6, price: '$0' },
     { name: 'NordVPN', description: 'Advanced threat protection VPN with dark web monitoring.', category: 'VPN', rating: 4.7, price: '$3.09/mo' },
     { name: 'Proton VPN', description: 'Swiss-based, open-source VPN with a free tier.', category: 'VPN', rating: 4.5, price: 'Free – $9.99/mo' },
-    { name: 'PureVPN', description: 'No-log audited VPN with 6,000+ servers in 65+ countries.', category: 'VPN', rating: 4.3, price: '$2.14/mo' },
     { name: 'Proton Mail', description: 'End-to-end encrypted email from Switzerland.', category: 'Email Security', rating: 4.6, price: 'Free – $12.99/mo' },
   ];
 
   return {
     '@context': 'https://schema.org',
     '@type': 'ItemList',
-    name: 'Security Tools & Resources — AI Threat Brief',
-    description: 'Curated security tools for AI-era defence: VPNs, password managers, encrypted email, and endpoint protection.',
+    name: 'AI Security Tools Matrix & Resources — AI Threat Brief',
+    description: 'The definitive AI security tools directory: LLM firewalls, AI-SPM, prompt injection defence, plus vetted VPNs, password managers, and endpoint protection.',
     url: 'https://aithreatbrief.com/tools',
     numberOfItems: items.length,
     itemListElement: items.map((item, index) => ({
@@ -270,9 +346,9 @@ export default function ToolsPage() {
         <div className="absolute inset-0 bg-grid opacity-40 pointer-events-none" aria-hidden="true" />
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="section-label mb-3">Curated Arsenal</div>
-          <h1 className="text-white mb-4">Security Tools &amp; Resources</h1>
+          <h1 className="text-white mb-4">AI Security Tools Matrix &amp; Resources</h1>
           <p className="text-lg max-w-2xl" style={{ color: '#8b949e' }}>
-            Curated tooling picks that line up with the threat and privacy themes covered across the briefing archive.
+            Enterprise AI security tooling, LLM firewalls, and posture management — plus the vetted personal security stack that complements the weekly briefings.
           </p>
 
           <div
@@ -411,8 +487,17 @@ export default function ToolsPage() {
           </section>
         ))}
 
+        {/* Sponsor slot — replace placeholder with real sponsor when ready */}
+        <SponsorSlot
+          sponsor="Your company here"
+          url="mailto:sponsor@aithreatbrief.com?subject=Tools%20Page%20Sponsorship"
+          tagline="Reach security engineers and AI practitioners building the next generation of defences."
+          label="Sponsor this page"
+        />
+
+        {/* B2B Lead Capture + Newsletter side-by-side */}
         <div
-          className="py-16 px-8 rounded-2xl text-center relative overflow-hidden"
+          className="py-16 px-8 rounded-2xl relative overflow-hidden"
           style={{ background: 'linear-gradient(135deg, #161b22 0%, #1a2030 100%)', border: '1px solid #30363d' }}
         >
           <div
@@ -420,22 +505,54 @@ export default function ToolsPage() {
             style={{ background: 'radial-gradient(ellipse at 50% 0%, rgba(0,180,255,0.08) 0%, transparent 60%)' }}
             aria-hidden="true"
           />
-          <div className="relative">
-            <div className="section-label mb-4 justify-center">
-              <span className="inline-flex items-center gap-2 text-xs font-mono font-semibold uppercase tracking-widest" style={{ color: '#00b4ff' }}>
-                Get tool reviews in your inbox
-              </span>
+          <div className="relative grid grid-cols-1 lg:grid-cols-2 gap-12">
+            {/* Left: B2B Lead Capture */}
+            <div>
+              <div className="section-label mb-4">
+                <span className="inline-flex items-center gap-2 text-xs font-mono font-semibold uppercase tracking-widest" style={{ color: '#bc8cff' }}>
+                  For security teams
+                </span>
+              </div>
+              <h2 className="text-white mb-3">Get the full AI Security Tools Matrix</h2>
+              <p className="text-sm mb-6" style={{ color: '#8b949e' }}>
+                The complete comparison matrix with deployment models, compliance coverage, and integration details — delivered to your work inbox.
+              </p>
+              <LeadCaptureForm
+                buttonText="Send me the matrix"
+                source="tools-matrix"
+                asset="ai-security-tools-matrix"
+              />
             </div>
-            <h2 className="text-white mb-4">Pair the tools with the threat briefings</h2>
-            <p className="text-lg mb-8 max-w-xl mx-auto" style={{ color: '#8b949e' }}>
-              Subscribe for weekly briefings, new tooling notes, and practical product recommendations that match the week’s threat briefings.
-            </p>
-            <Link
-              href="/newsletter"
-              className="inline-flex items-center gap-2 rounded-md bg-[#00b4ff] px-8 py-3.5 text-sm font-bold text-[#0d1117] transition-all duration-200 hover:bg-[#33c3ff] hover:shadow-[0_0_20px_rgba(0,180,255,0.35)]"
-            >
-              Subscribe free
-            </Link>
+
+            {/* Right: Newsletter */}
+            <div>
+              <div className="section-label mb-4">
+                <span className="inline-flex items-center gap-2 text-xs font-mono font-semibold uppercase tracking-widest" style={{ color: '#00b4ff' }}>
+                  Weekly briefing
+                </span>
+              </div>
+              <h2 className="text-white mb-3">Pair the tools with threat analysis</h2>
+              <p className="text-sm mb-6" style={{ color: '#8b949e' }}>
+                Low-noise weekly brief with AI threat intelligence, vulnerability breakdowns, and product recommendations.
+              </p>
+              <NewsletterForm
+                variant="page"
+                placeholder="your@email.com"
+                buttonText="Subscribe free"
+                source="tools-footer"
+              />
+              <div className="mt-4">
+                <Link
+                  href={buildNewsletterPath('tools-footer-archive')}
+                  className="inline-flex items-center gap-2 text-sm font-medium text-[#8b949e] transition-colors duration-200 hover:text-[#00b4ff]"
+                >
+                  See recent briefings first
+                  <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+                    <path fillRule="evenodd" d="M1 8a.5.5 0 01.5-.5h11.793l-3.147-3.146a.5.5 0 01.708-.708l4 4a.5.5 0 010 .708l-4 4a.5.5 0 01-.708-.708L13.293 8.5H1.5A.5.5 0 011 8z" />
+                  </svg>
+                </Link>
+              </div>
+            </div>
           </div>
         </div>
       </div>

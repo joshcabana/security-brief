@@ -12,6 +12,7 @@ import {
   writeText,
 } from './common.mjs';
 import { requestJsonFromGitHubModels } from './github-models.mjs';
+import { buildSeoOptimiserPrompts } from './prompt-builders.mjs';
 import { injectAffiliatePlaceholders, parseAffiliatePlaceholderMap } from './renderers.mjs';
 import { finishAutomationRun, prepareAutomationRun, requireEnvVars } from './workflow.mjs';
 
@@ -63,24 +64,17 @@ async function main() {
       !Array.isArray(parsed.data.keywords) ||
       parsed.data.keywords.length !== 5
     ) {
+      const prompts = buildSeoOptimiserPrompts({
+        title: String(parsed.data.title),
+        slug: String(parsed.data.slug),
+        excerpt: String(parsed.data.excerpt),
+        bodyExcerpt: parsed.content.slice(0, 4000),
+      });
       const seo = await requestJsonFromGitHubModels({
         model,
         maxTokens: 1500,
-        systemPrompt:
-          'You are the SEO metadata optimiser for AI Security Brief. Return strict JSON only. No markdown fences.',
-        userPrompt: [
-          `Optimise metadata for this AI security article draft.`,
-          `Title: ${parsed.data.title}`,
-          `Slug: ${parsed.data.slug}`,
-          `Excerpt: ${parsed.data.excerpt}`,
-          `Body:\n${parsed.content.slice(0, 4000)}`,
-          'Return JSON in this shape:',
-          '{"meta_title":"string","meta_description":"string","keywords":["one","two","three","four","five"]}',
-          'Requirements:',
-          '- meta_title 50-60 characters.',
-          '- meta_description 150-160 characters.',
-          '- exactly 5 focus keywords.',
-        ].join('\n'),
+        systemPrompt: prompts.systemPrompt,
+        userPrompt: prompts.userPrompt,
         validate: validateSeoPayload,
       });
 

@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation';
 import ArticleCard from '@/components/ArticleCard';
 import NewsletterForm from '@/components/NewsletterForm';
 import ShareButtons from '@/components/ShareButtons';
+import type { ArticleDocument } from '@/lib/articles';
 import { getAllArticles, getArticleBySlug } from '@/lib/articles';
 import { siteUrl, siteName } from '@/lib/site';
 
@@ -26,14 +27,7 @@ const categoryColors: Record<string, { bg: string; text: string; border: string 
   Privacy: { bg: 'rgba(0,180,255,0.08)', text: '#00b4ff', border: 'rgba(0,180,255,0.2)' },
 };
 
-export async function generateMetadata({ params }: ArticlePageProps): Promise<Metadata> {
-  const { slug } = await params;
-  const article = await getArticleBySlug(slug);
-
-  if (!article) {
-    return { title: 'Article Not Found' };
-  }
-
+export function buildArticleMetadata(article: ArticleDocument): Metadata {
   const articleUrl = `${siteUrl}/blog/${article.slug}`;
 
   return {
@@ -48,7 +42,7 @@ export async function generateMetadata({ params }: ArticlePageProps): Promise<Me
       description: article.metaDescription,
       type: 'article',
       publishedTime: article.date,
-      authors: [article.author],
+      authors: [article.author.name],
       url: articleUrl,
     },
     twitter: {
@@ -57,6 +51,44 @@ export async function generateMetadata({ params }: ArticlePageProps): Promise<Me
       description: article.metaDescription,
     },
   };
+}
+
+export function buildArticleJsonLd(article: ArticleDocument) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: article.title,
+    description: article.excerpt,
+    datePublished: article.date,
+    author: {
+      '@type': 'Person',
+      name: article.author.name,
+      ...(article.author.profileUrl ? { url: article.author.profileUrl } : {}),
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: siteName,
+      url: siteUrl,
+    },
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': `${siteUrl}/blog/${article.slug}`,
+    },
+    keywords: article.keywords.join(', '),
+    articleSection: article.category,
+    wordCount: article.body.split(/\s+/).length,
+  };
+}
+
+export async function generateMetadata({ params }: ArticlePageProps): Promise<Metadata> {
+  const { slug } = await params;
+  const article = await getArticleBySlug(slug);
+
+  if (!article) {
+    return { title: 'Article Not Found' };
+  }
+
+  return buildArticleMetadata(article);
 }
 
 export default async function ArticlePage({ params }: ArticlePageProps) {
@@ -82,30 +114,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
   const colors = categoryColors[article.category] || categoryColors.Privacy;
   const tags = [article.category, ...article.keywords.slice(0, 2)];
 
-  const articleJsonLd = {
-    '@context': 'https://schema.org',
-    '@type': 'Article',
-    headline: article.title,
-    description: article.excerpt,
-    datePublished: article.date,
-    author: {
-      '@type': 'Organization',
-      name: article.author,
-      url: siteUrl,
-    },
-    publisher: {
-      '@type': 'Organization',
-      name: siteName,
-      url: siteUrl,
-    },
-    mainEntityOfPage: {
-      '@type': 'WebPage',
-      '@id': `${siteUrl}/blog/${article.slug}`,
-    },
-    keywords: article.keywords.join(', '),
-    articleSection: article.category,
-    wordCount: article.body.split(/\s+/).length,
-  };
+  const articleJsonLd = buildArticleJsonLd(article);
 
   return (
     <div style={{ background: '#0d1117', minHeight: '100vh' }}>
@@ -135,7 +144,9 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
             <span aria-hidden="true">·</span>
             <span className="font-mono">{article.readTime}</span>
             <span aria-hidden="true">·</span>
-            <span>{article.author}</span>
+            <span>{article.author.name}</span>
+            <span aria-hidden="true">·</span>
+            <span>{article.author.role}</span>
           </div>
         </div>
       </header>
@@ -169,7 +180,11 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
               <div className="text-xs font-mono uppercase tracking-widest mb-3" style={{ color: '#00b4ff', letterSpacing: '0.12em' }}>Stay Briefed</div>
               <h3 className="text-base font-bold text-white mb-2">Get weekly briefings</h3>
               <p className="text-sm mb-5" style={{ color: '#8b949e' }}>Join the weekly briefing for new threat analysis, privacy updates, and practical tooling notes.</p>
-              <NewsletterForm variant="default" buttonText="Subscribe" source="article-inline" />
+              <NewsletterForm
+                variant="default"
+                buttonText="Subscribe"
+                source={`article-${article.slug}-inline`}
+              />
             </div>
             <div className="p-6 rounded-xl" style={{ background: '#161b22', border: '1px solid #30363d' }}>
               <div className="text-xs font-mono uppercase tracking-widest mb-4" style={{ color: '#8b949e', letterSpacing: '0.12em' }}>Article Stats</div>

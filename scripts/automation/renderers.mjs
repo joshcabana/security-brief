@@ -2,9 +2,14 @@
 
 import matter from 'gray-matter';
 import path from 'node:path';
+import { buildNewsletterPath } from '../../lib/newsletter-source.mjs';
+import {
+  renderYamlFrontmatter,
+  validateAuthorObject,
+  validatePrimarySources,
+} from '../article-trust.mjs';
 import { countWords, escapeRegex, FINDING_CATEGORIES, REPO_ROOT, slugify } from './common.mjs';
 
-const CTA_LINE = '**Stay ahead of AI security threats.** Subscribe to the AI Security Brief newsletter for weekly intelligence. [Subscribe now →](/newsletter)';
 const NEWSLETTER_ISSUE_PATTERN = /^# Newsletter Issue #(\d+) — AI Security Brief$/m;
 
 const CATEGORY_MAP = {
@@ -16,27 +21,10 @@ const CATEGORY_MAP = {
   Framework: 'AI Threats',
 };
 
-function quote(value) {
-  return JSON.stringify(value);
-}
+function renderArticleCtaLine(articleSlug) {
+  const newsletterPath = buildNewsletterPath(`article-${articleSlug}-cta`);
 
-function renderFrontmatter(frontmatter) {
-  const lines = ['---'];
-
-  for (const [key, value] of Object.entries(frontmatter)) {
-    if (Array.isArray(value)) {
-      lines.push(`${key}:`);
-      for (const item of value) {
-        lines.push(`  - ${quote(item)}`);
-      }
-      continue;
-    }
-
-    lines.push(`${key}: ${typeof value === 'boolean' ? String(value) : quote(String(value))}`);
-  }
-
-  lines.push('---', '');
-  return lines.join('\n');
+  return `**Stay ahead of AI security threats.** Subscribe to the AI Security Brief newsletter for weekly intelligence. [Subscribe now →](${newsletterPath})`;
 }
 
 export function validateFindingCategory(value) {
@@ -59,7 +47,7 @@ export function renderHarvestMarkdown({ date, weekNumber, findings }) {
   });
 
   return [
-    renderFrontmatter({
+    renderYamlFrontmatter({
       date,
       week_number: String(weekNumber),
       finding_count: String(findings.length),
@@ -103,6 +91,8 @@ function calculateReadTime(text) {
 }
 
 export function renderArticleMarkdown({ article, date }) {
+  const author = validateAuthorObject(article.author, `generated article ${article.slug}`);
+  const primarySources = validatePrimarySources(article.primarySources, `generated article ${article.slug}`);
   const intro = article.intro.map((paragraph) => paragraph.trim()).join('\n\n');
   const sections = article.sections
     .map((section) => [`## ${section.heading}`, '', ...section.paragraphs.map((paragraph) => paragraph.trim()), ''].join('\n'))
@@ -116,9 +106,9 @@ export function renderArticleMarkdown({ article, date }) {
   const references = [
     '## References',
     '',
-    ...article.references.map(
+    ...primarySources.map(
       (reference, index) =>
-        `${index + 1}. ${reference.source_name} — ${reference.title}. [${reference.url}](${reference.url})`,
+        `${index + 1}. ${reference.title}. [${reference.url}](${reference.url})`,
     ),
     '',
   ].join('\n');
@@ -133,15 +123,15 @@ export function renderArticleMarkdown({ article, date }) {
     '',
     references.trim(),
     '',
-    CTA_LINE,
+    renderArticleCtaLine(article.slug),
     '',
   ].join('\n');
 
-  const frontmatter = renderFrontmatter({
+  const frontmatter = renderYamlFrontmatter({
     title: article.title,
     slug: article.slug,
     date,
-    author: 'AI Security Brief',
+    author,
     excerpt: article.excerpt,
     category: article.category,
     featured: false,
@@ -149,6 +139,7 @@ export function renderArticleMarkdown({ article, date }) {
     meta_description: article.meta_description,
     keywords: article.keywords,
     read_time: calculateReadTime(body),
+    primarySources,
   });
 
   return `${frontmatter}${body}`;
@@ -206,12 +197,8 @@ export function injectAffiliatePlaceholders(markdown, placeholders) {
     ['NordVPN', 'NORDVPN'],
     ['Proton', 'PROTON'],
     ['Surfshark', 'SURFSHARK'],
-    ['1Password', '1PASSWORD'],
-    ['Malwarebytes', 'MALWAREBYTES'],
     ['PureVPN', 'PUREVPN'],
-    ['CyberGhost', 'CYBERGHOST'],
-    ['Jasper AI', 'JASPER'],
-    ['Jasper', 'JASPER'],
+    ['Incogni', 'INCOGNI'],
   ];
 
   let output = markdown;
@@ -248,6 +235,7 @@ export function renderNewsletterDraft({
   toolOfWeek,
   nextWeek,
 }) {
+  const forwardedSubscribePath = buildNewsletterPath(`newsletter-issue-${issueNumber}-forwarded`);
   const signalBlocks = signals.map((signal, index) => {
     const block = [
       `### 📡 SIGNAL ${index + 1}: ${signal.headline}`,
@@ -297,6 +285,7 @@ export function renderNewsletterDraft({
     '',
     `### 🛡️ TOOL OF THE WEEK: ${toolOfWeek.program_name}`,
     toolOfWeek.description,
+    `**[Review the full security tools directory →](/tools)**`,
     `**[Try ${toolOfWeek.program_name} → ${toolOfWeek.placeholder}](/tools)**`,
     '',
     '---',
@@ -311,7 +300,7 @@ export function renderNewsletterDraft({
     '',
     'AI Security Brief publishes every Monday. Forward this to a colleague who should be reading it.',
     '',
-    'Was this forwarded to you? **[Subscribe here →](/newsletter)**',
+    `Was this forwarded to you? **[Subscribe here →](${forwardedSubscribePath})**`,
     '',
     '---',
     '',

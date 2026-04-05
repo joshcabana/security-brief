@@ -281,7 +281,7 @@ export default async function HomePage() {
           </div>
           <h2 className="text-white mb-5">Get the next briefing in your inbox</h2>
           <p className="text-lg mb-10" style={{ color: '#8b949e' }}>
-            Weekly briefings on AI threats, privacy changes, and practical security tools worth your attention.
+            Low-noise weekly briefings on AI threats, privacy changes, and the security tools worth evaluating next.
           </p>
           <NewsletterForm
             variant="page"

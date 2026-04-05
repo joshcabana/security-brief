@@ -11,12 +11,27 @@ import { replaceAffiliateTokens } from './affiliate-links';
 
 export const BLOG_DIR = path.join(process.cwd(), 'blog');
 export const READ_TIME_PATTERN = /^\d+\s+min$/;
+export const BRAND_AUTHOR_NAME = 'AI Security Brief';
+
+export interface ArticleAuthor {
+  name: string;
+  role: string;
+  profileUrl?: string;
+  bio?: string;
+}
+
+export interface PrimarySource {
+  url: string;
+  title: string;
+  date?: string;
+  excerpt?: string;
+}
 
 export interface ArticleSummary {
   title: string;
   slug: string;
   date: string;
-  author: string;
+  author: ArticleAuthor;
   excerpt: string;
   category: string;
   featured: boolean;
@@ -24,6 +39,7 @@ export interface ArticleSummary {
   metaDescription: string;
   keywords: string[];
   readTime: string;
+  primarySources: PrimarySource[];
   fileName: string;
 }
 
@@ -56,6 +72,14 @@ function assertString(value: unknown, field: string, fileName: string): string {
   return value.trim();
 }
 
+function assertOptionalString(value: unknown, field: string, fileName: string): string | undefined {
+  if (value === undefined || value === null) {
+    return undefined;
+  }
+
+  return assertString(value, field, fileName);
+}
+
 function assertBoolean(value: unknown, field: string, fileName: string): boolean {
   if (typeof value !== 'boolean') {
     throw new Error(`Expected "${field}" to be a boolean in ${fileName}.`);
@@ -82,6 +106,81 @@ function assertReadTime(value: unknown, field: string, fileName: string): string
   return normalisedValue;
 }
 
+function assertRecord(value: unknown, field: string, fileName: string): Record<string, unknown> {
+  if (value === null || typeof value !== 'object' || Array.isArray(value)) {
+    throw new Error(`Expected "${field}" to be an object in ${fileName}.`);
+  }
+
+  return value as Record<string, unknown>;
+}
+
+function assertHttpUrl(value: unknown, field: string, fileName: string): string {
+  const normalisedValue = assertString(value, field, fileName);
+
+  let parsed: URL;
+
+  try {
+    parsed = new URL(normalisedValue);
+  } catch {
+    throw new Error(`Expected "${field}" to be an http or https URL in ${fileName}.`);
+  }
+
+  if (parsed.protocol !== 'http:' && parsed.protocol !== 'https:') {
+    throw new Error(`Expected "${field}" to be an http or https URL in ${fileName}.`);
+  }
+
+  return normalisedValue;
+}
+
+function assertAuthor(value: unknown, fileName: string): ArticleAuthor {
+  const authorRecord = assertRecord(value, 'author', fileName);
+  const name = assertString(authorRecord.name, 'author.name', fileName);
+
+  if (name === BRAND_AUTHOR_NAME) {
+    throw new Error(`Expected "author.name" to be a named human, not ${BRAND_AUTHOR_NAME}, in ${fileName}.`);
+  }
+
+  const role = assertString(authorRecord.role, 'author.role', fileName);
+  const profileUrl = authorRecord.profileUrl === undefined
+    ? undefined
+    : assertHttpUrl(authorRecord.profileUrl, 'author.profileUrl', fileName);
+  const bio = assertOptionalString(authorRecord.bio, 'author.bio', fileName);
+
+  return {
+    name,
+    role,
+    ...(profileUrl ? { profileUrl } : {}),
+    ...(bio ? { bio } : {}),
+  };
+}
+
+function assertPrimarySource(value: unknown, index: number, fileName: string): PrimarySource {
+  const sourceRecord = assertRecord(value, `primarySources[${index}]`, fileName);
+  const url = assertHttpUrl(sourceRecord.url, `primarySources[${index}].url`, fileName);
+  const title = assertString(sourceRecord.title, `primarySources[${index}].title`, fileName);
+  const date = assertOptionalString(sourceRecord.date, `primarySources[${index}].date`, fileName);
+  const excerpt = assertOptionalString(sourceRecord.excerpt, `primarySources[${index}].excerpt`, fileName);
+
+  return {
+    url,
+    title,
+    ...(date ? { date } : {}),
+    ...(excerpt ? { excerpt } : {}),
+  };
+}
+
+function assertPrimarySources(value: unknown, fileName: string): PrimarySource[] {
+  if (!Array.isArray(value)) {
+    throw new Error(`Expected "primarySources" to be an array in ${fileName}.`);
+  }
+
+  if (value.length < 3) {
+    throw new Error(`Expected "primarySources" to include at least 3 entries in ${fileName}.`);
+  }
+
+  return value.map((entry, index) => assertPrimarySource(entry, index, fileName));
+}
+
 async function renderMarkdown(markdown: string, title: string): Promise<string> {
   const processed = await remark()
     .use(remarkGfm)
@@ -106,7 +205,7 @@ export async function parseArticleSource(fileName: string, source: string): Prom
     title,
     slug,
     date: assertDateString(data.date, 'date', fileName),
-    author: assertString(data.author, 'author', fileName),
+    author: assertAuthor(data.author, fileName),
     excerpt: assertString(data.excerpt, 'excerpt', fileName),
     category,
     featured: assertBoolean(data.featured, 'featured', fileName),
@@ -114,6 +213,7 @@ export async function parseArticleSource(fileName: string, source: string): Prom
     metaDescription: assertString(data.meta_description, 'meta_description', fileName),
     keywords,
     readTime: assertReadTime(data.read_time, 'read_time', fileName),
+    primarySources: assertPrimarySources(data.primarySources, fileName),
     fileName,
     body: resolvedBody,
     contentHtml: await renderMarkdown(resolvedBody, title),

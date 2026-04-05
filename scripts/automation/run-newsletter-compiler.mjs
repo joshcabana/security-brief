@@ -19,6 +19,7 @@ import {
   parseHarvestMarkdown,
   renderNewsletterDraft,
 } from './renderers.mjs';
+import { buildNewsletterCompilerPrompts } from './prompt-builders.mjs';
 import { finishAutomationRun, prepareAutomationRun, requireEnvVars } from './workflow.mjs';
 
 function validateNewsletterPayload(payload, validArticleMap, validHarvestSourceMap) {
@@ -182,29 +183,20 @@ async function main() {
     existingIssueNumbers,
     currentDraftIssueNumber,
   });
+  const prompts = buildNewsletterCompilerPrompts({
+    effectiveDate: context.effectiveDate,
+    issueNumber,
+    harvestFindings,
+    datedArticles,
+    selectedProgram,
+    toolPlaceholder,
+  });
 
   const payload = await requestJsonFromGitHubModels({
     model,
     maxTokens: 4500,
-    systemPrompt:
-      'You are the newsletter editor for AI Security Brief. Return strict JSON only. No markdown fences. Do not publish or reference any email platform UI.',
-    userPrompt: [
-      `Compile the weekly newsletter draft for ${context.effectiveDate}.`,
-      `Issue number: ${issueNumber}.`,
-      `Top three weekly findings:\n${harvestFindings.slice(0, 3).map((finding, index) => `${index + 1}. ${finding.headline} — ${finding.summary}`).join('\n')}`,
-      `Article drafts:\n${datedArticles.slice(0, 2).map((article) => `- ${article.title} (/blog/${article.slug}) — ${article.excerpt}`).join('\n')}`,
-      `Signals 1 and 2 must use these exact article fields in this order:\n1. article_slug=${datedArticles[0].slug} | article_title=${datedArticles[0].title}\n2. article_slug=${datedArticles[1].slug} | article_title=${datedArticles[1].title}`,
-      `If Signal 3 cites a source instead of an article, it must use one of these exact source pairs:\n${harvestFindings.slice(0, 3).map((finding) => `- source_name=${finding.source_name} | source_url=${finding.source_url}`).join('\n')}`,
-      `Tool of the week: ${selectedProgram.name} with placeholder ${toolPlaceholder}`,
-      'Return JSON in this shape:',
-      '{"subject_lines":["string","string"],"preview_text":"string","intro":["paragraph","paragraph"],"signals":[{"headline":"string","summary":"string","article_slug":"string|null","article_title":"string|null","source_name":"string|null","source_url":"https://...|null"}],"tool_of_week":{"program_name":"string","description":"string","placeholder":"[AFFILIATE:KEY]"},"next_week":["item","item","item"]}',
-      'Requirements:',
-      '- Exactly 3 signals.',
-      '- Signals 1 and 2 must link to the two current article drafts using the exact slug and title pairs listed above.',
-      '- Signal 3 may link to a source URL if there is no draft article, but the source_name and source_url must be copied exactly from the allowed harvest source pairs above.',
-      '- Keep the preview text under 150 characters.',
-      '- Keep subject lines under 50 characters.',
-    ].join('\n'),
+    systemPrompt: prompts.systemPrompt,
+    userPrompt: prompts.userPrompt,
     validate: (value) => validateNewsletterPayload(value, articleMap, harvestSourceMap),
   });
 

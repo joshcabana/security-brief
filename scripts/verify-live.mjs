@@ -1,14 +1,14 @@
 #!/usr/bin/env node
 
-import { readdirSync, readFileSync, statSync, writeFileSync } from 'fs';
+import { readFileSync, writeFileSync } from 'fs';
 import { dirname, isAbsolute, resolve } from 'path';
 import { fileURLToPath, pathToFileURL } from 'url';
-import { SECURITY_HEADERS, getExpectedSecurityHeaderValue } from '../lib/security-headers.mjs';
 import {
-  ANALYTICS_INTEGRATION_MARKERS,
-  PRIVACY_ANALYTICS_DECLARATION,
-  VERIFIED_PAGE_METADATA,
-} from '../lib/page-metadata.mjs';
+  evaluatePrivacyAnalyticsContract,
+  resolveAnalyticsState,
+} from '../lib/analytics-config.mjs';
+import { SECURITY_HEADERS, getExpectedSecurityHeaderValue } from '../lib/security-headers.mjs';
+import { VERIFIED_PAGE_METADATA } from '../lib/page-metadata.mjs';
 
 const SCRIPT_DIR = dirname(fileURLToPath(import.meta.url));
 const REPO_ROOT = resolve(SCRIPT_DIR, '..');
@@ -271,61 +271,6 @@ function extractMetaPropertyContent(body, property) {
   return match?.[1] ?? null;
 }
 
-function collectSourceFiles(directoryPath) {
-  const entries = readdirSync(directoryPath, { withFileTypes: true });
-  const filePaths = [];
-
-  for (const entry of entries) {
-    const entryPath = resolve(directoryPath, entry.name);
-
-    if (entry.isDirectory()) {
-      filePaths.push(...collectSourceFiles(entryPath));
-      continue;
-    }
-
-    if (entry.isFile()) {
-      filePaths.push(entryPath);
-    }
-  }
-
-  return filePaths;
-}
-
-function codebaseHasAnalyticsIntegration() {
-  const excludedPaths = new Set([
-    resolve(REPO_ROOT, 'app/privacy/page.tsx'),
-    resolve(REPO_ROOT, 'lib/page-metadata.mjs'),
-  ]);
-  const sourceDirectories = [
-    resolve(REPO_ROOT, 'app'),
-    resolve(REPO_ROOT, 'components'),
-    resolve(REPO_ROOT, 'lib'),
-  ];
-
-  for (const directoryPath of sourceDirectories) {
-    if (!statSync(directoryPath).isDirectory()) {
-      continue;
-    }
-
-    const sourceFiles = collectSourceFiles(directoryPath).filter((filePath) => {
-      if (excludedPaths.has(filePath)) {
-        return false;
-      }
-
-      return /\.(?:[cm]?js|tsx?)$/.test(filePath);
-    });
-
-    for (const filePath of sourceFiles) {
-      const contents = readFileSync(filePath, 'utf8').toLowerCase();
-      if (ANALYTICS_INTEGRATION_MARKERS.some((marker) => contents.includes(marker))) {
-        return true;
-      }
-    }
-  }
-
-  return false;
-}
-
 function assertSecurityHeaders(headers) {
   for (const header of SECURITY_HEADERS) {
     const actualValue = headers.get(header.key);
@@ -402,7 +347,7 @@ async function run() {
   const manifest = loadManifest();
   const featuredArticle = manifest.articles[0];
   const articlePath = `/blog/${featuredArticle.slug}`;
-  const analyticsIntegrationEnabled = codebaseHasAnalyticsIntegration();
+  const analyticsState = resolveAnalyticsState(process.env.NEXT_PUBLIC_PLAUSIBLE_DOMAIN);
   const nordVpnArticleChecks = getTokenizedAffiliateArticleChecks(
     manifest.articles,
     'NORDVPN',
@@ -453,14 +398,13 @@ async function run() {
         }
 
         if (pageMetadata.path === '/privacy') {
-          const declaresNoClientSideAnalytics = body.includes(PRIVACY_ANALYTICS_DECLARATION);
+          const analyticsContract = evaluatePrivacyAnalyticsContract({
+            analyticsEnabled: analyticsState.analyticsEnabled,
+            html: body,
+          });
 
-          if (analyticsIntegrationEnabled && declaresNoClientSideAnalytics) {
-            throw new Error('Privacy policy still declares no client-side analytics while analytics integration markers exist in source.');
-          }
-
-          if (!analyticsIntegrationEnabled && !declaresNoClientSideAnalytics) {
-            throw new Error('Privacy policy no longer states that no client-side analytics service is deployed.');
+          if (!analyticsContract.ok) {
+            throw new Error(analyticsContract.message);
           }
         }
       },
@@ -514,11 +458,15 @@ async function run() {
             },
           );
         }
+
+        if (!body.includes('data-newsletter-source="tools-footer"')) {
+          throw new Error('Tools page is missing the inline newsletter signup form.');
+        }
       },
     },
     {
       name: 'newsletter-page',
-      path: '/newsletter',
+      path: '/newsletter?source=tools-footer',
       method: 'GET',
       assert: async (response) => {
         const body = await response.text();
@@ -527,6 +475,9 @@ async function run() {
         }
         if (!body.includes('Subscribe')) {
           throw new Error('Newsletter page is missing the subscribe marker.');
+        }
+        if (!body.includes('data-newsletter-source="tools-footer"')) {
+          throw new Error('Newsletter page did not preserve the tagged source from the query string.');
         }
       },
     },

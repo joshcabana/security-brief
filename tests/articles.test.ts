@@ -70,6 +70,87 @@ test('parseArticleSource rejects invalid dates', async () => {
   );
 });
 
+test('parseArticleSource rejects scalar author values', async () => {
+  await assert.rejects(
+    () =>
+      parseArticleSource(
+        'scalar-author.md',
+        buildArticleMarkdown({
+          slug: 'scalar-author',
+          author: 'AI Security Brief',
+        }),
+      ),
+    /author.*object/i,
+  );
+});
+
+test('parseArticleSource rejects brand-level author names', async () => {
+  await assert.rejects(
+    () =>
+      parseArticleSource(
+        'brand-author.md',
+        buildArticleMarkdown({
+          slug: 'brand-author',
+          author: {
+            name: 'AI Security Brief',
+            role: 'Editor & Publisher',
+          },
+        }),
+      ),
+    /named human/i,
+  );
+});
+
+test('parseArticleSource rejects invalid author profile URLs', async () => {
+  await assert.rejects(
+    () =>
+      parseArticleSource(
+        'bad-profile-url.md',
+        buildArticleMarkdown({
+          slug: 'bad-profile-url',
+          author: {
+            name: 'Josh Cabana',
+            role: 'Editor & Publisher',
+            profileUrl: 'mailto:josh@example.com',
+          },
+        }),
+      ),
+    /author\.profileUrl/i,
+  );
+});
+
+test('parseArticleSource rejects missing primary sources', async () => {
+  await assert.rejects(
+    () =>
+      parseArticleSource(
+        'missing-primary-sources.md',
+        buildArticleMarkdown({
+          slug: 'missing-primary-sources',
+          primarySources: [],
+        }),
+      ),
+    /primarySources/i,
+  );
+});
+
+test('parseArticleSource rejects invalid primary source urls', async () => {
+  await assert.rejects(
+    () =>
+      parseArticleSource(
+        'bad-primary-source-url.md',
+        buildArticleMarkdown({
+          slug: 'bad-primary-source-url',
+          primarySources: [
+            { url: 'https://example.com/one', title: 'One' },
+            { url: 'ftp://example.com/two', title: 'Two' },
+            { url: 'https://example.com/three', title: 'Three' },
+          ],
+        }),
+      ),
+    /primarySources\[1\]\.url/i,
+  );
+});
+
 test('loadArticlesFromDirectory rejects duplicate slugs', async () => {
   const workspace = await createWorkspace([
     {

@@ -14,12 +14,14 @@ import {
   writeText,
 } from './common.mjs';
 import { requestJsonFromGitHubModels } from './github-models.mjs';
+import { buildArticleFactoryPrompts } from './prompt-builders.mjs';
 import {
   buildExpectedArticlePlan,
   findRedundantCurrentWeekArticleFiles,
   parseHarvestMarkdown,
   renderArticleMarkdown,
 } from './renderers.mjs';
+import { validateAuthorObject, validatePrimarySources } from '../article-trust.mjs';
 import { finishAutomationRun, prepareAutomationRun, requireEnvVars } from './workflow.mjs';
 
 function validateArticlePayload(payload, expectedSlugs, allowedReferences) {
@@ -37,10 +39,11 @@ function validateArticlePayload(payload, expectedSlugs, allowedReferences) {
       typeof article?.meta_title !== 'string' ||
       typeof article?.meta_description !== 'string' ||
       !Array.isArray(article?.keywords) ||
+      article?.author === undefined ||
       !Array.isArray(article?.intro) ||
       !Array.isArray(article?.sections) ||
       !Array.isArray(article?.key_takeaways) ||
-      !Array.isArray(article?.references)
+      !Array.isArray(article?.primarySources)
     ) {
       throw new Error('Article payload is missing required fields.');
     }
@@ -58,6 +61,8 @@ function validateArticlePayload(payload, expectedSlugs, allowedReferences) {
       throw new Error(`Article ${article.slug} must include exactly 5 keywords.`);
     }
 
+    validateAuthorObject(article.author, `generated article ${article.slug}`);
+
     if (article.sections.length < 4 || article.sections.length > 5) {
       throw new Error(`Article ${article.slug} must include 4 or 5 sections.`);
     }
@@ -72,22 +77,11 @@ function validateArticlePayload(payload, expectedSlugs, allowedReferences) {
       }
     }
 
-    if (article.references.length < 4) {
-      throw new Error(`Article ${article.slug} must include at least 4 references.`);
-    }
+    const primarySources = validatePrimarySources(article.primarySources, `generated article ${article.slug}`);
 
-    for (const reference of article.references) {
-      if (
-        typeof reference?.title !== 'string' ||
-        typeof reference?.source_name !== 'string' ||
-        typeof reference?.url !== 'string' ||
-        !/^https?:\/\//.test(reference.url)
-      ) {
-        throw new Error(`Article ${article.slug} contains an invalid reference.`);
-      }
-
-      if (!allowedReferences.has(reference.url)) {
-        throw new Error(`Article ${article.slug} cited a reference outside the current harvest: ${reference.url}`);
+    for (const primarySource of primarySources) {
+      if (!allowedReferences.has(primarySource.url)) {
+        throw new Error(`Article ${article.slug} cited a primary source outside the current harvest: ${primarySource.url}`);
       }
     }
   }
@@ -183,33 +177,17 @@ async function main() {
       ].join('\n'),
     )
     .join('\n\n');
+  const prompts = buildArticleFactoryPrompts({
+    effectiveDate: context.effectiveDate,
+    articlePlan,
+    harvestSourcePack,
+  });
 
   const payload = await requestJsonFromGitHubModels({
     model,
     maxTokens: 7000,
-    systemPrompt:
-      'You are the article generation engine for AI Security Brief. Return strict JSON only. No markdown fences. Use only the supplied weekly harvest source pack. Do not cite URLs that are not in the source pack.',
-    userPrompt: [
-      `Write 2 SEO-ready AI security articles for ${context.effectiveDate}.`,
-      'Use these exact target slugs and topics:',
-      ...articlePlan.map((item) => `- slug: ${item.slug} | category: ${item.category} | finding: ${item.headline}`),
-      '',
-      'Weekly harvest source pack:',
-      harvestSourcePack,
-      '',
-      'Return JSON in this shape:',
-      '{"articles":[{"slug":"string","title":"string","excerpt":"string","meta_title":"string","meta_description":"string","keywords":["a","b","c","d","e"],"intro":["paragraph"],"sections":[{"heading":"string","paragraphs":["paragraph","paragraph"]}],"key_takeaways":["item"],"references":[{"source_name":"string","title":"string","url":"https://..."}]}]}',
-      'Requirements:',
-      '- Exactly 2 articles.',
-      '- Each article should render to roughly 950-1200 words after markdown rendering.',
-      '- Intro must contain exactly 2 substantial paragraphs.',
-      '- 4 or 5 H2 sections.',
-      '- Every section must contain exactly 2 substantial paragraphs.',
-      '- 4 to 5 key takeaways.',
-      '- Include 4 or 5 references, and every reference URL must come from the weekly harvest source pack.',
-      '- Keep tone authoritative, data-driven, and written for tech professionals and IT decision-makers.',
-      '- Do not invent statistics or sources. When the source pack is sparse, prefer careful analysis and defensive guidance over unsupported claims.',
-    ].join('\n'),
+    systemPrompt: prompts.systemPrompt,
+    userPrompt: prompts.userPrompt,
     validate: (value) => validateArticlePayload(value, expectedSlugs, allowedReferences),
   });
 

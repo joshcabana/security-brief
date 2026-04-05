@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import type { ArticleAuthor } from '@/lib/articles';
 
 export interface Article {
   slug: string;
@@ -11,7 +12,7 @@ export interface Article {
   category: string;
   categoryColor?: string;
   featured?: boolean;
-  author?: string;
+  author: ArticleAuthor;
 }
 
 interface ArticleCardProps {
@@ -137,12 +138,8 @@ export default function ArticleCard({ article, variant = 'default', index = 0 }:
           <time dateTime={article.date} className="text-xs" style={{ color: '#484f58' }}>{formatDate(article.date)}</time>
           <span style={{ color: '#30363d' }} aria-hidden="true">·</span>
           <span className="text-xs font-mono" style={{ color: '#484f58' }}>{article.readTime}</span>
-          {article.author && (
-            <>
-              <span style={{ color: '#30363d' }} aria-hidden="true">·</span>
-              <span className="text-xs" style={{ color: '#484f58' }}>{article.author}</span>
-            </>
-          )}
+          <span style={{ color: '#30363d' }} aria-hidden="true">·</span>
+          <span className="text-xs" style={{ color: '#484f58' }}>{article.author.name}</span>
         </div>
       </article>
     </Link>
