@@ -1,7 +1,8 @@
 import type { Metadata } from 'next';
 import { createPageMetadata } from '@/lib/page-metadata.mjs';
 import ToolsMatrix from '@/components/ToolsMatrix';
-import NewsletterForm from '@/components/NewsletterForm';
+import LeadCaptureForm from '@/components/LeadCaptureForm';
+import SponsorSlot from '@/components/SponsorSlot';
 
 export const metadata: Metadata = createPageMetadata({
   canonicalPath: '/tools',
@@ -44,32 +45,35 @@ export default function ToolsDirectoryPage() {
         </div>
       </div>
 
+      {/* Featured Sponsor */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-12 mb-8">
+        <SponsorSlot 
+          sponsor="Featured Sponsor SLOT"
+          url="mailto:sponsorships@aithreatbrief.com"
+          tagline="Secure the top spot on the 2026 AI Security Matrix. Reach thousands of AppSec engineers and CISOs."
+          label="AVAILABLE"
+        />
+      </div>
+
       {/* Tools Matrix */}
       <ToolsMatrix />
 
       {/* 
-        Subscribe CTA 
+        Lead Capture CTA 
       */}
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pb-32 pt-16">
         <div className="p-10 rounded-3xl relative overflow-hidden text-center border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/50 shadow-xl dark:shadow-none">
           <div className="absolute inset-0 bg-gradient-to-b from-cyan-50 dark:from-cyan-900/20 to-transparent pointer-events-none" />
           <div className="relative z-10">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full mb-5 text-xs font-mono font-bold uppercase tracking-widest" style={{ background: 'rgba(0,180,255,0.08)', border: '1px solid rgba(0,180,255,0.2)', color: 'var(--accent)' }}>
-              Pro members get exclusive tool discounts
+              Enterprise Intelligence
             </div>
-            <h2 className="text-3xl font-extrabold text-slate-900 dark:text-white mb-4">Pair the tools with the intelligence.</h2>
+            <h2 className="text-3xl font-extrabold text-slate-900 dark:text-white mb-4">Download the Q2 2026 AI Security Tools Matrix</h2>
             <p className="text-slate-600 dark:text-slate-400 text-lg mb-8 max-w-2xl mx-auto">
-              Pro members get priority threat advisories, deep-dive technical briefings, and exclusive discounts on the tools listed above. No vendor noise.
+              Get the complete, high-resolution PDF report mapping the modern MLSecOps ecosystem.
             </p>
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <a
-                href="/pro"
-                id="tools-page-pro-cta"
-                className="pro-cta-btn inline-flex items-center gap-2 px-8 py-3 rounded-lg font-bold text-sm"
-              >
-                Get Pro Access →
-              </a>
-              <NewsletterForm variant="page" buttonText="Subscribe Free" source="tools-page" />
+            <div className="max-w-md mx-auto text-left">
+              <LeadCaptureForm buttonText="Download Free Report" source="tools-page" asset="ai-security-matrix-q2-2026" />
             </div>
           </div>
         </div>
