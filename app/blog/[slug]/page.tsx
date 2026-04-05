@@ -3,8 +3,10 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import ArticleCard from '@/components/ArticleCard';
 import NewsletterForm from '@/components/NewsletterForm';
+import RepurposeCTA from '@/components/RepurposeCTA';
+import { generateArticleSchema } from '@/lib/seo';
 import ShareButtons from '@/components/ShareButtons';
-import type { ArticleDocument } from '@/lib/articles';
+import PaywallCTA from '@/components/PaywallCTA';
 import { getAllArticles, getArticleBySlug } from '@/lib/articles';
 import { siteUrl, siteName } from '@/lib/site';
 
@@ -27,7 +29,14 @@ const categoryColors: Record<string, { bg: string; text: string; border: string 
   Privacy: { bg: 'rgba(0,180,255,0.08)', text: '#00b4ff', border: 'rgba(0,180,255,0.2)' },
 };
 
-export function buildArticleMetadata(article: ArticleDocument): Metadata {
+export async function generateMetadata({ params }: ArticlePageProps): Promise<Metadata> {
+  const { slug } = await params;
+  const article = await getArticleBySlug(slug);
+
+  if (!article) {
+    return { title: 'Article Not Found' };
+  }
+
   const articleUrl = `${siteUrl}/blog/${article.slug}`;
 
   return {
@@ -42,7 +51,7 @@ export function buildArticleMetadata(article: ArticleDocument): Metadata {
       description: article.metaDescription,
       type: 'article',
       publishedTime: article.date,
-      authors: [article.author.name],
+      authors: [typeof article.author === 'string' ? article.author : article.author?.name ?? ''],
       url: articleUrl,
     },
     twitter: {
@@ -51,44 +60,6 @@ export function buildArticleMetadata(article: ArticleDocument): Metadata {
       description: article.metaDescription,
     },
   };
-}
-
-export function buildArticleJsonLd(article: ArticleDocument) {
-  return {
-    '@context': 'https://schema.org',
-    '@type': 'Article',
-    headline: article.title,
-    description: article.excerpt,
-    datePublished: article.date,
-    author: {
-      '@type': 'Person',
-      name: article.author.name,
-      ...(article.author.profileUrl ? { url: article.author.profileUrl } : {}),
-    },
-    publisher: {
-      '@type': 'Organization',
-      name: siteName,
-      url: siteUrl,
-    },
-    mainEntityOfPage: {
-      '@type': 'WebPage',
-      '@id': `${siteUrl}/blog/${article.slug}`,
-    },
-    keywords: article.keywords.join(', '),
-    articleSection: article.category,
-    wordCount: article.body.split(/\s+/).length,
-  };
-}
-
-export async function generateMetadata({ params }: ArticlePageProps): Promise<Metadata> {
-  const { slug } = await params;
-  const article = await getArticleBySlug(slug);
-
-  if (!article) {
-    return { title: 'Article Not Found' };
-  }
-
-  return buildArticleMetadata(article);
 }
 
 export default async function ArticlePage({ params }: ArticlePageProps) {
@@ -114,29 +85,43 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
   const colors = categoryColors[article.category] || categoryColors.Privacy;
   const tags = [article.category, ...article.keywords.slice(0, 2)];
 
-  const articleJsonLd = buildArticleJsonLd(article);
+  const articleUrl = `${siteUrl}/blog/${article.slug}`;
+
+  const articleJsonLd = generateArticleSchema({
+    title: article.title,
+    description: article.excerpt,
+    datePublished: article.date,
+    authorName: typeof article.author === 'string' ? article.author : article.author?.name,
+    authorUrl: siteUrl,
+    publisherName: siteName,
+    publisherUrl: siteUrl,
+    url: articleUrl,
+    category: article.category,
+    keywords: article.keywords,
+    wordCount: article.body.split(/\s+/).length,
+  });
 
   return (
-    <div style={{ background: '#0d1117', minHeight: '100vh' }}>
+    <div className="bg-slate-900 dark:bg-slate-950 min-h-screen">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
       />
-      <header className="relative overflow-hidden" style={{ background: 'linear-gradient(to bottom, #080c11, #0d1117)', borderBottom: '1px solid #21262d', paddingTop: '3.5rem', paddingBottom: '3.5rem' }}>
+      <header className="relative overflow-hidden bg-gradient-to-b from-slate-900 to-slate-950 border-b border-slate-800 py-14">
         <div className="absolute inset-0 bg-grid opacity-30 pointer-events-none" aria-hidden="true" />
         <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <nav className="flex items-center gap-2 text-xs font-mono mb-6" aria-label="Breadcrumb">
-            <Link href="/" className="text-[#484f58] transition-colors hover:text-[#00b4ff]">Home</Link>
-            <span style={{ color: '#30363d' }} aria-hidden="true">/</span>
-            <Link href="/blog" className="text-[#484f58] transition-colors hover:text-[#00b4ff]">Blog</Link>
-            <span style={{ color: '#30363d' }} aria-hidden="true">/</span>
-            <span style={{ color: '#8b949e' }} className="truncate max-w-48">{article.title}</span>
+            <Link href="/" className="text-slate-500 transition-colors hover:text-cyan-400">Home</Link>
+            <span className="text-slate-700" aria-hidden="true">/</span>
+            <Link href="/blog" className="text-slate-500 transition-colors hover:text-cyan-400">Blog</Link>
+            <span className="text-slate-700" aria-hidden="true">/</span>
+            <span className="text-slate-400 truncate max-w-48">{article.title}</span>
           </nav>
           <div className="mb-5">
-            <span className="text-xs font-mono font-semibold px-2.5 py-1 rounded" style={{ background: colors.bg, color: colors.text, border: `1px solid ${colors.border}` }}>{article.category}</span>
+            <span className="text-xs font-mono font-semibold px-2.5 py-1 rounded border" style={{ background: colors.bg, color: colors.text, borderColor: colors.border }}>{article.category}</span>
           </div>
-          <h1 className="text-white font-black leading-tight mb-6" style={{ letterSpacing: '-0.025em' }}>{article.title}</h1>
-          <div className="flex flex-wrap items-center gap-4 text-sm" style={{ color: '#484f58' }}>
+          <h1 className="text-white font-black leading-tight mb-6 tracking-tight">{article.title}</h1>
+          <div className="flex flex-wrap items-center gap-4 text-sm text-slate-500">
             <div className="flex items-center gap-2">
               <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 1a.5.5 0 01.5.5v.793l.646-.647a.5.5 0 01.708.708L9 3.207V3.5a.5.5 0 01-1 0v-.293L7.146 4.06a.5.5 0 01-.708-.708L7 2.793V1.5A.5.5 0 018 1zm0 2a5 5 0 100 10A5 5 0 008 3zM1.5 8a6.5 6.5 0 1113 0 6.5 6.5 0 01-13 0z" /></svg>
               <time dateTime={article.date}>{formatDate(article.date)}</time>
@@ -144,9 +129,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
             <span aria-hidden="true">·</span>
             <span className="font-mono">{article.readTime}</span>
             <span aria-hidden="true">·</span>
-            <span>{article.author.name}</span>
-            <span aria-hidden="true">·</span>
-            <span>{article.author.role}</span>
+            <span>{typeof article.author === 'string' ? article.author : article.author?.name}</span>
           </div>
         </div>
       </header>
@@ -154,40 +137,37 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-12">
           <article>
-            <p className="text-lg leading-relaxed mb-8 pb-8" style={{ color: '#c9d1d9', borderBottom: '1px solid #21262d', fontStyle: 'italic' }}>{article.excerpt}</p>
+            <p className="text-lg text-slate-300 leading-relaxed mb-8 pb-8 border-b border-slate-800 italic">{article.excerpt}</p>
             <div
-              className="prose-dark"
-              style={{ color: '#e6edf3' }}
+              className="prose-dark text-slate-200"
               dangerouslySetInnerHTML={{ __html: article.contentHtml }}
             />
-            <div className="flex flex-wrap gap-2 mt-12 pt-8" style={{ borderTop: '1px solid #21262d' }}>
-              <span className="text-xs" style={{ color: '#484f58', alignSelf: 'center' }}>Filed under:</span>
+            {article.isPaywalled && <PaywallCTA />}
+            <div className="flex flex-wrap gap-2 mt-12 pt-8 border-t border-slate-800">
+              <span className="text-xs text-slate-500 self-center">Filed under:</span>
               {tags.map((tag) => (
                 <span key={tag} className="tag">{tag}</span>
               ))}
             </div>
-            <div className="flex items-center justify-between mt-8 pt-6" style={{ borderTop: '1px solid #21262d' }}>
-              <Link href="/blog" className="inline-flex items-center gap-2 text-sm text-[#8b949e] transition-colors hover:text-[#00b4ff]">
+            <div className="flex items-center justify-between mt-8 pt-6 border-t border-slate-800">
+              <Link href="/blog" className="inline-flex items-center gap-2 text-sm text-slate-400 transition-colors hover:text-cyan-400">
                 <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path fillRule="evenodd" d="M15 8a.5.5 0 00-.5-.5H2.707l3.147-3.146a.5.5 0 10-.708-.708l-4 4a.5.5 0 000 .708l4 4a.5.5 0 00.708-.708L2.707 8.5H14.5A.5.5 0 0015 8z" /></svg>
                 Back to all articles
               </Link>
               <ShareButtons title={article.title} slug={article.slug} />
             </div>
+            <RepurposeCTA title={article.title} url={articleUrl} />
           </article>
 
           <aside className="space-y-6" aria-label="Article sidebar">
-            <div className="p-6 rounded-xl" style={{ background: '#161b22', border: '1px solid #30363d' }}>
-              <div className="text-xs font-mono uppercase tracking-widest mb-3" style={{ color: '#00b4ff', letterSpacing: '0.12em' }}>Stay Briefed</div>
+            <div className="p-6 rounded-xl bg-slate-900 border border-slate-800">
+              <div className="text-xs font-mono uppercase tracking-[0.12em] mb-3 text-cyan-400">Stay Briefed</div>
               <h3 className="text-base font-bold text-white mb-2">Get weekly briefings</h3>
-              <p className="text-sm mb-5" style={{ color: '#8b949e' }}>Join the weekly briefing for new threat analysis, privacy updates, and practical tooling notes.</p>
-              <NewsletterForm
-                variant="default"
-                buttonText="Subscribe"
-                source={`article-${article.slug}-inline`}
-              />
+              <p className="text-sm text-slate-400 mb-5">Join the weekly briefing for new threat analysis, privacy updates, and practical tooling notes.</p>
+              <NewsletterForm variant="default" buttonText="Subscribe" source="article-inline" />
             </div>
-            <div className="p-6 rounded-xl" style={{ background: '#161b22', border: '1px solid #30363d' }}>
-              <div className="text-xs font-mono uppercase tracking-widest mb-4" style={{ color: '#8b949e', letterSpacing: '0.12em' }}>Article Stats</div>
+            <div className="p-6 rounded-xl bg-slate-900 border border-slate-800">
+              <div className="text-xs font-mono uppercase tracking-[0.12em] mb-4 text-slate-400">Article Stats</div>
               <div className="space-y-3">
                 {[
                   { label: 'Read time', value: article.readTime },
@@ -196,17 +176,17 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
                   { label: 'Keywords', value: article.keywords.length.toString() },
                 ].map((item) => (
                   <div key={item.label} className="flex justify-between items-center">
-                    <span className="text-xs" style={{ color: '#484f58' }}>{item.label}</span>
-                    <span className="text-xs font-mono font-medium" style={{ color: '#8b949e' }}>{item.value}</span>
+                    <span className="text-xs text-slate-500">{item.label}</span>
+                    <span className="text-xs font-mono font-medium text-slate-400">{item.value}</span>
                   </div>
                 ))}
               </div>
             </div>
-            <div className="p-6 rounded-xl" style={{ background: 'linear-gradient(135deg, rgba(0,180,255,0.05) 0%, rgba(0,180,255,0.02) 100%)', border: '1px solid rgba(0,180,255,0.2)' }}>
-              <div className="text-xs font-mono uppercase mb-3" style={{ color: '#00b4ff' }}>Recommended</div>
+            <div className="p-6 rounded-xl bg-gradient-to-br from-cyan-900/10 to-transparent border border-cyan-900/30">
+              <div className="text-xs font-mono uppercase mb-3 text-cyan-400">Recommended</div>
               <h3 className="text-sm font-bold text-white mb-2">Security tools</h3>
-              <p className="text-xs mb-4" style={{ color: '#8b949e' }}>Recommended tools may include affiliate links and are selected to match the threats and privacy topics covered in the archive.</p>
-              <Link href="/tools" className="text-xs font-semibold flex items-center gap-1 transition-colors" style={{ color: '#00b4ff' }}>
+              <p className="text-xs text-slate-400 mb-4">Recommended tools may include affiliate links and are selected to match the threats and privacy topics covered in the archive.</p>
+              <Link href="/tools" className="text-xs font-semibold flex items-center gap-1 transition-colors text-cyan-400">
                 Browse tools
                 <svg width="10" height="10" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path fillRule="evenodd" d="M1 8a.5.5 0 01.5-.5h11.793l-3.147-3.146a.5.5 0 01.708-.708l4 4a.5.5 0 010 .708l-4 4a.5.5 0 01-.708-.708L13.293 8.5H1.5A.5.5 0 011 8z" /></svg>
               </Link>
@@ -214,7 +194,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
           </aside>
         </div>
 
-        <div className="mt-16 pt-12" style={{ borderTop: '1px solid #21262d' }}>
+        <div className="mt-16 pt-12 border-t border-slate-800">
           <div className="section-label mb-6">Related Intelligence</div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
             {relatedArticles.map((relatedArticle, index) => (

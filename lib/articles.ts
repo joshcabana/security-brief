@@ -46,6 +46,7 @@ export interface ArticleSummary {
 export interface ArticleDocument extends ArticleSummary {
   body: string;
   contentHtml: string;
+  isPaywalled: boolean;
 }
 
 type ArticleEnvironment = Readonly<Record<string, string | undefined>>;
@@ -199,7 +200,17 @@ export async function parseArticleSource(fileName: string, source: string): Prom
   const keywords = assertStringArray(data.keywords, 'keywords', fileName);
   const category = assertString(data.category, 'category', fileName);
   const isAffiliateEnabled = category !== 'AI Threats';
-  const resolvedBody = replaceAffiliateTokens(content.trim(), isAffiliateEnabled ? process.env : {});
+  
+  const rawBody = content.trim();
+  const paywallToken = '[beehiiv:paywall]';
+  const isPaywalled = rawBody.includes(paywallToken);
+  
+  let freeContent = rawBody;
+  if (isPaywalled) {
+    freeContent = rawBody.split(paywallToken)[0].trim();
+  }
+
+  const resolvedBody = replaceAffiliateTokens(freeContent, isAffiliateEnabled ? process.env : {});
   const slug = assertString(data.slug, 'slug', fileName);
   const article = {
     title,
@@ -217,6 +228,7 @@ export async function parseArticleSource(fileName: string, source: string): Prom
     fileName,
     body: resolvedBody,
     contentHtml: await renderMarkdown(resolvedBody, title),
+    isPaywalled,
   } satisfies ArticleDocument;
 
   return article;

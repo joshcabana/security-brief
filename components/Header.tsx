@@ -3,14 +3,14 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
-import { buildNewsletterPath } from '@/lib/newsletter-source.mjs';
 import ShieldLogo from './ShieldLogo';
 
 const navLinks = [
   { href: '/', label: 'Home' },
-  { href: '/blog', label: 'Blog' },
+  { href: '/blog', label: 'Briefings' },
   { href: '/tools', label: 'Tools' },
-  { href: buildNewsletterPath('header-nav'), label: 'Newsletter', matchPath: '/newsletter' },
+  { href: '/archive', label: 'Archive' },
+  { href: '/methodology', label: 'Methodology' },
 ];
 
 export default function Header() {
@@ -19,98 +19,59 @@ export default function Header() {
 
   return (
     <header
-      className="sticky top-0 z-50 w-full"
-      style={{
-        background: 'rgba(13, 17, 23, 0.92)',
-        borderBottom: '1px solid #21262d',
-        backdropFilter: 'blur(12px)',
-        WebkitBackdropFilter: 'blur(12px)',
-      }}
+      className="sticky top-0 z-50 w-full bg-slate-950/90 border-b border-slate-800 backdrop-blur-md"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           <Link href="/" className="flex items-center gap-3 group" aria-label="AI Security Brief home">
-            <div className="transition-all duration-300 group-hover:drop-shadow-[0_0_8px_rgba(0,180,255,0.6)]">
+            <div className="transition-all duration-300 group-hover:drop-shadow-[0_0_8px_rgba(34,211,238,0.6)]">
               <ShieldLogo />
             </div>
-            <div className="flex flex-col leading-none">
-              <span
-                className="font-bold text-base text-white tracking-tight"
-                style={{ fontFamily: 'var(--font-inter, Inter, sans-serif)' }}
-              >
+            <div className="flex flex-col leading-none justify-center">
+              <span className="font-bold text-lg text-white tracking-tight font-sans">
                 AI Security Brief
-              </span>
-              <span
-                className="text-xs tracking-widest uppercase"
-                style={{
-                  color: '#00b4ff',
-                  fontFamily: 'var(--font-jetbrains, "JetBrains Mono", monospace)',
-                  fontSize: '0.6rem',
-                  letterSpacing: '0.18em',
-                }}
-              >
-                AI SECURITY BRIEFINGS
               </span>
             </div>
           </Link>
 
           <nav className="hidden md:flex items-center gap-1" aria-label="Main navigation">
             {navLinks.map((link) => {
-              const activePath = link.matchPath ?? link.href.split('?')[0];
-              const isActive = activePath === '/' ? pathname === '/' : pathname.startsWith(activePath);
+              const isActive = link.href === '/' ? pathname === '/' : pathname.startsWith(link.href);
               return (
                 <Link
                   key={link.href}
                   href={link.href}
-                  className="relative px-4 py-2 text-sm font-medium rounded-md transition-all duration-200"
-                  style={{
-                    color: isActive ? '#00b4ff' : '#8b949e',
-                    background: isActive ? 'rgba(0,180,255,0.08)' : 'transparent',
-                  }}
-                  onMouseEnter={(e) => {
-                    if (!isActive) {
-                      e.currentTarget.style.color = '#00b4ff';
-                      e.currentTarget.style.background = 'rgba(0,180,255,0.05)';
-                    }
-                  }}
-                  onMouseLeave={(e) => {
-                    if (!isActive) {
-                      e.currentTarget.style.color = '#8b949e';
-                      e.currentTarget.style.background = 'transparent';
-                    }
-                  }}
+                  className={`relative px-4 py-2 text-sm font-medium rounded-md transition-all duration-200 ${
+                    isActive 
+                      ? 'text-cyan-400 bg-cyan-400/10' 
+                      : 'text-slate-400 hover:text-cyan-400 hover:bg-cyan-400/5'
+                  }`}
                   aria-current={isActive ? 'page' : undefined}
                 >
                   {link.label}
                   {isActive && (
-                    <span
-                      className="absolute bottom-0 left-1/2 -translate-x-1/2 w-4 h-0.5 rounded-full"
-                      style={{ background: '#00b4ff' }}
-                    />
+                    <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-4 h-0.5 rounded-full bg-cyan-400" />
                   )}
                 </Link>
               );
             })}
             <Link
-              href={buildNewsletterPath('header-cta')}
-              className="ml-4 px-4 py-2 rounded-md text-sm font-semibold transition-all duration-200"
-              style={{ background: '#00b4ff', color: '#0d1117', fontWeight: 700 }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.background = '#33c3ff';
-                e.currentTarget.style.boxShadow = '0 0 16px rgba(0,180,255,0.35)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.background = '#00b4ff';
-                e.currentTarget.style.boxShadow = 'none';
-              }}
+              href="/subscribe"
+              className="ml-2 px-4 py-2 rounded-md text-sm font-semibold text-slate-400 hover:text-cyan-400 transition-colors duration-200"
             >
-              Subscribe
+              Subscribe Free
+            </Link>
+            <Link
+              href="/upgrade"
+              id="header-pro-cta"
+              className="ml-1 px-4 py-2 rounded-md text-sm font-bold transition-all duration-200 bg-cyan-500 hover:bg-cyan-400 text-slate-900 shadow-[0_0_15px_rgba(34,211,238,0.3)] hover:shadow-[0_0_20px_rgba(34,211,238,0.5)]"
+            >
+              Go Pro
             </Link>
           </nav>
 
           <button
-            className="md:hidden p-2 rounded-md transition-colors"
-            style={{ color: '#8b949e' }}
+            className="md:hidden p-2 rounded-md text-slate-400 hover:text-slate-200 transition-colors"
             onClick={() => setMobileOpen(!mobileOpen)}
             aria-label={mobileOpen ? 'Close menu' : 'Open menu'}
             aria-expanded={mobileOpen}
@@ -126,17 +87,17 @@ export default function Header() {
         </div>
 
         {mobileOpen && (
-          <nav className="md:hidden py-4 border-t" style={{ borderColor: '#21262d' }} aria-label="Mobile navigation">
+          <nav className="md:hidden py-4 border-t border-slate-800" aria-label="Mobile navigation">
             <div className="flex flex-col gap-1">
               {navLinks.map((link) => {
-                const activePath = link.matchPath ?? link.href.split('?')[0];
-                const isActive = activePath === '/' ? pathname === '/' : pathname.startsWith(activePath);
+                const isActive = link.href === '/' ? pathname === '/' : pathname.startsWith(link.href);
                 return (
                   <Link
                     key={link.href}
                     href={link.href}
-                    className="px-3 py-2.5 text-sm font-medium rounded-md transition-colors"
-                    style={{ color: isActive ? '#00b4ff' : '#e6edf3', background: isActive ? 'rgba(0,180,255,0.08)' : 'transparent' }}
+                    className={`px-3 py-2.5 text-sm font-medium rounded-md transition-colors ${
+                      isActive ? 'text-cyan-400 bg-cyan-400/10' : 'text-slate-200 hover:bg-slate-800'
+                    }`}
                     onClick={() => setMobileOpen(false)}
                     aria-current={isActive ? 'page' : undefined}
                   >
@@ -145,12 +106,19 @@ export default function Header() {
                 );
               })}
               <Link
-                href={buildNewsletterPath('mobile-nav-newsletter')}
-                className="mt-3 px-4 py-2.5 rounded-md text-sm font-bold text-center transition-all duration-200"
-                style={{ background: '#00b4ff', color: '#0d1117' }}
+                href="/subscribe"
+                className="mt-3 px-4 py-2.5 rounded-md text-sm font-semibold text-center text-slate-200 hover:bg-slate-800 transition-all duration-200"
                 onClick={() => setMobileOpen(false)}
               >
                 Subscribe Free
+              </Link>
+              <Link
+                href="/upgrade"
+                id="header-pro-cta-mobile"
+                className="mt-1 px-4 py-2.5 rounded-md text-sm font-bold text-center transition-all duration-200 bg-cyan-500 text-slate-900"
+                onClick={() => setMobileOpen(false)}
+              >
+                Go Pro
               </Link>
             </div>
           </nav>

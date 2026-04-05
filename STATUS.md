@@ -1,7 +1,7 @@
 <!-- markdownlint-disable MD034 -->
 # AI Security Brief — Project Status
 
-**Pinned baseline:** `origin/main` @ `c93f1d8171545bddd6dd94d5847715eac1016e68` **Last updated:** 01 April 2026 **Updated by:** Antigravity
+**Pinned baseline:** `origin/main` @ `pending-push` **Last updated:** 03 April 2026 **Updated by:** Antigravity
 
 **Verification pipeline:** Vercel Actions
 
@@ -19,11 +19,27 @@
 
 The site is deployed and operational. The newsletter is accepting signups via Upstash rate limits and Beehiiv insertion.
 
+The `/pro` page is live at `aithreatbrief.com/pro`. Pro CTAs are present in the header (Go Pro button), footer nav, ToolsMatrix bottom bar, and the Tools page CTA section.
+
+LinkedIn Insight Tag is wired in `app/layout.tsx` — pending `NEXT_PUBLIC_LINKEDIN_PARTNER_ID` env var in Vercel.
+
 ## Content
 
 | Metric | Count |
 | --- | --- |
 | Published articles | 14 |
+
+## Revenue Surface
+
+| Page | Status |
+| --- | --- |
+| `/pro` | ✅ Live — static, 815B, Pro signup CTA |
+| Header "Go Pro" CTA | ✅ Live — amber button on all pages |
+| ToolsMatrix Pro CTA | ✅ Fixed — now points to `/pro` (was dead beehiiv link) |
+| Tools page CTA | ✅ Upgraded — Pro-forward with free sub secondary |
+| Beehiiv Pro tier checkout | ⚠️ Pending — configure in Beehiiv dashboard |
+| LinkedIn Insight Tag | ⚠️ Pending — add `NEXT_PUBLIC_LINKEDIN_PARTNER_ID` to Vercel |
+| LinkedIn Campaigns | ⚠️ Pending — account access fix required (see playbook) |
 
 ## Open PRs
 
@@ -31,9 +47,18 @@ None.
 
 Most recent merges:
 
+- feat(pro): Add /pro page, Pro CTAs in header/footer/tools, fix ToolsMatrix dead link
 - Merge codex/content-week-2026-14
 - Merge chore/trust-cleanup-and-affiliate-updates
 
 ## System Notes
 
 Update this file whenever `main` advances. Pin the SHA in the header. External tooling should verify state against this file, not against prior conversation context.
+
+## Remaining Blockers (LinkedIn Campaign Launch)
+
+1. **Beehiiv Pro tier** — Set up paid tier checkout in Beehiiv dashboard so `/pro` CTA has a real destination
+2. **LinkedIn Insight Tag** — Get Partner ID from Campaign Manager → Account Settings → Insight Tag → add to Vercel env
+3. **LinkedIn Account Access** — Identify which account owns `509494393`, grant Josh Cabana Account Manager role
+4. **Pause active campaigns** — Once in Campaign Manager, pause all active campaigns (driving traffic to non-Pro pages)
+5. **Build new campaigns** — Follow `marketing/linkedin-campaign-playbook.md` Steps 3–6
