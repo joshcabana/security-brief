@@ -10,6 +10,10 @@ export const metadata: Metadata = createPageMetadata({
   title: 'Public Status',
   description:
     'Runtime deployment snapshot and public operational status for AI Security Brief.',
+  openGraphDescription:
+    'Public operational status for AI Security Brief: pinned main baseline, deployment context, and release verification signals.',
+  twitterDescription:
+    'Public operational status for AI Security Brief: pinned main baseline, deployment context, and release verification signals.',
 });
 
 type StatusRow = {

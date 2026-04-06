@@ -21,11 +21,9 @@ The site is deployed and operational. The newsletter is accepting signups via Up
 
 The `/pro` page is live at `aithreatbrief.com/pro`. Pro CTAs are present in the header (Go Pro button), footer nav, ToolsMatrix bottom bar, and the Tools page CTA section.
 
-LinkedIn Insight Tag base script is wired in `app/layout.tsx`. Campaign Manager now has Partner ID `9120908`, and the event-specific Pro signup conversion is `25104812`. Production tracking still requires `NEXT_PUBLIC_LINKEDIN_PARTNER_ID=9120908` and `NEXT_PUBLIC_LINKEDIN_CONVERSION_PRO_SIGNUP=25104812` in Vercel before the live site will start sending traffic data.
+LinkedIn Insight Tag base script is wired in `app/layout.tsx`. Campaign Manager now has Partner ID `9120908`, and the event-specific Pro signup conversion is `25104812`. Both production Vercel env vars are present, the site has been redeployed, and the live domain is loading the tag.
 
 LinkedIn Company Page `AI Security Brief` is now live, and the new Campaign Manager ad account `521990231` has been created with locked settings `AI Security Brief — Main`, `AUD`, and associated Page `AI Security Brief`.
-
-LinkedIn two-step verification for the profile is confirmed enabled. The `Business information` and payment method flow is now complete, and ad account `521990231` is `Active`.
 
 Campaign Manager now also has a saved draft website-conversion ad set:
 
@@ -40,7 +38,7 @@ Campaign Manager now also has a saved draft website-conversion ad set:
 - LAN: `Off`
 - Conversion selected: `Pro Signup` (`25104812`)
 
-LinkedIn currently shows the Insight Tag status as `NO_DOMAINS`, which is expected until the live site loads the base tag with the production env vars.
+LinkedIn two-step verification for the profile is confirmed enabled. The `Business information` and payment method flow are complete, ad account `521990231` is `Active`, and the first document-ad creative has been uploaded to the saved draft website-conversion campaign.
 
 ## Content
 
@@ -57,8 +55,8 @@ LinkedIn currently shows the Insight Tag status as `NO_DOMAINS`, which is expect
 | ToolsMatrix Pro CTA | ✅ Fixed — now points to `/pro` (was dead beehiiv link) |
 | Tools page CTA | ✅ Upgraded — Pro-forward with free sub secondary |
 | Beehiiv Pro tier checkout | ⚠️ Pending — configure in Beehiiv dashboard |
-| LinkedIn Insight Tag | ⚠️ Partial — Partner ID `9120908` and conversion ID `25104812` are created; still needs Vercel envs and live-site validation |
-| LinkedIn Campaigns | ⚠️ Partial — first draft campaign saved as `AU Pro Signup Document Draft` (`622908116`), but creative upload and launch are still pending |
+| LinkedIn Insight Tag | ✅ Live — Partner ID `9120908` and conversion ID `25104812` are set in Vercel production and deployed on `aithreatbrief.com` |
+| LinkedIn Campaigns | ⚠️ Draft ready — campaign `622908116` includes uploaded document creative/ad `1386551166`; manual launch decision still pending |
 
 ## Open PRs
 
@@ -77,7 +75,7 @@ Update this file whenever `main` advances. Pin the SHA in the header. External t
 ## Remaining Blockers (LinkedIn Campaign Launch)
 
 1. **Beehiiv Pro tier** — Set up paid tier checkout in Beehiiv dashboard so `/pro` CTA has a real destination
-2. **Vercel LinkedIn env vars** — Add `NEXT_PUBLIC_LINKEDIN_PARTNER_ID=9120908` and `NEXT_PUBLIC_LINKEDIN_CONVERSION_PRO_SIGNUP=25104812`, then redeploy and validate on the live site
-3. **Insight Tag domain validation** — Load the redeployed site so Campaign Manager can move the Insight Tag from `NO_DOMAINS` to an active tracked domain state
-4. **Campaign creative completion** — Upload the native document creative (`marketing/assets/ai-security-brief-pro-launch-teaser.pdf`) and complete the remaining ad build screens for draft campaign `622908116`
+2. **Campaign launch decision** — Review draft campaign `622908116`, confirm final targeting/budget copy, and explicitly launch when ready
+3. **LinkedIn domain confirmation** — Recheck Campaign Manager until the tracked domain state reflects the live site load, since that status is controlled on LinkedIn’s side
+4. **Beehiiv paid routing** — Replace placeholder Pro CTA routing with the final Beehiiv paid checkout destination once configured
 5. **Pause legacy campaigns if still spending** — If any older LinkedIn ad account is still active, pause campaigns driving traffic to non-Pro pages
