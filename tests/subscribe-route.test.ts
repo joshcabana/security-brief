@@ -493,28 +493,6 @@ test('subscribe route defaults the placement source to unknown when omitted', as
   });
 });
 
-test('subscribe route falls back to unknown when the placement source contains invalid characters', async () => {
-  setBeehiivEnv();
-  setUpstashEnv();
-  allowRateLimit();
-
-  globalThis.fetch = async (_input, init) => {
-    assert.ok(init?.body);
-    assert.equal(JSON.parse(String(init.body)).utm_content, 'unknown');
-
-    return new Response(JSON.stringify({ data: { id: 'sub_invalid_source' } }), {
-      status: 201,
-      headers: { 'Content-Type': 'application/json' },
-    });
-  };
-
-  const response = await POST(
-    createSameSiteRequest(JSON.stringify({ email: 'reader@example.com', source: 'Homepage Hero' })),
-  );
-
-  assert.equal(response.status, 200);
-});
-
 test('subscribe route enrolls the Beehiiv welcome automation when configured', async () => {
   setBeehiivEnv();
   setUpstashEnv();

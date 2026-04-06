@@ -1,79 +1,244 @@
 import type { Metadata } from 'next';
+import Link from 'next/link';
 import { createPageMetadata } from '@/lib/page-metadata.mjs';
-import { Shield, Search, Lock } from 'lucide-react';
 
 export const metadata: Metadata = createPageMetadata({
   canonicalPath: '/methodology',
-  title: 'Research Methodology & Editorial Independence | AI Security Brief',
-  description: 'How we evaluate MLSecOps tooling, define threat severity, and maintain strict editorial independence from vendors.',
+  title: 'Methodology',
+  description:
+    'AI Security Brief Methodology — how topics are selected, sources are evaluated, and editorial standards ensure accuracy and practical value.',
 });
 
 export default function MethodologyPage() {
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-[#080d14] pt-24 pb-24">
-      <div className="absolute inset-0 bg-[url('/grid-pattern.svg')] opacity-[0.03] pointer-events-none"></div>
-
-      <div className="max-w-4xl mx-auto px-6 relative z-10">
-        <div className="text-center mb-16">
-          <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight text-slate-900 dark:text-white mb-6">
-            Research Methodology
-          </h1>
-          <p className="text-xl text-slate-600 dark:text-slate-400 max-w-2xl mx-auto leading-relaxed">
-            We are practitioners, not analysts. Our tooling recommendations and threat evaluations are based on production constraints, not marketing sheets.
+    <div style={{ background: '#0d1117', minHeight: '100vh' }}>
+      <div
+        className="relative overflow-hidden"
+        style={{
+          background: 'linear-gradient(to bottom, #080c11, #0d1117)',
+          borderBottom: '1px solid #21262d',
+          paddingTop: '3.5rem',
+          paddingBottom: '3.5rem',
+        }}
+      >
+        <div className="absolute inset-0 bg-grid opacity-40 pointer-events-none" aria-hidden="true" />
+        <div
+          className="absolute top-0 right-0 w-2/3 h-full pointer-events-none"
+          style={{ background: 'radial-gradient(ellipse at 80% 0%, rgba(0,180,255,0.06) 0%, transparent 60%)' }}
+          aria-hidden="true"
+        />
+        <div className="relative max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="section-label mb-3">Standards</div>
+          <h1 className="text-white mb-4">Methodology</h1>
+          <p className="text-lg leading-relaxed" style={{ color: '#8b949e' }}>
+            How we select, source, and evaluate security and AI topics to ensure relevance, accuracy, and actionable insight.
           </p>
         </div>
+      </div>
 
-        <div className="space-y-12">
-          <section className="bg-white dark:bg-[#0d131f] border border-slate-200 dark:border-slate-800 rounded-2xl p-8 shadow-sm">
-            <div className="flex items-center gap-3 mb-6">
-              <div className="w-10 h-10 rounded-lg bg-emerald-500/10 flex items-center justify-center">
-                <Search className="text-emerald-500" size={20} />
+      <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <div className="space-y-16">
+          <section>
+            <h2 className="text-white text-xl font-bold mb-4">What we cover</h2>
+            <p className="text-sm leading-relaxed mb-6" style={{ color: '#8b949e' }}>
+              We focus on three intersecting domains where AI and security collide:
+            </p>
+            <div className="space-y-4">
+              <div>
+                <h3 className="text-base font-bold text-white mb-2">AI-enabled attacks</h3>
+                <p className="text-sm leading-relaxed" style={{ color: '#8b949e' }}>
+                  How machine learning is weaponised against defenders — prompt injection, synthetic phishing, agentic abuse, deepfake-driven social engineering, and adversarial ML tactics.
+                </p>
               </div>
-              <h2 className="text-2xl font-bold text-slate-900 dark:text-white">How We Evaluate Tools</h2>
-            </div>
-            <div className="space-y-4 text-slate-600 dark:text-slate-400 leading-relaxed">
-              <p>
-                The AI Security Stack Matrix is built over hundreds of hours of hands-on testing, red-teaming, and architectural review. To be included, a tool must solve a tangible problem in the MLSecOps lifecycle.
-              </p>
-              <ul className="list-disc pl-5 space-y-2 mt-4 text-sm font-medium">
-                <li><strong className="text-slate-900 dark:text-slate-200">Deployment Friction:</strong> Does it require a highly-invasive kernel agent, or does it utilize modern eBPF/sidecar patterns?</li>
-                <li><strong className="text-slate-900 dark:text-slate-200">False Positives:</strong> In prompt-injection filtering, what is the impact on legitimate LLM operations?</li>
-                <li><strong className="text-slate-900 dark:text-slate-200">Architecture:</strong> Can the solution run air-gapped on-premise, or does it enforce a SaaS-only model transmitting PII to vendor APIs?</li>
-              </ul>
+              <div>
+                <h3 className="text-base font-bold text-white mb-2">AI infrastructure security</h3>
+                <p className="text-sm leading-relaxed" style={{ color: '#8b949e' }}>
+                  Supply chain risk, model poisoning, data exfiltration from training pipelines, and the security requirements for deploying LLMs and ML systems in high-trust environments.
+                </p>
+              </div>
+              <div>
+                <h3 className="text-base font-bold text-white mb-2">Privacy and security tooling</h3>
+                <p className="text-sm leading-relaxed" style={{ color: '#8b949e' }}>
+                  VPNs, password managers, encrypted messaging, endpoint protection, and zero-trust frameworks — tested for real-world effectiveness and configuration best practices.
+                </p>
+              </div>
             </div>
           </section>
 
-          <section className="bg-white dark:bg-[#0d131f] border border-slate-200 dark:border-slate-800 rounded-2xl p-8 shadow-sm">
-            <div className="flex items-center gap-3 mb-6">
-              <div className="w-10 h-10 rounded-lg bg-amber-500/10 flex items-center justify-center">
-                <Shield className="text-amber-500" size={20} />
-              </div>
-              <h2 className="text-2xl font-bold text-slate-900 dark:text-white">Affiliate Transparency</h2>
-            </div>
-            <p className="text-slate-600 dark:text-slate-400 leading-relaxed mb-4">
-              AI Security Brief operates completely independent of vendor influence. We do not accept &quot;pay-to-play&quot; placements in our Matrix, and we do not do sponsored &quot;guest posts&quot; written by PR agencies.
+          <div style={{ height: '1px', background: '#21262d' }} aria-hidden="true" />
+
+          <section>
+            <h2 className="text-white text-xl font-bold mb-4">How topics are selected</h2>
+            <p className="text-sm leading-relaxed mb-6" style={{ color: '#8b949e' }}>
+              We curate security and AI feeds weekly. Topics are prioritized by security impact using a simple filter:
             </p>
-            <p className="text-slate-600 dark:text-slate-400 leading-relaxed">
-              To fund the significant infrastructure and research time required to run the intelligence feed, we use affiliate links. When you purchase a tool through a link in our Matrix, we may receive a commission. 
-              <strong> Crucially, this does not affect rankings.</strong> If a vendor&apos;s product deteriorates, it will be downgraded or removed, regardless of affiliate status.
-            </p>
+            <ul className="space-y-3 text-sm" style={{ color: '#8b949e' }}>
+              <li className="flex items-start">
+                <span className="mr-3 mt-1" style={{ color: '#00b4ff' }}>
+                  ▪
+                </span>
+                <span>
+                  <strong style={{ color: '#8b949e' }}>Does it enable new attacks or close existing defence gaps?</strong>
+                </span>
+              </li>
+              <li className="flex items-start">
+                <span className="mr-3 mt-1" style={{ color: '#00b4ff' }}>
+                  ▪
+                </span>
+                <span>
+                  <strong style={{ color: '#8b949e' }}>Are enterprises or security teams directly affected?</strong>
+                </span>
+              </li>
+              <li className="flex items-start">
+                <span className="mr-3 mt-1" style={{ color: '#00b4ff' }}>
+                  ▪
+                </span>
+                <span>
+                  <strong style={{ color: '#8b949e' }}>Is there actionable mitigation or defensive strategy?</strong>
+                </span>
+              </li>
+            </ul>
           </section>
 
-          <section className="bg-white dark:bg-[#0d131f] border border-cyan-500/20 rounded-2xl p-8 shadow-sm">
-            <div className="flex items-center gap-3 mb-6">
-              <div className="w-10 h-10 rounded-lg bg-cyan-500/10 flex items-center justify-center">
-                <Lock className="text-cyan-500" size={20} />
-              </div>
-              <h2 className="text-2xl font-bold text-slate-900 dark:text-white">Pro Subscriber Promise</h2>
-            </div>
-            <p className="text-slate-600 dark:text-slate-400 leading-relaxed mb-6">
-              Our Pro tier completely strips all affiliate and sponsorship noise from the briefings. When you pay for intelligence, you are paying for an uncompromised raw signal. Pro members receive neutral architectural reviews stripped of all tracking parameters.
+          <div style={{ height: '1px', background: '#21262d' }} aria-hidden="true" />
+
+          <section>
+            <h2 className="text-white text-xl font-bold mb-6">Source hierarchy</h2>
+            <p className="text-sm leading-relaxed mb-6" style={{ color: '#8b949e' }}>
+              We prioritize sources by reliability, not reach. Our hierarchy:
             </p>
-            <div className="flex justify-center mt-6">
-              <a href="/upgrade" className="px-6 py-3 rounded-xl bg-slate-900 dark:bg-slate-800 border border-slate-700 hover:border-cyan-500 text-white font-bold transition-all text-sm flex items-center gap-2">
-                Learn about Pro Intelligence
-              </a>
+            <div className="space-y-4">
+              <div
+                className="p-4 rounded-lg"
+                style={{
+                  background: '#161b22',
+                  border: '1px solid #30363d',
+                }}
+              >
+                <h3 className="text-sm font-bold text-white mb-2">Tier 1: Primary sources</h3>
+                <p className="text-sm leading-relaxed" style={{ color: '#8b949e' }}>
+                  Vendor security advisories, CISA alerts, CERT/CC notifications, NVD entries, official academic research, and government security bulletins. These form the foundation of our reporting.
+                </p>
+              </div>
+              <div
+                className="p-4 rounded-lg"
+                style={{
+                  background: '#161b22',
+                  border: '1px solid #30363d',
+                }}
+              >
+                <h3 className="text-sm font-bold text-white mb-2">Tier 2: Secondary sources</h3>
+                <p className="text-sm leading-relaxed" style={{ color: '#8b949e' }}>
+                  Reputable security journalism, established security research teams, and verified technical analysis from credible outlets. We verify claims against primary sources when possible.
+                </p>
+              </div>
+              <div
+                className="p-4 rounded-lg"
+                style={{
+                  background: '#161b22',
+                  border: '1px solid #30363d',
+                }}
+              >
+                <h3 className="text-sm font-bold text-white mb-2">Tier 3: Commentary</h3>
+                <p className="text-sm leading-relaxed" style={{ color: '#8b949e' }}>
+                  Analysis, perspective, and opinion. We label these clearly. They inform context but never form the primary claim in our coverage.
+                </p>
+              </div>
             </div>
+          </section>
+
+          <div style={{ height: '1px', background: '#21262d' }} aria-hidden="true" />
+
+          <section>
+            <h2 className="text-white text-xl font-bold mb-4">What &quot;reviewed&quot; means</h2>
+            <p className="text-sm leading-relaxed mb-6" style={{ color: '#8b949e' }}>
+              Before publication, every article undergoes a review checklist:
+            </p>
+            <ul className="space-y-3 text-sm" style={{ color: '#8b949e' }}>
+              <li className="flex items-start">
+                <span className="mr-3 mt-1" style={{ color: '#00b4ff' }}>
+                  ✓
+                </span>
+                <span>
+                  <strong style={{ color: '#8b949e' }}>References checked:</strong> Every source cited is verified to exist and accurately represent the original material.
+                </span>
+              </li>
+              <li className="flex items-start">
+                <span className="mr-3 mt-1" style={{ color: '#00b4ff' }}>
+                  ✓
+                </span>
+                <span>
+                  <strong style={{ color: '#8b949e' }}>Technical claims verified:</strong> Exploit PoCs, vulnerability details, and vendor statements are confirmed against primary documentation.
+                </span>
+              </li>
+              <li className="flex items-start">
+                <span className="mr-3 mt-1" style={{ color: '#00b4ff' }}>
+                  ✓
+                </span>
+                <span>
+                  <strong style={{ color: '#8b949e' }}>Mitigations actionable:</strong> If we recommend a defence or fix, we ensure it&apos;s practical and actually addresses the threat.
+                </span>
+              </li>
+              <li className="flex items-start">
+                <span className="mr-3 mt-1" style={{ color: '#00b4ff' }}>
+                  ✓
+                </span>
+                <span>
+                  <strong style={{ color: '#8b949e' }}>Affiliate links disclosed:</strong> Any affiliate links are clearly marked and never influence the editorial conclusion or product recommendation.
+                </span>
+              </li>
+            </ul>
+          </section>
+
+          <div style={{ height: '1px', background: '#21262d' }} aria-hidden="true" />
+
+          <section>
+            <h2 className="text-white text-xl font-bold mb-4">Conflicts and monetization</h2>
+            <p className="text-sm leading-relaxed mb-4" style={{ color: '#8b949e' }}>
+              We&apos;re transparent about how we&apos;re funded:
+            </p>
+            <ul className="space-y-3 text-sm" style={{ color: '#8b949e' }}>
+              <li className="flex items-start">
+                <span className="mr-3 mt-1" style={{ color: '#00b4ff' }}>
+                  •
+                </span>
+                <span>
+                  <strong style={{ color: '#8b949e' }}>Affiliate commissions:</strong> Some tool reviews and links on this site are affiliate relationships. These never influence our editorial conclusions or product rankings.
+                </span>
+              </li>
+              <li className="flex items-start">
+                <span className="mr-3 mt-1" style={{ color: '#00b4ff' }}>
+                  •
+                </span>
+                <span>
+                  <strong style={{ color: '#8b949e' }}>Sponsorships:</strong> We do not accept payment to change rankings, add false claims, or suppress critical coverage.
+                </span>
+              </li>
+              <li className="flex items-start">
+                <span className="mr-3 mt-1" style={{ color: '#00b4ff' }}>
+                  •
+                </span>
+                <span>
+                  <strong style={{ color: '#8b949e' }}>Disclosure:</strong> All affiliate links are marked. Read our{' '}
+                  <Link href="/about" className="font-medium transition-colors duration-200 hover:text-[#00b4ff]" style={{ color: '#00b4ff' }}>
+                    About page
+                  </Link>{' '}
+                  for more on our affiliate partnerships.
+                </span>
+              </li>
+            </ul>
+          </section>
+
+          <div style={{ height: '1px', background: '#21262d' }} aria-hidden="true" />
+
+          <section>
+            <h2 className="text-white text-xl font-bold mb-4">Got questions about our standards?</h2>
+            <p className="text-sm leading-relaxed" style={{ color: '#8b949e' }}>
+              We&apos;re committed to transparency. If you want to know more about how we source a particular article, how we verify facts, or how our review process works, reach out at{' '}
+              <Link href="mailto:hello@aisecuritybrief.com" className="font-medium transition-colors duration-200 hover:text-[#00b4ff]" style={{ color: '#00b4ff' }}>
+                hello@aisecuritybrief.com
+              </Link>.
+            </p>
           </section>
         </div>
       </div>

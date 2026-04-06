@@ -4,10 +4,6 @@ import path from 'node:path';
 import { spawn, spawnSync } from 'node:child_process';
 import { readFile } from 'node:fs/promises';
 import net from 'node:net';
-import {
-  PLAUSIBLE_SCRIPT_URL,
-  PRIVACY_ANALYTICS_COPY,
-} from '../lib/analytics-config.mjs';
 import { SECURITY_HEADERS } from '../lib/security-headers.mjs';
 
 const repoDir = process.cwd();
@@ -60,9 +56,9 @@ async function waitForServer(url, label) {
   throw new Error(`Timed out waiting for ${label}.`);
 }
 
-function startApp(port, extraEnv = {}, scriptName = 'dev') {
+function startApp(port, extraEnv = {}) {
   const packageManagerLaunch = resolvePackageManagerLaunch();
-  const child = spawn(packageManagerLaunch.command, [...packageManagerLaunch.args, scriptName, '-p', String(port)], {
+  const child = spawn(packageManagerLaunch.command, [...packageManagerLaunch.args, 'start', '-p', String(port)], {
     cwd: repoDir,
     detached: true,
     env: {
@@ -349,11 +345,6 @@ async function main() {
     assert.deepEqual(extractArticleLinks(privacyHtml, articleSlugs), privacyArticles.map((a) => a.slug));
 
     assert.doesNotMatch(homeHtml, /protected-assets\//);
-    assert.doesNotMatch(homeHtml, new RegExp(PLAUSIBLE_SCRIPT_URL.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')));
-
-    const privacyPolicyHtml = await fetch(`http://127.0.0.1:${coldStartPort}/privacy`).then((response) => response.text());
-    assert.match(privacyPolicyHtml, new RegExp(PRIVACY_ANALYTICS_COPY.disabled.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')));
-    assert.doesNotMatch(privacyPolicyHtml, new RegExp(PLAUSIBLE_SCRIPT_URL.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')));
 
     for (const article of manifest.articles) {
       const articleHtml = await fetch(`http://127.0.0.1:${coldStartPort}/blog/${article.slug}`).then((response) => response.text());
@@ -366,13 +357,12 @@ async function main() {
     const toolsHtml = await fetch(`http://127.0.0.1:${coldStartPort}/tools`).then((response) => response.text());
     assert.match(toolsHtml, /Affiliate disclosure:/);
     assert.match(toolsHtml, /affiliate links/);
-    assert.match(toolsHtml, /data-newsletter-source="tools-footer"/);
-    assert.match(toolsHtml, /Get the low-noise weekly brief/i);
+    assert.match(toolsHtml, /Subscribe for weekly briefings, new tooling notes/);
     assert.doesNotMatch(toolsHtml, /launch updates/i);
 
-    const newsletterHtml = await fetch(`http://127.0.0.1:${coldStartPort}/newsletter?source=tools-footer`).then((response) => response.text());
-    assert.match(newsletterHtml, /tracking AI abuse, privacy changes, and the tooling choices that matter/i);
-    assert.match(newsletterHtml, /data-newsletter-source="tools-footer"/);
+    const newsletterHtml = await fetch(`http://127.0.0.1:${coldStartPort}/newsletter`).then((response) => response.text());
+    assert.match(newsletterHtml, /weekly ai security briefings, privacy shifts, and practical tooling notes/i);
+    assert.match(newsletterHtml, /one concise issue each week covering AI threats, privacy changes, and tools worth evaluating/i);
     assert.match(newsletterHtml, /weekly briefings, low-noise/i);
     assert.doesNotMatch(newsletterHtml, /launch list|publishing schedule is live/i);
 
@@ -397,7 +387,6 @@ async function main() {
     BEEHIIV_API_KEY: 'smoke-test-key',
     BEEHIIV_PUBLICATION_ID: 'test-publication',
     BEEHIIV_API_BASE_URL: mockBeehiiv.baseUrl,
-    NEXT_PUBLIC_PLAUSIBLE_DOMAIN: 'aithreatbrief.com',
     UPSTASH_REDIS_REST_URL: mockUpstash.baseUrl,
     UPSTASH_REDIS_REST_TOKEN: 'smoke-test-token',
   });
@@ -408,13 +397,6 @@ async function main() {
       'Content-Type': 'application/json',
       origin: `http://127.0.0.1:${configuredPort}`,
     };
-
-    const configuredHomeHtml = await fetch(`http://127.0.0.1:${configuredPort}/`).then((response) => response.text());
-    assert.match(configuredHomeHtml, new RegExp(PLAUSIBLE_SCRIPT_URL.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')));
-
-    const configuredPrivacyHtml = await fetch(`http://127.0.0.1:${configuredPort}/privacy`).then((response) => response.text());
-    assert.match(configuredPrivacyHtml, new RegExp(PRIVACY_ANALYTICS_COPY.enabled.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')));
-    assert.match(configuredPrivacyHtml, new RegExp(PLAUSIBLE_SCRIPT_URL.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')));
 
     const invalidJsonResult = await requestJson(`http://127.0.0.1:${configuredPort}/api/subscribe`, {
       method: 'POST',

@@ -37,7 +37,6 @@ The repository combines a markdown-backed editorial site, a server-side Beehiiv 
 | Route | Description |
 | --- | --- |
 | `/api/subscribe` | Same-site newsletter signup endpoint that validates requests before forwarding them to Beehiiv |
-| `/api/lead-capture` | B2B lead capture endpoint with work-email gating, job-title validation, and Beehiiv custom fields |
 
 ## Content and Automation Model
 
@@ -92,7 +91,6 @@ The app will be available at `http://localhost:3000`.
 | `BEEHIIV_PUBLICATION_ID` | Yes for signup and performance logging | Beehiiv publication target |
 | `UPSTASH_REDIS_REST_URL` | Yes for signup rate limiting | Upstash Redis REST endpoint for distributed rate limiting |
 | `UPSTASH_REDIS_REST_TOKEN` | Yes for signup rate limiting | Upstash Redis REST authentication token |
-| `BEEHIIV_LEAD_AUTOMATION_ID` | Optional | Beehiiv automation ID for gated lead capture (PDF delivery); falls back to `BEEHIIV_WELCOME_AUTOMATION_ID` |
 | `NEXT_PUBLIC_SITE_URL` | Yes for `verify:ops` readiness | Canonical site URL |
 | `NEXT_PUBLIC_SITE_NAME` | Yes for `verify:ops` readiness | Public site name |
 | `AFFILIATE_NORDVPN` | Optional | Runtime link for NordVPN |

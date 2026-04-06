@@ -9,10 +9,3 @@ export const siteDescription =
 export function getSiteUrl(): URL {
   return new URL(siteUrl);
 }
-
-export const siteConfig = {
-  beehiiv: {
-    upgradeUrl: 'https://aisec.beehiiv.com/upgrade',
-    loginUrl: 'https://aisec.beehiiv.com/login',
-  }
-};

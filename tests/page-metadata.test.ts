@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import {
+  PRIVACY_ANALYTICS_DECLARATION,
   VERIFIED_PAGE_METADATA,
   createPageMetadata,
 } from '../lib/page-metadata.mjs';
@@ -77,4 +78,5 @@ test('verified metadata and privacy analytics declarations match the live contra
         'Public operational status for AI Security Brief: pinned main baseline, deployment context, and release verification signals.',
     },
   ]);
+  assert.match(PRIVACY_ANALYTICS_DECLARATION, /plausible analytics/i);
 });

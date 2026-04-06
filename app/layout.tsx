@@ -4,10 +4,9 @@ import { Inter, JetBrains_Mono } from 'next/font/google';
 import './globals.css';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import AffiliateBanner from '@/components/AffiliateBanner';
 import { getSiteUrl, siteDescription, siteName, siteUrl } from '@/lib/site';
 
-
+const plausibleDomain = process.env.NEXT_PUBLIC_PLAUSIBLE_DOMAIN ?? '';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -81,7 +80,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${inter.variable} ${jetbrainsMono.variable} dark`}
+      className={`${inter.variable} ${jetbrainsMono.variable}`}
       suppressHydrationWarning
     >
       <head>
@@ -106,37 +105,18 @@ export default function RootLayout({
         />
       </head>
       <body
-        className="min-h-screen flex flex-col bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-200 antialiased selection:bg-cyan-500/30"
+        className="min-h-screen flex flex-col"
+        style={{ background: '#0d1117', color: '#e6edf3' }}
       >
-        <AffiliateBanner />
         <Header />
         <main className="flex-1">{children}</main>
         <Footer />
-        <Script
-          defer
-          data-domain="aithreatbrief.com"
-          src="https://plausible.io/js/script.js"
-          strategy="afterInteractive"
-        />
-        {process.env.NEXT_PUBLIC_LINKEDIN_PARTNER_ID && (
+        {plausibleDomain && (
           <Script
-            id="linkedin-insight"
+            defer
+            data-domain={plausibleDomain}
+            src="https://plausible.io/js/script.js"
             strategy="afterInteractive"
-            dangerouslySetInnerHTML={{
-              __html: `
-                _linkedin_partner_id = "${process.env.NEXT_PUBLIC_LINKEDIN_PARTNER_ID}";
-                window._linkedin_data_partner_ids = window._linkedin_data_partner_ids || [];
-                window._linkedin_data_partner_ids.push(_linkedin_partner_id);
-                (function(l) {
-                if (!l){window.lintrk = function(a,b){window.lintrk.q.push([a,b])};
-                window.lintrk.q=[]}
-                var s = document.getElementsByTagName("script")[0];
-                var b = document.createElement("script");
-                b.type = "text/javascript";b.async = true;
-                b.src = "https://snap.licdn.com/li.lms-analytics/insight.min.js";
-                s.parentNode.insertBefore(b, s);})(window.lintrk);
-              `,
-            }}
           />
         )}
       </body>

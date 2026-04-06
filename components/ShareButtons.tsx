@@ -25,12 +25,13 @@ export default function ShareButtons({ title, slug }: ShareButtonsProps) {
 
   return (
     <div className="flex items-center gap-3">
-      <span className="text-xs text-slate-500">Share:</span>
+      <span className="text-xs" style={{ color: '#484f58' }}>Share:</span>
       <a
         href={`https://twitter.com/intent/tweet?text=${encodedTitle}&url=${encodedUrl}`}
         target="_blank"
         rel="noopener noreferrer"
-        className="inline-flex items-center justify-center rounded transition-colors text-slate-400 hover:text-cyan-400 hover:bg-slate-800 p-1.5"
+        className="inline-flex items-center justify-center rounded transition-colors"
+        style={{ color: '#8b949e', padding: '6px' }}
         aria-label="Share on X (Twitter)"
         title="Share on X"
       >
@@ -42,7 +43,8 @@ export default function ShareButtons({ title, slug }: ShareButtonsProps) {
         href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`}
         target="_blank"
         rel="noopener noreferrer"
-        className="inline-flex items-center justify-center rounded transition-colors text-slate-400 hover:text-cyan-400 hover:bg-slate-800 p-1.5"
+        className="inline-flex items-center justify-center rounded transition-colors"
+        style={{ color: '#8b949e', padding: '6px' }}
         aria-label="Share on LinkedIn"
         title="Share on LinkedIn"
       >
@@ -53,7 +55,8 @@ export default function ShareButtons({ title, slug }: ShareButtonsProps) {
       {hasNativeShare ? (
         <button
           onClick={handleNativeShare}
-          className="inline-flex items-center justify-center rounded transition-colors cursor-pointer text-slate-400 hover:text-cyan-400 hover:bg-slate-800 p-1.5 bg-transparent border-none"
+          className="inline-flex items-center justify-center rounded transition-colors cursor-pointer"
+          style={{ color: '#8b949e', padding: '6px', background: 'transparent', border: 'none' }}
           aria-label="Share via device share menu"
           title="Share"
           type="button"

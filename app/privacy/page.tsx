@@ -1,8 +1,4 @@
 import type { Metadata } from 'next';
-import {
-  PRIVACY_ANALYTICS_COPY,
-  resolveAnalyticsState,
-} from '@/lib/analytics-config.mjs';
 import { createPageMetadata } from '@/lib/page-metadata.mjs';
 
 export const metadata: Metadata = createPageMetadata({
@@ -13,8 +9,6 @@ export const metadata: Metadata = createPageMetadata({
 });
 
 export default function PrivacyPage() {
-  const analyticsState = resolveAnalyticsState(process.env.NEXT_PUBLIC_PLAUSIBLE_DOMAIN);
-
   return (
     <div style={{ background: '#0d1117', minHeight: '100vh' }}>
       <div
@@ -59,25 +53,13 @@ export default function PrivacyPage() {
               <div>
                 <h3 className="text-base font-bold text-white mb-2">Analytics</h3>
                 <p className="text-sm leading-relaxed" style={{ color: '#8b949e' }}>
-                  {analyticsState.analyticsEnabled ? (
-                    <>
-                      {PRIVACY_ANALYTICS_COPY.enabled} Plausible does not collect personal data, does not use cookies, and does not track users across websites. All data is aggregated and no individual visitor profiles are created. You can review Plausible&apos;s data policy at plausible.io/data-policy. Vercel, our hosting provider, also collects basic request-level data such as access logs as part of normal platform operation.
-                    </>
-                  ) : (
-                    <>
-                      {PRIVACY_ANALYTICS_COPY.disabled} We still rely on Vercel for hosting, which means Vercel collects basic request-level operational logs as part of normal platform operation.
-                    </>
-                  )}
+                  This site uses Plausible Analytics, a privacy-focused, cookie-free analytics service. Plausible does not collect personal data, does not use cookies, and does not track users across websites. All data is aggregated and no individual visitor profiles are created. You can review Plausible&apos;s data policy at plausible.io/data-policy. Vercel, our hosting provider, collects basic request-level data (e.g. access logs) as part of normal platform operation.
                 </p>
               </div>
               <div>
                 <h3 className="text-base font-bold text-white mb-2">Cookies</h3>
                 <p className="text-sm leading-relaxed" style={{ color: '#8b949e' }}>
-                  {analyticsState.analyticsEnabled ? (
-                    <>Plausible is cookie-free, so we do not use analytics cookies or cross-site tracking cookies on this site. Beehiiv may set cookies if you interact directly with its hosted newsletter pages or email preference flows.</>
-                  ) : (
-                    <>We do not use analytics or advertising cookies on this site. Beehiiv may still set cookies if you interact directly with its hosted newsletter pages or email preference flows.</>
-                  )}
+                  This site may use essential cookies required for basic functionality. We do not currently embed third-party analytics or newsletter widgets that set cookies while you browse the site. If you follow links to Beehiiv-hosted pages or emails, Beehiiv may set its own cookies under its privacy policy. No analytics cookies or advertising cookies are used on this site.
                 </p>
               </div>
             </div>
@@ -103,9 +85,7 @@ export default function PrivacyPage() {
               </li>
               <li className="flex items-start gap-2">
                 <span style={{ color: '#00b4ff' }} aria-hidden="true">&bull;</span>
-                {analyticsState.analyticsEnabled
-                  ? 'To understand which briefings and tools pages are useful without building individual visitor profiles'
-                  : 'To understand which content is useful based on server-level access patterns'}
+                To understand which content is useful based on server-level access patterns
               </li>
               <li className="flex items-start gap-2">
                 <span style={{ color: '#00b4ff' }} aria-hidden="true">&bull;</span>
@@ -139,12 +119,6 @@ export default function PrivacyPage() {
                 <span style={{ color: '#00b4ff' }} aria-hidden="true">&bull;</span>
                 <strong className="text-white">Vercel</strong> &mdash; site hosting and deployment
               </li>
-              {analyticsState.analyticsEnabled ? (
-                <li className="flex items-start gap-2">
-                  <span style={{ color: '#00b4ff' }} aria-hidden="true">&bull;</span>
-                  <strong className="text-white">Plausible Analytics</strong> &mdash; privacy-focused website analytics
-                </li>
-              ) : null}
               <li className="flex items-start gap-2">
                 <span style={{ color: '#00b4ff' }} aria-hidden="true">&bull;</span>
                 <strong className="text-white">GitHub</strong> &mdash; source code hosting

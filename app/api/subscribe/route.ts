@@ -1,6 +1,5 @@
 import { NextResponse } from 'next/server';
 import { ratelimit } from '@/lib/rate-limit';
-import { sanitizeNewsletterSource } from '@/lib/newsletter-source.mjs';
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const DEFAULT_SOURCE = 'unknown';
@@ -142,7 +141,17 @@ function getSubmittedOrigin(request: Request): string | null {
 }
 
 function normalizeSource(source: unknown): string {
-  return sanitizeNewsletterSource(source) ?? DEFAULT_SOURCE;
+  if (typeof source !== 'string') {
+    return DEFAULT_SOURCE;
+  }
+
+  const normalizedSource = source.trim().toLowerCase();
+
+  if (!normalizedSource) {
+    return DEFAULT_SOURCE;
+  }
+
+  return normalizedSource.replace(/\s+/g, '-');
 }
 
 function getReferringSite(request: Request): string {

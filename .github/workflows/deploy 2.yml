@@ -5,7 +5,7 @@ on:
     branches: [main]
   pull_request:
     branches: [main]
-  workflow_dispatch:
+
 jobs:
   verify:
     runs-on: ubuntu-latest
@@ -14,7 +14,7 @@ jobs:
         uses: actions/checkout@v6
 
       - name: Setup pnpm
-        uses: pnpm/action-setup@v5
+        uses: pnpm/action-setup@v4
         with:
           version: 10.23.0
 
@@ -24,19 +24,11 @@ jobs:
           node-version: '20'
           cache: 'pnpm'
 
-      - name: Verify STATUS.md baseline
-        env:
-          EXPECTED_STATUS_BASELINE_SHA: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || github.event.before }}
-        run: pnpm verify:status-doc
-
       - name: Verify env contract (warn only)
         run: pnpm verify:ops:contract
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
-
-      - name: Lint
-        run: pnpm lint
 
       - name: Check content manifest
         run: pnpm check:content
@@ -86,7 +78,7 @@ jobs:
         uses: actions/checkout@v6
 
       - name: Setup pnpm
-        uses: pnpm/action-setup@v5
+        uses: pnpm/action-setup@v4
         with:
           version: 10.23.0
 
