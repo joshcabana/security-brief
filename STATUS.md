@@ -1,7 +1,7 @@
 <!-- markdownlint-disable MD034 -->
 # AI Security Brief — Project Status
 
-**Pinned baseline:** `origin/main` @ `8a7111baccd137793f18ef018bfae7f2b11249d7` **Last updated:** 07 April 2026 **Updated by:** Codex
+**Pinned baseline:** `origin/main` @ `cc40aad7fa2b7eeec1750012ec33dbb64eb53335` **Last updated:** 07 April 2026 **Updated by:** Codex
 
 **Verification pipeline:** Vercel Actions
 
@@ -10,7 +10,7 @@
 | Component | Status |
 | --- | --- |
 | Live URL | https://aithreatbrief.com |
-| Latest deploy | `origin/main` — current |
+| Latest deploy | `main` @ `cc40aad7fa2b7eeec1750012ec33dbb64eb53335` — runtime reported active deployment |
 | Rate limiting | Upstash-backed distributed 5 req/min per IP on `/api/subscribe` |
 | Repository license | MIT (`LICENSE`) |
 | Public status surface | `/status` and `/status.json` (runtime snapshot) |
@@ -54,7 +54,7 @@ LinkedIn two-step verification for the profile is confirmed enabled. The `Busine
 | Header "Go Pro" CTA | ✅ Live — amber button on all pages |
 | ToolsMatrix Pro CTA | ✅ Fixed — now points to `/pro` (was dead beehiiv link) |
 | Tools page CTA | ✅ Upgraded — Pro-forward with free sub secondary |
-| Beehiiv Pro tier checkout | ⚠️ External confirmation pending — site routes `/upgrade` to the Beehiiv upgrade flow, but hosted checkout still needs browser-level confirmation in Beehiiv |
+| Beehiiv Pro tier checkout | ❌ Blocked — deployed `/upgrade` target currently lands on the wrong Beehiiv publication (`The Atlas Collective`), so checkout, tier name, and price for AI Security Brief are not yet verifiable |
 | LinkedIn Insight Tag | ✅ Live — Partner ID `9120908` and conversion ID `25104812` are set in Vercel production and deployed on `aithreatbrief.com` |
 | LinkedIn Campaigns | ⚠️ Draft ready — campaign `622908116` includes uploaded document creative/ad `1386551166`; manual launch decision still pending |
 
@@ -74,8 +74,8 @@ Update this file whenever `main` advances. Pin the SHA in the header. External t
 
 ## Remaining Blockers (LinkedIn Campaign Launch)
 
-1. **Beehiiv Pro tier confirmation** — Confirm the hosted Beehiiv upgrade flow completes successfully in a normal browser session and that pricing/tier settings match the live offer
+1. **Beehiiv upgrade URL fix** — Replace `siteConfig.beehiiv.upgradeUrl` with the correct AI Security Brief hosted paid URL; current deployed target (`https://ai-security-brief.beehiiv.com/upgrade`) renders the wrong publication (`The Atlas Collective`)
 2. **Campaign launch decision** — Review draft campaign `622908116`, confirm final targeting/budget copy, and explicitly launch when ready
 3. **LinkedIn domain confirmation** — Recheck Campaign Manager until the tracked domain state reflects the live site load, since that status is controlled on LinkedIn’s side
-4. **Beehiiv paid routing confirmation** — Confirm the current Beehiiv upgrade URL remains the intended canonical checkout destination; if Beehiiv issues a different final paid URL, update `siteConfig.beehiiv.upgradeUrl` and redeploy
+4. **Beehiiv paid routing confirmation** — After updating the URL, confirm the hosted checkout opens the AI Security Brief paid offer in a normal browser session and that the plan name and price match the intended live offer
 5. **Pause legacy campaigns if still spending** — If any older LinkedIn ad account is still active, pause campaigns driving traffic to non-Pro pages
