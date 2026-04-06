@@ -55,6 +55,8 @@ test('deploy workflow sanitises the Vercel deploy URL and keeps production live 
   assert.match(deployJob, /Failed to parse deployment URL from Vercel CLI output\./);
   assert.match(verifyJob, /name:\s+Verify STATUS\.md baseline/);
   assert.match(verifyJob, /run:\s+pnpm verify:status-doc/);
+  assert.match(verifyJob, /name:\s+Run production smoke tests/);
+  assert.match(verifyJob, /run:\s+pnpm test:smoke/);
   assert.match(
     verifyJob,
     /EXPECTED_STATUS_BASELINE_SHA:\s+\$\{\{ github\.event_name == 'pull_request' && github\.event\.pull_request\.base\.sha \|\| github\.event\.before \}\}/,

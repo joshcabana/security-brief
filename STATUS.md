@@ -1,7 +1,7 @@
 <!-- markdownlint-disable MD034 -->
 # AI Security Brief — Project Status
 
-**Pinned baseline:** `origin/main` @ `4cde7a28d5cf57983d400700ec05881444416010` **Last updated:** 06 April 2026 **Updated by:** Codex
+**Pinned baseline:** `origin/main` @ `5dfa801f90e61b4f0192077c35090caa88028107` **Last updated:** 07 April 2026 **Updated by:** Codex
 
 **Verification pipeline:** Vercel Actions
 
@@ -77,5 +77,5 @@ Update this file whenever `main` advances. Pin the SHA in the header. External t
 1. **Beehiiv Pro tier confirmation** — Confirm the hosted Beehiiv upgrade flow completes successfully in a normal browser session and that pricing/tier settings match the live offer
 2. **Campaign launch decision** — Review draft campaign `622908116`, confirm final targeting/budget copy, and explicitly launch when ready
 3. **LinkedIn domain confirmation** — Recheck Campaign Manager until the tracked domain state reflects the live site load, since that status is controlled on LinkedIn’s side
-4. **Beehiiv paid routing** — Replace placeholder Pro CTA routing with the final Beehiiv paid checkout destination once configured
+4. **Beehiiv paid routing confirmation** — Confirm the current Beehiiv upgrade URL remains the intended canonical checkout destination; if Beehiiv issues a different final paid URL, update `siteConfig.beehiiv.upgradeUrl` and redeploy
 5. **Pause legacy campaigns if still spending** — If any older LinkedIn ad account is still active, pause campaigns driving traffic to non-Pro pages
