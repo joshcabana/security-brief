@@ -1,7 +1,16 @@
+import type { Metadata } from 'next';
 import { buildStatusSnapshot } from '@/lib/status-data.mjs';
+import { createPageMetadata } from '@/lib/page-metadata.mjs';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
+
+export const metadata: Metadata = createPageMetadata({
+  canonicalPath: '/status',
+  title: 'Public Status',
+  description:
+    'Runtime deployment snapshot and public operational status for AI Security Brief.',
+});
 
 type StatusRow = {
   key: string;
