@@ -30,3 +30,6 @@ protected-assets/
 *.tsbuildinfo
 next-env.d.ts
 .pnpm-store
+
+# Internal Docs
+marketing/

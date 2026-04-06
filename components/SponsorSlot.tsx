@@ -9,14 +9,14 @@ export default function SponsorSlot({
   sponsor,
   url,
   tagline,
-  label = 'Presented by',
+  label = 'Advertisement',
 }: SponsorSlotProps) {
   return (
     <div
       className="relative rounded-xl overflow-hidden"
       style={{
-        background: 'linear-gradient(135deg, rgba(0,180,255,0.03) 0%, rgba(0,180,255,0.01) 100%)',
-        border: '1px solid rgba(0,180,255,0.12)',
+        background: 'rgba(20, 20, 20, 0.5)',
+        border: '1px dashed rgba(255, 255, 255, 0.15)',
       }}
     >
       <div className="px-5 py-4 flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4">
