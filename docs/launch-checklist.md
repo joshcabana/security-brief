@@ -3,7 +3,7 @@
 > Complete these steps in order after all repo files are pushed to GitHub.  
 > Estimated total time: **3–4 hours**
 
-> Note: This is the original launch runbook, retained for reference. It is not the canonical live status source after launch. For current operational state, use `README.md`, `automation-architecture.md`, `ops/affiliate-status.md`, the latest `main` commit, and the latest green GitHub Actions runs.
+> Note: This is the original launch runbook, retained for reference. It is not the canonical live status source after launch. For current operational state, use `README.md`, `docs/automation-architecture.md`, `ops/affiliate-status.md`, the latest `main` commit, and the latest green GitHub Actions runs.
 
 ---
 
@@ -79,9 +79,9 @@
 **Steps:**
 1. Go to [beehiiv.com](https://www.beehiiv.com) → Create account
 2. Publication name: **AI Security Brief**
-3. Configure branding (see `beehiiv-setup.md` for colours and template)
+3. Configure branding (see `docs/beehiiv-setup.md` for colours and template)
 4. Set up sender email (requires domain verification)
-5. Create email template matching the design in `beehiiv-setup.md`
+5. Create email template matching the design in `docs/beehiiv-setup.md`
 6. Generate API key: Settings → Integrations → API
 7. Copy API key to `.env.local` as `BEEHIIV_API_KEY`
 8. Copy Publication ID to `.env.local` as `BEEHIIV_PUBLICATION_ID`
@@ -90,7 +90,7 @@
 11. Optional: if using a Beehiiv automation, add `BEEHIIV_WELCOME_AUTOMATION_ID` to `.env.local` and Vercel before testing
 12. Verify `/newsletter` can create a real signup through `/api/subscribe`
 13. Confirm the subscriber receives the intended Beehiiv welcome flow and that the PDF link works
-14. Create Issue #1 using content from `newsletter-issue-001.md`
+14. Create Issue #1 using content from `docs/newsletter-issue-001.md`
 15. Preview → Test send to yourself
 16. Publish or schedule Issue #1
 
@@ -196,7 +196,7 @@ Thanks,
    - `BEEHIIV_PUBLICATION_ID`
 3. Add optional repository variable:
    - `GITHUB_MODELS_MODEL=openai/gpt-4o-mini`
-4. Review `zapier-setup.md` — it now documents the production GitHub Actions pipeline
+4. Review `docs/zapier-setup.md` — it now documents the production GitHub Actions pipeline
 5. Confirm the following workflows exist:
    - `weekly-harvest.yml`
    - `article-factory.yml`

@@ -249,23 +249,19 @@ ai-security-brief/
 ├── app/                    # Next.js routes, metadata, and subscribe API
 ├── blog/                   # Markdown article source files
 ├── components/             # Reusable UI components
+├── docs/                   # Operator runbooks, setup guides, and archived planning docs
 ├── drafts/                 # Review-only newsletter drafts
 ├── harvests/               # Weekly research harvests
 ├── lib/                    # Content loading, affiliate helpers, and page metadata contract
 ├── logs/                   # Beehiiv performance logs
 ├── ops/                    # Affiliate status, intake, and local mapping templates
+├── patches/                # Archived migration and redesign patch bundles
 ├── public/                 # Static assets served directly by Next.js
 ├── scripts/                # Verification and automation scripts
-├── skills.md               # Local notes on installed skills and operator tooling
 ├── tests/                  # Unit-level regression tests
 ├── .github/workflows/      # Automation and deployment workflows
 ├── content-manifest.json   # Generated article manifest
-├── automation-architecture.md
-├── affiliate-programs.md
-├── beehiiv-setup.md
-├── launch-checklist.md
-├── newsletter-issue-001.md
-└── zapier-setup.md
+└── STATUS.md               # Canonical audited project state and deployment baseline
 ```
 
 ## License

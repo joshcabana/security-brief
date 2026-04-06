@@ -138,25 +138,25 @@ async function main() {
 
   const harvestFindings = parseHarvestMarkdown(await readText(harvestPath));
   const harvestSourceMap = new Map(harvestFindings.map((finding) => [finding.source_url, finding]));
-  const affiliatePrograms = await readText(path.join(REPO_ROOT, 'affiliate-programs.md'));
+  const affiliatePrograms = await readText(path.join(REPO_ROOT, 'docs', 'affiliate-programs.md'));
   const placeholders = parseAffiliatePlaceholderMap(affiliatePrograms);
   const programs = parseAffiliatePrograms(affiliatePrograms);
   const selectedProgram = programs[(Number(context.identity.weekKey.split('-')[1]) - 1) % programs.length];
   const toolPlaceholder = selectedProgram ? placeholders.get(selectedProgram.placeholderKey) : null;
 
   if (!toolPlaceholder || !selectedProgram) {
-    throw new Error('Affiliate program rotation could not be resolved from affiliate-programs.md');
+    throw new Error('Affiliate program rotation could not be resolved from docs/affiliate-programs.md');
   }
 
   const draftFiles = (await fs.readdir(path.join(REPO_ROOT, 'drafts'))).filter((entry) => entry.startsWith('newsletter-') && entry.endsWith('.md'));
   const existingIssueNumbers = [];
-  const publishedIssuePath = path.join(REPO_ROOT, 'newsletter-issue-001.md');
+  const publishedIssuePath = path.join(REPO_ROOT, 'docs', 'newsletter-issue-001.md');
 
   if (await fileExists(publishedIssuePath)) {
     const publishedIssueNumber = extractNewsletterIssueNumber(await readText(publishedIssuePath));
 
     if (!publishedIssueNumber) {
-      throw new Error('Published newsletter issue numbering could not be parsed from newsletter-issue-001.md.');
+      throw new Error('Published newsletter issue numbering could not be parsed from docs/newsletter-issue-001.md.');
     }
 
     existingIssueNumbers.push(publishedIssueNumber);

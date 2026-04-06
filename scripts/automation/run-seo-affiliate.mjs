@@ -48,7 +48,7 @@ async function main() {
     throw new Error('SEO optimiser could not find any blog drafts in the current weekly content branch.');
   }
 
-  const affiliatePrograms = await readText(path.join(REPO_ROOT, 'affiliate-programs.md'));
+  const affiliatePrograms = await readText(path.join(REPO_ROOT, 'docs', 'affiliate-programs.md'));
   const placeholders = parseAffiliatePlaceholderMap(affiliatePrograms);
   const updatedFiles = [];
 

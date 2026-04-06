@@ -141,14 +141,14 @@ Use this skill after the Weekly AI Security Harvest has run, to produce blog con
 
 **Name:** `newsletter-compiler`
 
-**Description:** Read the latest /harvests/ file and 2 newest /blog/ posts from the ai-security-brief GitHub repo. Compile a newsletter draft using newsletter-issue-001.md as a template. Insert affiliate placeholders from affiliate-programs.md. Save as /drafts/newsletter-[DATE].md. Do NOT publish.
+**Description:** Read the latest /harvests/ file and 2 newest /blog/ posts from the ai-security-brief GitHub repo. Compile a newsletter draft using docs/newsletter-issue-001.md as a template. Insert affiliate placeholders from docs/affiliate-programs.md. Save as /drafts/newsletter-[DATE].md. Do NOT publish.
 
 **Instructions:**
 
 ```
 ---
 name: newsletter-compiler
-description: Read the latest /harvests/ file and 2 newest /blog/ posts from the ai-security-brief GitHub repo. Compile a newsletter draft using newsletter-issue-001.md as a template. Insert affiliate placeholders from affiliate-programs.md. Do NOT publish.
+description: Read the latest /harvests/ file and 2 newest /blog/ posts from the ai-security-brief GitHub repo. Compile a newsletter draft using docs/newsletter-issue-001.md as a template. Insert affiliate placeholders from docs/affiliate-programs.md. Do NOT publish.
 metadata:
   author: ai-security-brief
   version: '1.0'
@@ -165,8 +165,8 @@ Use this skill after Article Factory has run, to compile a newsletter draft from
 1. **Gather inputs from GitHub repo `ai-security-brief`:**
    - Read the latest file in `/harvests/` (the weekly harvest)
    - Read the 2 newest files in `/blog/` (the articles just created)
-   - Read `newsletter-issue-001.md` (the template)
-   - Read `affiliate-programs.md` (for affiliate placeholders)
+   - Read `docs/newsletter-issue-001.md` (the template)
+   - Read `docs/affiliate-programs.md` (for affiliate placeholders)
 
 2. **Compile the newsletter draft using this structure:**
 
@@ -213,7 +213,7 @@ Use this skill after Article Factory has run, to compile a newsletter draft from
 
    ---
 
-   ### 🛡️ TOOL OF THE WEEK: [Rotate through affiliate-programs.md]
+   ### 🛡️ TOOL OF THE WEEK: [Rotate through docs/affiliate-programs.md]
    [2-3 sentence description of the tool and why it's relevant this week]
    **[Try [Tool Name] → [AFFILIATE:TOOLNAME]](/tools)**
 
@@ -223,7 +223,7 @@ Use this skill after Article Factory has run, to compile a newsletter draft from
    [SUBSCRIBE CTA + FOOTER — same as template]
    ```
 
-3. **Affiliate rotation:** Cycle through the 8 programs in affiliate-programs.md. Use the placeholder format `[AFFILIATE:TOOLNAME]` so links can be replaced before publishing.
+3. **Affiliate rotation:** Cycle through the 8 programs in docs/affiliate-programs.md. Use the placeholder format `[AFFILIATE:TOOLNAME]` so links can be replaced before publishing.
 
 4. **Save draft:**
    - Filename: `newsletter-YYYY-MM-DD.md`
@@ -239,14 +239,14 @@ Use this skill after Article Factory has run, to compile a newsletter draft from
 
 **Name:** `seo-affiliate-optimizer`
 
-**Description:** Scan all /blog/ markdown files in the ai-security-brief GitHub repo that are missing SEO metadata. Add meta title, meta description, and 5 focus keywords. Inject affiliate links from affiliate-programs.md where tools are mentioned. Commit changes.
+**Description:** Scan all /blog/ markdown files in the ai-security-brief GitHub repo that are missing SEO metadata. Add meta title, meta description, and 5 focus keywords. Inject affiliate links from docs/affiliate-programs.md where tools are mentioned. Commit changes.
 
 **Instructions:**
 
 ```
 ---
 name: seo-affiliate-optimizer
-description: Scan all /blog/ markdown files in the ai-security-brief GitHub repo that are missing SEO metadata. Add meta title, meta description, and 5 focus keywords. Inject affiliate links from affiliate-programs.md where tools are mentioned. Commit changes.
+description: Scan all /blog/ markdown files in the ai-security-brief GitHub repo that are missing SEO metadata. Add meta title, meta description, and 5 focus keywords. Inject affiliate links from docs/affiliate-programs.md where tools are mentioned. Commit changes.
 metadata:
   author: ai-security-brief
   version: '1.0'
@@ -277,7 +277,7 @@ Use this skill weekly to ensure all blog posts have complete SEO metadata and re
    - Update the YAML frontmatter with the new fields
 
 3. **Inject affiliate links:**
-   - Read `affiliate-programs.md` from the repo root for the tool list and placeholder format
+   - Read `docs/affiliate-programs.md` for the tool list and placeholder format
    - Scan each article body for mentions of these tools/services:
      - NordVPN, Nord → `[AFFILIATE:NORDVPN]`
      - Proton, ProtonMail, Proton Mail, Proton VPN → `[AFFILIATE:PROTON]`
@@ -392,4 +392,4 @@ If you reuse these legacy Computer skills manually, run them in this order:
 4. **SEO + Affiliate Optimizer**
 5. **Performance Logger**
 
-Production scheduling no longer uses Zapier or Perplexity Computer. The live automation schedule now lives in GitHub Actions and is documented in `zapier-setup.md`.
+Production scheduling no longer uses Zapier or Perplexity Computer. The live automation schedule now lives in GitHub Actions and is documented in `docs/zapier-setup.md`.

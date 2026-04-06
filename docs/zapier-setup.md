@@ -115,5 +115,5 @@ Suggested first backfill order:
 ## Deprecated Paths
 
 - Perplexity Computer credits are **not** part of the production automation path
-- `skills.md` is retained as legacy reference only
+- `docs/skills.md` is retained as legacy reference only
 - Zapier is no longer required and should not be wired to placeholder Perplexity endpoints

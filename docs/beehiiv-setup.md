@@ -121,7 +121,7 @@ Optional: create an embedded Beehiiv form later if you want a hosted fallback, b
 
 ## Step 7: Publish Issue #1
 
-1. Use the content from `newsletter-issue-001.md` in this repo
+1. Use the content from `docs/newsletter-issue-001.md` in this repo
 2. Preview → Test send to yourself
 3. Schedule or publish
 4. Verify tracking is working in Beehiiv analytics
@@ -282,4 +282,3 @@ After a successful lead capture, you can segment subscribers in Beehiiv by:
 - `job_title = "CISO / CSO"` → Pitch as "150 CISOs on your list"
 - `lead_source = "tools-matrix"` → Attribute conversions per page
 - `asset_requested = "ai-security-tools-matrix"` → Track which content converts
-
