@@ -1,7 +1,7 @@
 <!-- markdownlint-disable MD034 -->
 # AI Security Brief — Project Status
 
-**Pinned baseline:** `origin/main` @ `b6393b949e4004c92896598bae98153a4f5ad2da` **Last updated:** 03 April 2026 **Updated by:** Antigravity
+**Pinned baseline:** `origin/main` @ `4cde7a28d5cf57983d400700ec05881444416010` **Last updated:** 03 April 2026 **Updated by:** Antigravity
 
 **Verification pipeline:** Vercel Actions
 
