@@ -7,6 +7,7 @@ import RepurposeCTA from '@/components/RepurposeCTA';
 import { generateArticleSchema } from '@/lib/seo';
 import ShareButtons from '@/components/ShareButtons';
 import PaywallCTA from '@/components/PaywallCTA';
+import AccountabilityBox from '@/components/AccountabilityBox';
 import { getAllArticles, getArticleBySlug } from '@/lib/articles';
 import { siteUrl, siteName } from '@/lib/site';
 
@@ -14,7 +15,12 @@ interface ArticlePageProps {
   params: Promise<{ slug: string }>;
 }
 
-export const dynamic = 'force-dynamic';
+export async function generateStaticParams() {
+  const articles = await getAllArticles();
+  return articles.map((article) => ({
+    slug: article.slug,
+  }));
+}
 
 function formatDate(date: string): string {
   return new Date(date).toLocaleDateString('en-AU', {
@@ -142,6 +148,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
               className="prose-dark text-slate-200"
               dangerouslySetInnerHTML={{ __html: article.contentHtml }}
             />
+            <AccountabilityBox reviewerName={typeof article.author === 'string' ? article.author : article.author?.name} />
             {article.isPaywalled && <PaywallCTA />}
             <div className="flex flex-wrap gap-2 mt-12 pt-8 border-t border-slate-800">
               <span className="text-xs text-slate-500 self-center">Filed under:</span>
@@ -195,7 +202,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
         </div>
 
         <div className="mt-16 pt-12 border-t border-slate-800">
-          <div className="section-label mb-6">Related Intelligence</div>
+          <div className="section-label mb-6">Related Briefings</div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
             {relatedArticles.map((relatedArticle, index) => (
               <ArticleCard key={relatedArticle.slug} article={relatedArticle} variant="default" index={index} />

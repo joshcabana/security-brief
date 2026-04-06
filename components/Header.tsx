@@ -2,8 +2,9 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import ShieldLogo from './ShieldLogo';
+import SearchBar from './SearchBar';
 
 const navLinks = [
   { href: '/', label: 'Home' },
@@ -16,10 +17,23 @@ const navLinks = [
 export default function Header() {
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 20);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   return (
     <header
-      className="sticky top-0 z-50 w-full bg-slate-950/90 border-b border-slate-800 backdrop-blur-md"
+      className={`sticky top-0 z-50 w-full border-b transition-all duration-300 ${
+        scrolled 
+          ? 'bg-slate-950/90 border-slate-800/80 backdrop-blur-md shadow-sm' 
+          : 'bg-transparent border-transparent backdrop-blur-none'
+      }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
@@ -55,6 +69,9 @@ export default function Header() {
                 </Link>
               );
             })}
+            <div className="mx-2 hidden lg:block">
+              <SearchBar />
+            </div>
             <Link
               href="/subscribe"
               className="ml-2 px-4 py-2 rounded-md text-sm font-semibold text-slate-400 hover:text-cyan-400 transition-colors duration-200"

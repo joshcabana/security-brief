@@ -13,7 +13,7 @@ Plus: the definitive VPN guide for security pros, and DNS-based data exfiltratio
 
 ## Header
 
-**AI Security Brief** | Weekly threat intelligence for security professionals
+**AI Security Brief** | Weekly security briefings for security professionals
 
 ---
 

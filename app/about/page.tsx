@@ -9,7 +9,7 @@ export const metadata: Metadata = createPageMetadata({
   canonicalPath: '/about',
   title: 'About Josh Cabana — AI Security Brief',
   description:
-    'The uncompromising intelligence feed for technology professionals defending against autonomous agents, prompt injection, and MLSecOps vulnerabilities.',
+    'The uncompromising briefing for technology professionals defending against autonomous agents, prompt injection, and MLSecOps vulnerabilities.',
 });
 
 export default function AboutPage() {
@@ -28,14 +28,14 @@ export default function AboutPage() {
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
               <span className="relative inline-flex rounded-full h-2 w-2 bg-cyan-500"></span>
             </span>
-            Operator-Led Intelligence
+            Operator-Led Analysis
           </div>
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight mb-6 text-slate-900 dark:text-white">
             We don&apos;t summarize the news.<br className="hidden md:block" />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-500 to-blue-600">We reverse-engineer the threat.</span>
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-500 to-blue-600">We unpack the actual risk.</span>
           </h1>
           <p className="text-lg md:text-xl text-slate-600 dark:text-slate-400 max-w-3xl mx-auto leading-relaxed">
-            AI Security Brief is an independent intelligence operation serving CISOs, AppSec Leads, and Red Teamers navigating the explosive reality of agentic vulnerabilities.
+            AI Security Brief is an independent briefing publication serving CISOs, AppSec Leads, and Red Teamers navigating the explosive reality of agentic vulnerabilities.
           </p>
         </div>
       </div>
@@ -100,7 +100,7 @@ export default function AboutPage() {
         Methodology & Coverage Matrix
       */}
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-2 text-center">Our Intelligence Matrix</h2>
+        <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-2 text-center">Our Coverage Matrix</h2>
         <p className="text-slate-600 dark:text-slate-400 text-center mb-12 max-w-2xl mx-auto">The three pillars of coverage delivered exclusively to your inbox.</p>
         
         <div className="grid sm:grid-cols-3 gap-6">
@@ -160,7 +160,7 @@ export default function AboutPage() {
           <div className="relative z-10">
             <h2 className="text-3xl font-extrabold text-slate-900 dark:text-white mb-4">Don&apos;t leave your perimeter to chance.</h2>
             <p className="text-slate-600 dark:text-slate-400 text-lg mb-8 max-w-2xl mx-auto">
-              Join 4,500+ CISOs, Security Engineers, and Red Teamers receiving the definitive briefing on agentic threat intelligence.
+              Join 4,500+ CISOs, Security Engineers, and Red Teamers receiving the definitive briefing on agentic security risks.
             </p>
             <div className="max-w-md mx-auto">
               <NewsletterForm variant="page" buttonText="Access the Briefing" source="about-page" />

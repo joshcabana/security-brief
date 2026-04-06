@@ -219,9 +219,9 @@ function generateToolsJsonLd() {
   return {
     '@context': 'https://schema.org',
     '@type': 'ItemList',
-    name: 'Security Tools & Resources — AI Threat Brief',
+    name: 'Security Tools & Resources — AI Security Brief',
     description: 'Curated security tools for AI-era defence: VPNs, password managers, encrypted email, and endpoint protection.',
-    url: 'https://aithreatbrief.com/tools',
+    url: 'https://aisecuritybrief.com/tools',
     numberOfItems: items.length,
     itemListElement: items.map((item, index) => ({
       '@type': 'ListItem',
@@ -431,7 +431,7 @@ export default function ToolsPage() {
               Subscribe for weekly briefings, new tooling notes, and practical product recommendations that match the week’s threat briefings.
             </p>
             <Link
-              href="/newsletter"
+              href="/subscribe"
               className="inline-flex items-center gap-2 rounded-md bg-[#00b4ff] px-8 py-3.5 text-sm font-bold text-[#0d1117] transition-all duration-200 hover:bg-[#33c3ff] hover:shadow-[0_0_20px_rgba(0,180,255,0.35)]"
             >
               Subscribe free
