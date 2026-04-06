@@ -4,7 +4,7 @@
 
 1. Go to [beehiiv.com](https://www.beehiiv.com/) and sign up for a free account (or Scale plan for full features)
 2. Choose publication name: **AI Security Brief**
-3. Set publication URL: `aisecuritybrief.beehiiv.com` (or custom domain later)
+3. Set publication URL: `aisec.beehiiv.com` (or custom domain later)
 
 ## Step 2: Configure Publication Settings
 
