@@ -20,6 +20,12 @@ export const metadata: Metadata = createPageMetadata({
   title: 'AI Security Brief Pro — Intelligence for Security Leaders',
   description:
     'The AI threat feed built for CISOs, SecOps leads, and AI security engineers. Exclusive briefings, threat advisories, and analysis — no fluff, no affiliate noise.',
+  openGraphTitle: 'AI Security Brief Pro — Intelligence for Security Leaders',
+  openGraphDescription:
+    'The AI threat feed built for CISOs, SecOps leads, and AI security engineers. Exclusive briefings, threat advisories, and analysis — no fluff, no affiliate noise.',
+  twitterTitle: 'AI Security Brief Pro',
+  twitterDescription:
+    'Priority AI threat advisories, deep technical briefings, and the full archive for security leaders.',
 });
 
 const proFeatures = [

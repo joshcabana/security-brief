@@ -54,7 +54,7 @@ LinkedIn two-step verification for the profile is confirmed enabled. The `Busine
 | Header "Go Pro" CTA | ✅ Live — amber button on all pages |
 | ToolsMatrix Pro CTA | ✅ Fixed — now points to `/pro` (was dead beehiiv link) |
 | Tools page CTA | ✅ Upgraded — Pro-forward with free sub secondary |
-| Beehiiv Pro tier checkout | ⚠️ Pending — configure in Beehiiv dashboard |
+| Beehiiv Pro tier checkout | ⚠️ External confirmation pending — site routes `/upgrade` to the Beehiiv upgrade flow, but hosted checkout still needs browser-level confirmation in Beehiiv |
 | LinkedIn Insight Tag | ✅ Live — Partner ID `9120908` and conversion ID `25104812` are set in Vercel production and deployed on `aithreatbrief.com` |
 | LinkedIn Campaigns | ⚠️ Draft ready — campaign `622908116` includes uploaded document creative/ad `1386551166`; manual launch decision still pending |
 
@@ -74,7 +74,7 @@ Update this file whenever `main` advances. Pin the SHA in the header. External t
 
 ## Remaining Blockers (LinkedIn Campaign Launch)
 
-1. **Beehiiv Pro tier** — Set up paid tier checkout in Beehiiv dashboard so `/pro` CTA has a real destination
+1. **Beehiiv Pro tier confirmation** — Confirm the hosted Beehiiv upgrade flow completes successfully in a normal browser session and that pricing/tier settings match the live offer
 2. **Campaign launch decision** — Review draft campaign `622908116`, confirm final targeting/budget copy, and explicitly launch when ready
 3. **LinkedIn domain confirmation** — Recheck Campaign Manager until the tracked domain state reflects the live site load, since that status is controlled on LinkedIn’s side
 4. **Beehiiv paid routing** — Replace placeholder Pro CTA routing with the final Beehiiv paid checkout destination once configured

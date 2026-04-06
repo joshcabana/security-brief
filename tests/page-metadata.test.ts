@@ -59,6 +59,18 @@ test('verified metadata and privacy analytics declarations match the live contra
       canonicalPath: '/privacy',
     },
     {
+      path: '/pro',
+      canonicalPath: '/pro',
+      ogDescription:
+        'The AI threat feed built for CISOs, SecOps leads, and AI security engineers. Exclusive briefings, threat advisories, and analysis — no fluff, no affiliate noise.',
+    },
+    {
+      path: '/upgrade',
+      canonicalPath: '/upgrade',
+      ogDescription:
+        'Activate AI Security Brief Pro at the founding member rate with secure Beehiiv checkout and immediate access to priority advisories, deep dives, and the full archive.',
+    },
+    {
       path: '/tools',
       canonicalPath: '/tools',
       ogDescription:
