@@ -10,9 +10,14 @@ export function getSiteUrl(): URL {
   return new URL(siteUrl);
 }
 
+export function isBeehiivCheckoutLive(env: Record<string, string | undefined> = process.env): boolean {
+  return env.NEXT_PUBLIC_PRO_CHECKOUT_LIVE?.trim().toLowerCase() === 'true';
+}
+
 export const siteConfig = {
   beehiiv: {
     upgradeUrl: 'https://aisec.beehiiv.com/upgrade',
     loginUrl: 'https://aisec.beehiiv.com/login',
+    checkoutLive: isBeehiivCheckoutLive(),
   }
 };

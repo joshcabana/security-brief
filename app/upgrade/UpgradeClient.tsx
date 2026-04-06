@@ -8,9 +8,9 @@ import { siteConfig } from '@/lib/site';
 /**
  * If true, the page redirects directly to the live Beehiiv checkout flow.
  * If false, it captures upgrade-intent signups via the existing /api/subscribe
- * endpoint until paid checkout is ready.
+ * endpoint until Beehiiv paid subscriptions are confirmed live.
  */
-const PRO_CHECKOUT_LIVE = true;
+const PRO_CHECKOUT_LIVE = siteConfig.beehiiv.checkoutLive;
 
 const BEEHIIV_CHECKOUT_URL = siteConfig.beehiiv.upgradeUrl;
 

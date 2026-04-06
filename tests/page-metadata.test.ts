@@ -68,7 +68,7 @@ test('verified metadata and privacy analytics declarations match the live contra
       path: '/upgrade',
       canonicalPath: '/upgrade',
       ogDescription:
-        'Activate AI Security Brief Pro at the founding member rate with secure Beehiiv checkout and immediate access to priority advisories, deep dives, and the full archive.',
+        'Join the AI Security Brief Pro founding cohort to lock in the founding rate and get notified when paid access opens.',
     },
     {
       path: '/tools',

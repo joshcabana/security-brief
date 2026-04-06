@@ -6,13 +6,13 @@ export const metadata: Metadata = createPageMetadata({
   canonicalPath: '/upgrade',
   title: 'Upgrade to AI Security Brief Pro',
   description:
-    'Activate AI Security Brief Pro at the founding member rate and unlock priority advisories, deep technical briefings, and the full archive.',
+    'Join the AI Security Brief Pro founding cohort and get notified as soon as paid access opens.',
   openGraphTitle: 'Upgrade to AI Security Brief Pro',
   openGraphDescription:
-    'Activate AI Security Brief Pro at the founding member rate with secure Beehiiv checkout and immediate access to priority advisories, deep dives, and the full archive.',
+    'Join the AI Security Brief Pro founding cohort to lock in the founding rate and get notified when paid access opens.',
   twitterTitle: 'Upgrade to AI Security Brief Pro',
   twitterDescription:
-    'Activate AI Security Brief Pro at the founding member rate with secure checkout and full archive access.',
+    'Join the AI Security Brief Pro founding cohort and get first access when paid subscriptions open.',
 });
 
 export default function UpgradePage() {

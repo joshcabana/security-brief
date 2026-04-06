@@ -96,6 +96,7 @@ The app will be available at `http://localhost:3000`.
 | `BEEHIIV_LEAD_AUTOMATION_ID` | Optional | Beehiiv automation ID for gated lead capture (PDF delivery); falls back to `BEEHIIV_WELCOME_AUTOMATION_ID` |
 | `NEXT_PUBLIC_SITE_URL` | Yes for `verify:ops` readiness | Canonical site URL |
 | `NEXT_PUBLIC_SITE_NAME` | Yes for `verify:ops` readiness | Public site name |
+| `NEXT_PUBLIC_PRO_CHECKOUT_LIVE` | Optional | Enables the live `/upgrade` redirect to Beehiiv paid checkout; default is the upgrade-intent waitlist flow |
 | `NEXT_PUBLIC_PLAUSIBLE_DOMAIN` | Optional | Enables Plausible analytics script injection for the configured public domain |
 | `NEXT_PUBLIC_LINKEDIN_PARTNER_ID` | Optional | LinkedIn Insight Tag partner ID for site-wide tracking |
 | `NEXT_PUBLIC_LINKEDIN_CONVERSION_PRO_SIGNUP` | Optional | LinkedIn conversion ID used for Pro signup intent tracking |

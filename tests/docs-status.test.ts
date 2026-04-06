@@ -45,6 +45,7 @@ test('README documents the full optional runtime env surface used by the app', (
 
   assert.match(readmeSource, /\| `BEEHIIV_WELCOME_AUTOMATION_ID` \| Optional \|/);
   assert.match(readmeSource, /\| `BEEHIIV_LEAD_AUTOMATION_ID` \| Optional \|/);
+  assert.match(readmeSource, /\| `NEXT_PUBLIC_PRO_CHECKOUT_LIVE` \| Optional \|/);
   assert.match(readmeSource, /\| `NEXT_PUBLIC_PLAUSIBLE_DOMAIN` \| Optional \|/);
   assert.match(readmeSource, /\| `NEXT_PUBLIC_LINKEDIN_PARTNER_ID` \| Optional \|/);
   assert.match(readmeSource, /\| `NEXT_PUBLIC_LINKEDIN_CONVERSION_PRO_SIGNUP` \| Optional \|/);

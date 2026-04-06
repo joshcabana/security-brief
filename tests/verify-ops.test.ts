@@ -131,6 +131,7 @@ test('verify:ops --contract-only allows documented optional env keys', async () 
       'BEEHIIV_LEAD_AUTOMATION_ID=',
       'NEXT_PUBLIC_SITE_URL=https://your-domain.com',
       'NEXT_PUBLIC_SITE_NAME=AI Security Brief',
+      'NEXT_PUBLIC_PRO_CHECKOUT_LIVE=',
       'NEXT_PUBLIC_PLAUSIBLE_DOMAIN=',
       'NEXT_PUBLIC_LINKEDIN_PARTNER_ID=',
       'NEXT_PUBLIC_LINKEDIN_CONVERSION_PRO_SIGNUP=',
