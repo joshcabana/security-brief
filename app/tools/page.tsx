@@ -423,7 +423,7 @@ export default function ToolsPage() {
           <div className="relative">
             <div className="section-label mb-4 justify-center">
               <span className="inline-flex items-center gap-2 text-xs font-mono font-semibold uppercase tracking-widest" style={{ color: '#00b4ff' }}>
-                Get tool reviews in your inbox
+                Get the low-noise weekly brief
               </span>
             </div>
             <h2 className="text-white mb-4">Pair the tools with the threat briefings</h2>
@@ -432,6 +432,7 @@ export default function ToolsPage() {
             </p>
             <Link
               href="/subscribe"
+              data-newsletter-source="tools-footer"
               className="inline-flex items-center gap-2 rounded-md bg-[#00b4ff] px-8 py-3.5 text-sm font-bold text-[#0d1117] transition-all duration-200 hover:bg-[#33c3ff] hover:shadow-[0_0_20px_rgba(0,180,255,0.35)]"
             >
               Subscribe free

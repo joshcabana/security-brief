@@ -341,7 +341,8 @@ async function main() {
       homepageSlugs,
       'Expected homepage to link to the latest four article slugs in content-manifest.json.',
     );
-    assert.match(homeHtml, /Published briefings/);
+    assert.match(homeHtml, /Latest Briefings/);
+    assert.match(homeHtml, /Intelligence Feed/);
     assert.match(homeHtml, /Get the next briefing in your inbox/);
     assert.doesNotMatch(homeHtml, /Join the launch list|publication goes live/i);
 

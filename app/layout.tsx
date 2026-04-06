@@ -6,6 +6,7 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import AffiliateBanner from '@/components/AffiliateBanner';
 import { getSiteUrl, siteDescription, siteName, siteUrl } from '@/lib/site';
+import { resolveAnalyticsState } from '@/lib/analytics-config.mjs';
 
 
 
@@ -78,6 +79,8 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const analyticsState = resolveAnalyticsState(process.env.NEXT_PUBLIC_PLAUSIBLE_DOMAIN);
+
   return (
     <html
       lang="en"
@@ -112,12 +115,14 @@ export default function RootLayout({
         <Header />
         <main className="flex-1">{children}</main>
         <Footer />
-        <Script
-          defer
-          data-domain="aithreatbrief.com"
-          src="https://plausible.io/js/script.js"
-          strategy="afterInteractive"
-        />
+        {analyticsState.analyticsEnabled ? (
+          <Script
+            defer
+            data-domain={analyticsState.plausibleDomain}
+            src="https://plausible.io/js/script.js"
+            strategy="afterInteractive"
+          />
+        ) : null}
         {process.env.NEXT_PUBLIC_LINKEDIN_PARTNER_ID && (
           <Script
             id="linkedin-insight"
