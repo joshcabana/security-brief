@@ -11,7 +11,10 @@
       "title": "The Best LLM Firewalls Evaluated (2026 Guide)",
       "slug": "best-llm-firewall-2026",
       "date": "2026-04-03",
-      "author": "Josh Cabana",
+      "author": {
+        "name": "Josh Cabana",
+        "role": "Editor & Publisher"
+      },
       "excerpt": "A technical evaluation of the top MLSecOps firewalls for filtering prompts, preventing injection attacks, and securing large language model deployments in production.",
       "category": "Tools",
       "featured": true,
@@ -25,13 +28,38 @@
         "enterprise AI security"
       ],
       "readTime": "7 min",
+      "primarySources": [
+        {
+          "url": "https://docs.nvidia.com/nemo-guardrails/index.html",
+          "title": "NVIDIA NeMo Guardrails Documentation"
+        },
+        {
+          "url": "https://docs.nvidia.com/nemo/guardrails/latest/configure-rails/guardrail-catalog.html",
+          "title": "NVIDIA NeMo Guardrails — Guardrail Catalog"
+        },
+        {
+          "url": "https://docs.lakera.ai/docs/defenses",
+          "title": "Lakera Guard — Guardrails Documentation"
+        },
+        {
+          "url": "https://github.com/protectai/rebuff",
+          "title": "Protect AI Rebuff — LLM Prompt Injection Detector"
+        },
+        {
+          "url": "https://developers.cloudflare.com/ai-gateway/features/dlp/",
+          "title": "Cloudflare AI Gateway — Data Loss Prevention (DLP)"
+        }
+      ],
       "fileName": "best-llm-firewall-2026.md"
     },
     {
       "title": "The Zero-BS Guide to Preventing Prompt Injection Attacks",
       "slug": "preventing-prompt-injection-attacks",
       "date": "2026-04-03",
-      "author": "Josh Cabana",
+      "author": {
+        "name": "Josh Cabana",
+        "role": "Editor & Publisher"
+      },
       "excerpt": "A tactical guide to mitigating prompt injection attacks in production. Moving beyond fragile regex filters to semantic validation and dual-LLM architectural defenses.",
       "category": "Security Engineering",
       "featured": false,
@@ -45,13 +73,34 @@
         "enterprise AI security"
       ],
       "readTime": "6 min",
+      "primarySources": [
+        {
+          "url": "https://cheatsheetseries.owasp.org/cheatsheets/LLM_Prompt_Injection_Prevention_Cheat_Sheet.html",
+          "title": "OWASP Cheat Sheet Series — LLM Prompt Injection Prevention Cheat Sheet"
+        },
+        {
+          "url": "https://genai.owasp.org/llmrisk/llm01-prompt-injection/",
+          "title": "OWASP Gen AI Security Project — LLM01:2025 Prompt Injection"
+        },
+        {
+          "url": "https://www.microsoft.com/en-us/msrc/blog/2025/07/how-microsoft-defends-against-indirect-prompt-injection-attacks",
+          "title": "Microsoft Security Response Centre — How Microsoft Defends Against Indirect Prompt Injection Attacks"
+        },
+        {
+          "url": "https://docs.anthropic.com/en/docs/test-and-evaluate/strengthen-guardrails/mitigate-jailbreaks",
+          "title": "Anthropic — Mitigate jailbreaks and prompt injections"
+        }
+      ],
       "fileName": "preventing-prompt-injection-attacks.md"
     },
     {
       "title": "Claude Extension Flaw Enabled Zero-Click XSS Prompt Injection via Any Website",
       "slug": "claude-extension-flaw-enabled-zero-click-xss-prompt-injection-via-any-website",
       "date": "2026-03-30",
-      "author": "AI Security Brief",
+      "author": {
+        "name": "Josh Cabana",
+        "role": "Editor & Publisher"
+      },
       "excerpt": "A critical vulnerability in Anthropic's Claude Chrome Extension exposes users to zero-click XSS prompt injection attacks, allowing malicious actors to execute commands without user interaction. This article examines the technical details, risks, and defensive strategies for organizations and individuals.",
       "category": "AI Threats",
       "featured": false,
@@ -65,13 +114,34 @@
         "Chrome extension flaw"
       ],
       "readTime": "5 min",
+      "primarySources": [
+        {
+          "url": "https://thehackernews.com/2026/03/claude-extension-flaw-enabled-zero.html",
+          "title": "The Hacker News — Claude Extension Flaw Enabled Zero-Click XSS Prompt Injection via Any Website"
+        },
+        {
+          "url": "https://www.infosecurity-magazine.com/news/ai-top-cyber-priority-defenders-pwc/",
+          "title": "Infosecurity Magazine — AI Becomes the Top Cybersecurity Priority for Defenders as Criminals Exploit It, PwC Warns"
+        },
+        {
+          "url": "https://www.helpnetsecurity.com/2026/03/27/cve-2026-33017-cve-2026-33634-exploited/",
+          "title": "Help Net Security — CISA sounds alarm on Langflow RCE, Trivy supply chain compromise after rapid exploitation"
+        },
+        {
+          "url": "https://thehackernews.com/2026/03/langchain-langgraph-flaws-expose-files.html",
+          "title": "The Hacker News — LangChain, LangGraph Flaws Expose Files, Secrets, Databases in Widely Used AI Frameworks"
+        }
+      ],
       "fileName": "claude-extension-flaw-enabled-zero-click-xss-prompt-injection-via-any-website.md"
     },
     {
       "title": "Security Researchers Sound the Alarm on Vulnerabilities in AI-Generated Code",
       "slug": "security-researchers-sound-the-alarm-on-vulnerabilities-in-ai-generated-code",
       "date": "2026-03-30",
-      "author": "AI Security Brief",
+      "author": {
+        "name": "Josh Cabana",
+        "role": "Editor & Publisher"
+      },
       "excerpt": "A surge in vulnerabilities linked to AI-generated code has prompted security researchers to call for urgent improvements in code review and development practices. This article explores the risks, trends, and defensive strategies for organizations leveraging AI in software development.",
       "category": "AI Threats",
       "featured": false,
@@ -85,13 +155,38 @@
         "CVE trends"
       ],
       "readTime": "5 min",
+      "primarySources": [
+        {
+          "url": "https://www.infosecurity-magazine.com/news/ai-generated-code-vulnerabilities/",
+          "title": "Infosecurity Magazine — Security Researchers Sound the Alarm on Vulnerabilities in AI-Generated Code"
+        },
+        {
+          "url": "https://thehackernews.com/2026/03/langchain-langgraph-flaws-expose-files.html",
+          "title": "The Hacker News — LangChain, LangGraph Flaws Expose Files, Secrets, Databases in Widely Used AI Frameworks"
+        },
+        {
+          "url": "https://www.helpnetsecurity.com/2026/03/27/cve-2026-33017-cve-2026-33634-exploited/",
+          "title": "Help Net Security — CISA sounds alarm on Langflow RCE, Trivy supply chain compromise after rapid exploitation"
+        },
+        {
+          "url": "https://www.infosecurity-magazine.com/news/ai-top-cyber-priority-defenders-pwc/",
+          "title": "Infosecurity Magazine — AI Becomes the Top Cybersecurity Priority for Defenders as Criminals Exploit It, PwC Warns"
+        },
+        {
+          "url": "https://www.infosecurity-magazine.com/news/openai-bug-bounty-ai-abuse-safety/",
+          "title": "Infosecurity Magazine — OpenAI Expands Bug Bounty to Cover AI Abuse and 'Safety' Concerns"
+        }
+      ],
       "fileName": "security-researchers-sound-the-alarm-on-vulnerabilities-in-ai-generated-code.md"
     },
     {
       "title": "Best Password Managers for Security Teams 2026",
       "slug": "best-password-managers-for-security-teams-2026",
       "date": "2026-03-26",
-      "author": "AI Security Brief",
+      "author": {
+        "name": "Josh Cabana",
+        "role": "Editor & Publisher"
+      },
       "excerpt": "A security-focused comparison of enterprise password managers — evaluating zero-knowledge architecture, audit history, SSO integration, and secrets management for IT teams.",
       "category": "Privacy",
       "featured": false,
@@ -105,13 +200,42 @@
         "team password management 2026"
       ],
       "readTime": "8 min",
+      "primarySources": [
+        {
+          "url": "https://www.hypr.com/resource/state-of-passwordless-security",
+          "title": "HYPR — 2026 State of Passwordless Identity Security Report"
+        },
+        {
+          "url": "https://www.verizon.com/business/resources/reports/dbir/",
+          "title": "Verizon — 2025 Data Breach Investigations Report"
+        },
+        {
+          "url": "https://1password.com/soc/",
+          "title": "1Password — SOC 2 Certification"
+        },
+        {
+          "url": "https://bitwarden.com/products/enterprise/",
+          "title": "Bitwarden — Enterprise Password Manager"
+        },
+        {
+          "url": "https://www.dashlane.com/blog/feb-2026-whats-new",
+          "title": "Dashlane — What's New at Dashlane: February 2026"
+        },
+        {
+          "url": "https://nordpass.com/plans/business/",
+          "title": "NordPass — Business Plans and Pricing"
+        }
+      ],
       "fileName": "best-password-managers-for-security-teams-2026.md"
     },
     {
       "title": "Best VPNs for Cybersecurity Professionals 2026",
       "slug": "best-vpns-for-cybersecurity-professionals-2026",
       "date": "2026-03-24",
-      "author": "AI Security Brief",
+      "author": {
+        "name": "Josh Cabana",
+        "role": "Editor & Publisher"
+      },
       "excerpt": "A data-driven comparison of the best VPNs for security analysts, threat researchers, and IT teams — evaluated on encryption, jurisdiction, audit history, and operational security.",
       "category": "Privacy",
       "featured": true,
@@ -125,13 +249,66 @@
         "cybersecurity VPN 2026"
       ],
       "readTime": "9 min",
+      "primarySources": [
+        {
+          "url": "https://nordvpn.com/blog/nordvpn-no-logs-assurance-engagement-2025/",
+          "title": "NordVPN no-logs assurance engagement, 6th (Deloitte Lithuania, Dec 2025)"
+        },
+        {
+          "url": "https://nordvpn.com/blog/nordlynx-protocol-wireguard/",
+          "title": "NordLynx protocol and post-quantum encryption"
+        },
+        {
+          "url": "https://protonvpn.com/blog/no-logs-audit",
+          "title": "ProtonVPN no-logs audit 2025 (Securitum)"
+        },
+        {
+          "url": "https://www.securitum.com/public-reports/securitum-protonvpn-nologs-2025.pdf",
+          "title": "Securitum ProtonVPN no-logs audit full report"
+        },
+        {
+          "url": "https://protonvpn.com/blog/stealth-vpn-protocol",
+          "title": "ProtonVPN Stealth protocol"
+        },
+        {
+          "url": "https://protonvpn.com/blog/eoy-report-2025",
+          "title": "ProtonVPN end of year report 2025"
+        },
+        {
+          "url": "https://www.purevpn.com/blog/purevpn-h1-2025-transparency-report/",
+          "title": "PureVPN H1 2025 transparency report"
+        },
+        {
+          "url": "https://www.purevpn.com/no-log-assessment",
+          "title": "PureVPN no-log assessment"
+        },
+        {
+          "url": "https://www.reddit.com/r/mullvadvpn/comments/16nf0i3/we_have_successfully_completed_our_migration_to/",
+          "title": "Mullvad RAM-only server migration (completed Sep 2023)"
+        },
+        {
+          "url": "https://mullvad.net/en/blog/new-security-audit-of-account-and-payment-services",
+          "title": "Mullvad 2025 security audit (Assured)"
+        },
+        {
+          "url": "https://www.shouldiuseavpn.com/articles/vpn-jurisdiction-guide-privacy-friendly-countries",
+          "title": "VPN jurisdiction guide"
+        },
+        {
+          "url": "https://greycoder.com/a-list-of-vpn-providers-with-public-audits/",
+          "title": "GreyCoder VPN audit list 2026"
+        }
+      ],
       "fileName": "best-vpns-for-cybersecurity-professionals-2026.md"
     },
     {
       "title": "NordVPN vs ProtonVPN: A Security Professional's Comparison",
       "slug": "nordvpn-vs-protonvpn-security-comparison",
       "date": "2026-03-24",
-      "author": "AI Security Brief",
+      "author": {
+        "name": "Josh Cabana",
+        "role": "Editor & Publisher"
+      },
       "excerpt": "A head-to-head comparison of NordVPN and ProtonVPN for cybersecurity work — covering encryption, jurisdiction, open-source status, audit history, and pricing.",
       "category": "Privacy",
       "featured": false,
@@ -145,13 +322,66 @@
         "secure VPN 2026"
       ],
       "readTime": "7 min",
+      "primarySources": [
+        {
+          "url": "https://nordvpn.com/blog/nordvpn-no-logs-assurance-engagement-2025/",
+          "title": "NordVPN sixth no-logs assurance engagement (Deloitte, 2025)"
+        },
+        {
+          "url": "https://www.cnet.com/tech/services-and-software/nordvpn-passes-sixth-independent-audit-2025-results/",
+          "title": "CNET — NordVPN passes sixth no-logs audit"
+        },
+        {
+          "url": "https://www.tomsguide.com/computing/vpns/nordvpn-completes-sixth-no-logs-audit-and-once-again-its-proved-your-data-is-safe",
+          "title": "Tom's Guide — NordVPN sixth no-logs audit"
+        },
+        {
+          "url": "https://nordvpn.com/blog/nordlynx-protocol-wireguard/",
+          "title": "NordLynx protocol and post-quantum encryption"
+        },
+        {
+          "url": "https://nordvpn.com/features/vpn-encryption/",
+          "title": "NordVPN encryption overview"
+        },
+        {
+          "url": "https://protonvpn.com/blog/no-logs-audit",
+          "title": "ProtonVPN no-logs audit 2025"
+        },
+        {
+          "url": "https://www.securitum.com/public-reports/securitum-protonvpn-nologs-2025.pdf",
+          "title": "Securitum ProtonVPN no-logs audit report 2025 (full PDF)"
+        },
+        {
+          "url": "https://protonvpn.com/blog/stealth-vpn-protocol",
+          "title": "ProtonVPN Stealth protocol"
+        },
+        {
+          "url": "https://protonvpn.com/blog/eoy-report-2025",
+          "title": "ProtonVPN censorship and repression end-of-year report 2025"
+        },
+        {
+          "url": "https://www.shouldiuseavpn.com/articles/vpn-jurisdiction-guide-privacy-friendly-countries",
+          "title": "VPN jurisdiction guide — Switzerland, Panama"
+        },
+        {
+          "url": "https://greycoder.com/a-list-of-vpn-providers-with-public-audits/",
+          "title": "GreyCoder VPN audit list 2026"
+        },
+        {
+          "url": "https://www.independent.co.uk/tech/security/proton-open-source-vpn-b2828930.html",
+          "title": "The Independent — ProtonVPN open-source and Swiss jurisdiction"
+        }
+      ],
       "fileName": "nordvpn-vs-protonvpn-security-comparison.md"
     },
     {
       "title": "AI Flaws in Amazon Bedrock, LangSmith, and SGLang Enable Data Exfiltration and RCE",
       "slug": "ai-flaws-in-amazon-bedrock-langsmith-and-sglang-enable-data-exfiltration-and-rce",
       "date": "2026-03-19",
-      "author": "AI Security Brief",
+      "author": {
+        "name": "Josh Cabana",
+        "role": "Editor & Publisher"
+      },
       "excerpt": "Three independent research teams disclosed critical vulnerabilities across Amazon Bedrock AgentCore, LangSmith, and SGLang in March 2026 — collectively enabling DNS-based data exfiltration, account takeover, and unauthenticated remote code execution against AI infrastructure. One of these flaws remains unpatched, and CERT/CC has issued a public advisory.",
       "category": "AI Threats",
       "featured": false,
@@ -165,13 +395,42 @@
         "pickle deserialization remote code execution"
       ],
       "readTime": "7 min",
+      "primarySources": [
+        {
+          "url": "https://thehackernews.com/2026/03/ai-flaws-in-amazon-bedrock-langsmith.html",
+          "title": "Ravie Lakshmanan — AI Flaws in Amazon Bedrock, LangSmith, and SGLang Enable Data Exfiltration and RCE, The Hacker News (March 17, 2026)"
+        },
+        {
+          "url": "https://kb.cert.org/vuls/",
+          "title": "CERT/CC — Advisory on SGLang pickle deserialization vulnerabilities (CVE-2026-3059, CVE-2026-3060, CVE-2026-3989)"
+        },
+        {
+          "url": "https://nvd.nist.gov/vuln/detail/CVE-2026-25750",
+          "title": "NVD — CVE-2026-25750 (LangSmith URL parameter injection, CVSS 8.5)"
+        },
+        {
+          "url": "https://nvd.nist.gov/vuln/detail/CVE-2026-3059",
+          "title": "NVD — CVE-2026-3059 (SGLang unauthenticated RCE via ZMQ, CVSS 9.8)"
+        },
+        {
+          "url": "https://nvd.nist.gov/vuln/detail/CVE-2026-3060",
+          "title": "NVD — CVE-2026-3060 (SGLang unauthenticated RCE via disaggregation module, CVSS 9.8)"
+        },
+        {
+          "url": "https://nvd.nist.gov/vuln/detail/CVE-2026-3989",
+          "title": "NVD — CVE-2026-3989 (SGLang insecure pickle deserialization, CVSS 7.8)"
+        }
+      ],
       "fileName": "ai-flaws-in-amazon-bedrock-langsmith-and-sglang-enable-data-exfiltration-and-rce.md"
     },
     {
       "title": "CursorJack: How MCP Deeplinks Turn Cursor IDE Into a Code Execution Vector",
       "slug": "cursorjack-attack-path-exposes-code-execution-risk-in-ai-development-environment",
       "date": "2026-03-19",
-      "author": "AI Security Brief",
+      "author": {
+        "name": "Josh Cabana",
+        "role": "Editor & Publisher"
+      },
       "excerpt": "Proofpoint Threat Research has demonstrated that a single crafted deeplink can weaponise Cursor IDE's MCP installation flow to execute arbitrary commands under a developer's full privileges — exposing the structural security gap at the heart of the Model Context Protocol ecosystem.",
       "category": "AI Threats",
       "featured": false,
@@ -185,13 +444,42 @@
         "AI development tooling threats"
       ],
       "readTime": "6 min",
+      "primarySources": [
+        {
+          "url": "https://www.proofpoint.com/us/blog/threat-insight/cursorjack-weaponizing-deeplinks-exploit-cursor-ide",
+          "title": "Proofpoint Threat Research — CursorJack: Weaponizing Deeplinks to Exploit Cursor IDE (March 16, 2026): Primary technical analysis, proof-of-concept details, and mitigation recommendations"
+        },
+        {
+          "url": "https://www.infosecurity-magazine.com/news/cursor-jack-attack-path-ai/",
+          "title": "Infosecurity Magazine — 'CursorJack' Attack Path Exposes Code Execution Risk in AI Development Environment (March 17, 2026): News coverage by Alessandro Mascellino"
+        },
+        {
+          "url": "https://www.anthropic.com/news/model-context-protocol",
+          "title": "Anthropic — Introducing the Model Context Protocol (November 2024): Original MCP specification announcement"
+        },
+        {
+          "url": "https://zuplo.com/blog/mcp-survey",
+          "title": "Zuplo — The State of MCP Report (January 2026): Industry survey on MCP adoption, security challenges, and builder practices"
+        },
+        {
+          "url": "https://www.getpanto.ai/blog/cursor-ai-statistics",
+          "title": "Panto AI — Cursor AI Statistics 2026 (March 2026): Cursor user growth, DAU, enterprise penetration, and revenue milestones"
+        },
+        {
+          "url": "https://www.truefoundry.com/blog/mcp-servers-in-cursor-setup-configuration-and-security-guide",
+          "title": "Truefoundry — MCP Servers in Cursor: Setup, Configuration, and Security (2026 Guide): Technical overview of CVE-2025-54136 (MCPoison) and CVE-2025-54135 (CurXecute) and MCP security posture guidance"
+        }
+      ],
       "fileName": "cursorjack-attack-path-exposes-code-execution-risk-in-ai-development-environment.md"
     },
     {
       "title": "LLM Guardrails Are Failing: What the 2025–2026 Research Actually Shows",
       "slug": "researchers-discover-major-security-gaps-in-llm-guardrails",
       "date": "2026-03-17",
-      "author": "AI Security Brief",
+      "author": {
+        "name": "Josh Cabana",
+        "role": "Editor & Publisher"
+      },
       "excerpt": "Palo Alto Networks' Unit 42, Oxford researchers, and a Nature Communications study converge on the same finding: the safety layers enterprises rely on to govern generative AI can be bypassed at scale, by automated tools, in under 60 seconds. The attack success rates are not marginal — they are, in several documented cases, approaching 100%.",
       "category": "AI Threats",
       "featured": false,
@@ -205,13 +493,66 @@
         "OWASP LLM security"
       ],
       "readTime": "8 min",
+      "primarySources": [
+        {
+          "url": "https://unit42.paloaltonetworks.com/multi-turn-technique-jailbreaks-llms/",
+          "title": "Palo Alto Networks Unit 42 — Bad Likert Judge: A Multi-Turn Technique to Jailbreak LLMs: Named technique, ASR data, 89.2 pp filter reduction"
+        },
+        {
+          "url": "https://unit42.paloaltonetworks.com/jailbreaking-generative-ai-web-products/",
+          "title": "Palo Alto Networks Unit 42 — Jailbreaking 17 GenAI Web Products: Bad Likert Judge 45.9% ASR, Crescendo 43.2% ASR"
+        },
+        {
+          "url": "https://unit42.paloaltonetworks.com/fuzzing-ai-judges-security-bypass/",
+          "title": "Palo Alto Networks Unit 42 — AdvJudge-Zero: Fuzzing AI Judges Security Bypass: 99% bypass rate against AI judge architectures"
+        },
+        {
+          "url": "https://arxiv.org/html/2503.08990v1",
+          "title": "Gohil et al. — JBFuzz (arXiv 2025): 99% ASR across 9 LLMs in under 60 seconds"
+        },
+        {
+          "url": "https://arxiv.org/abs/2510.26418",
+          "title": "Zhao, Fu, Schaeffer et al. — Chain-of-Thought Hijacking (Oxford Martin / Anthropic / Stanford, November 2025): 94–100% ASR on frontier LRMs"
+        },
+        {
+          "url": "https://www.nature.com/articles/s41467-026-69010-1",
+          "title": "Hagendorff et al. — Autonomous Jailbreak Agents via LRMs, Nature Communications, February 2026: 97.14% overall ASR"
+        },
+        {
+          "url": "https://www.hiddenlayer.com/research/same-model-different-hat",
+          "title": "HiddenLayer Research — Same Model, Different Hat, October 2025: OpenAI Guardrails bypass via judge manipulation"
+        },
+        {
+          "url": "https://iclr.cc/virtual/2026/poster/10007213",
+          "title": "Jha et al. — HMNS: Head-Masked Nullspace Steering, ICLR 2026: Circuit-level safety subversion"
+        },
+        {
+          "url": "https://thehackernews.com/2025/12/critical-langchain-core-vulnerability.html",
+          "title": "The Hacker News — CVE-2025-68664: Critical LangChain Core Vulnerability: Serialisation injection, RCE via Jinja2"
+        },
+        {
+          "url": "https://nvd.nist.gov/vuln/detail/CVE-2025-3248",
+          "title": "NIST NVD — CVE-2025-3248: Langflow Unauthenticated RCE (CVSS 9.8): CISA KEV May 2025; exploited by Flodrix botnet"
+        },
+        {
+          "url": "https://owasp.org/www-project-top-10-for-large-language-model-applications/assets/PDF/OWASP-Top-10-for-LLMs-v2025.pdf",
+          "title": "OWASP — Top 10 for Large Language Model Applications 2025: LLM01 Prompt Injection at 1"
+        },
+        {
+          "url": "https://blogs.cisco.com/ai/open-model-vulnerability-analysis",
+          "title": "Cisco — Death by a Thousand Prompts: Open Model Vulnerability Analysis, November 2025: Multi-turn ASR up to 92.78%; 87% single-turn block rate collapses under persistence"
+        }
+      ],
       "fileName": "researchers-discover-major-security-gaps-in-llm-guardrails.md"
     },
     {
       "title": "Hive0163 Deploys AI-Assisted Slopoly Malware for Persistent Access in Ransomware Attacks",
       "slug": "hive0163-uses-ai-assisted-slopoly-malware-for-persistent-access-in-ransomware-attacks",
       "date": "2026-03-16",
-      "author": "AI Security Brief",
+      "author": {
+        "name": "Josh Cabana",
+        "role": "Editor & Publisher"
+      },
       "excerpt": "IBM X-Force discovered Slopoly, an LLM-generated PowerShell backdoor deployed by Hive0163 that maintained persistent access for 7+ days during a live ransomware engagement. The code self-describes as a \"Polymorphic C2 Persistence Client\" — but isn't actually polymorphic. That gap between what AI claims to build and what it actually builds is the story.",
       "category": "AI Threats",
       "featured": false,
@@ -225,13 +566,58 @@
         "CVE-2026-20131"
       ],
       "readTime": "7 min",
+      "primarySources": [
+        {
+          "url": "https://www.ibm.com/think/x-force/slopoly-start-ai-enhanced-ransomware-attacks",
+          "title": "IBM X-Force — \"A Slopoly start to AI-enhanced ransomware attacks\" (Golo Mühr, March 12, 2026)"
+        },
+        {
+          "url": "https://www.bleepingcomputer.com/news/security/ai-generated-slopoly-malware-used-in-interlock-ransomware-attack/",
+          "title": "BleepingComputer — \"AI-generated Slopoly malware used in Interlock ransomware attack\" (Bill Toulas, March 12, 2026)"
+        },
+        {
+          "url": "https://www.bleepingcomputer.com/news/security/interlock-ransomware-exploited-secure-fmc-flaw-in-zero-day-attacks-since-january/",
+          "title": "BleepingComputer — \"Interlock ransomware exploited Cisco FMC flaw in zero-day attacks since January\" (Sergiu Gatlan, March 18, 2026)"
+        },
+        {
+          "url": "https://newsroom.ibm.com/2026-02-25-ibm-2026-x-force-threat-index-ai-driven-attacks-are-escalating-as-basic-security-gaps-leave-enterprises-exposed",
+          "title": "IBM Newsroom — 2026 X-Force Threat Intelligence Index (February 25, 2026)"
+        },
+        {
+          "url": "https://www.paloaltonetworks.com/blog/2026/02/unit-42-global-ir-report/",
+          "title": "Palo Alto Networks — Unit 42 2026 Global Incident Response Report (February 17, 2026)"
+        },
+        {
+          "url": "https://arcticwolf.com/resources/blog/threat-actor-profile-interlock-ransomware/",
+          "title": "Arctic Wolf — \"Threat Actor Profile: Interlock Ransomware\" (August 15, 2025)"
+        },
+        {
+          "url": "https://securityaffairs.com/189378/malware/ai-assisted-slopoly-malware-powers-hive0163s-ransomware-campaigns.html",
+          "title": "Security Affairs — \"AI-assisted Slopoly malware powers Hive0163's ransomware campaigns\" (Pierluigi Paganini, March 13, 2026)"
+        },
+        {
+          "url": "https://www.cybersecuritydive.com/news/ai-ransomware-backdoor-ibm-attribution/814671/",
+          "title": "Cybersecurity Dive — \"Even primitive AI-coded malware helps hackers move faster\" (March 13, 2026)"
+        },
+        {
+          "url": "https://attack.mitre.org/techniques/T1204/004/",
+          "title": "MITRE ATT&CK — T1204.004: User Execution: Malicious Copy and Paste"
+        },
+        {
+          "url": "https://www.fortinet.com/blog/threat-research/interlock-ransomware-new-techniques-same-old-tricks",
+          "title": "Fortinet — \"Interlock Ransomware: New Techniques, Same Old Tricks\" (January 29, 2026)"
+        }
+      ],
       "fileName": "hive0163-uses-ai-assisted-slopoly-malware-for-persistent-access-in-ransomware-attacks.md"
     },
     {
       "title": "OpenClaw AI Agent Flaws: CVEs, Prompt Injection, and a Government Warning",
       "slug": "openclaw-ai-agent-flaws-could-enable-prompt-injection-and-data-exfiltration",
       "date": "2026-03-16",
-      "author": "AI Security Brief",
+      "author": {
+        "name": "Josh Cabana",
+        "role": "Editor & Publisher"
+      },
       "excerpt": "China's CNCERT issued a formal warning on March 14 about OpenClaw's inherently weak default configurations. With 97+ CVEs tracked, 135,000+ exposed instances, and zero-click data exfiltration demonstrated in the wild, the open-source AI agent has become a case study in what happens when autonomous systems ship without a security baseline.",
       "category": "AI Threats",
       "featured": false,
@@ -245,13 +631,78 @@
         "CNCERT warning"
       ],
       "readTime": "8 min",
+      "primarySources": [
+        {
+          "url": "https://thehackernews.com/2026/03/openclaw-ai-agent-flaws-could-enable.html",
+          "title": "The Hacker News — OpenClaw AI Agent Flaws Could Enable Prompt Injection and Data Exfiltration (Ravie Lakshmanan, March 14, 2026)"
+        },
+        {
+          "url": "https://nvd.nist.gov/vuln/detail/CVE-2026-25253",
+          "title": "NVD — CVE-2026-25253 detail page (CVSS 8.8, CWE-669, published February 1, 2026)"
+        },
+        {
+          "url": "https://github.com/jgamblin/OpenClawCVEs/",
+          "title": "GitHub — OpenClawCVEs community tracker (jgamblin)"
+        },
+        {
+          "url": "https://www.adminbyrequest.com/en/blogs/openclaw-went-from-viral-ai-agent-to-security-crisis-in-just-three-weeks",
+          "title": "Admin By Request — OpenClaw Went From Viral AI Agent to Security Crisis in Just Three Weeks (March 10, 2026)"
+        },
+        {
+          "url": "https://www.reco.ai/blog/openclaw-the-ai-agent-security-crisis-unfolding-right-now",
+          "title": "Reco AI — OpenClaw: The AI Agent Security Crisis Unfolding Right Now (March 17, 2026)"
+        },
+        {
+          "url": "https://www.giskard.ai/knowledge/openclaw-security-vulnerabilities-include-data-leakage-and-prompt-injection-risks",
+          "title": "Giskard — OpenClaw Security Vulnerabilities Include Data Leakage and Prompt Injection Risks (February 4, 2026)"
+        },
+        {
+          "url": "https://www.sonicwall.com/blog/openclaw-auth-token-theft-leading-to-rce-cve-2026-25253",
+          "title": "SonicWall — OpenClaw Auth Token Theft Leading to RCE: CVE-2026-25253 (February 26, 2026)"
+        },
+        {
+          "url": "https://www.reuters.com/world/china/china-warns-security-risks-linked-openclaw-open-source-ai-agent-2026-02-05/",
+          "title": "Reuters — China Warns of Security Risks Linked to OpenClaw Open-Source AI Agent (February 5, 2026)"
+        },
+        {
+          "url": "https://www.penligent.ai/hackinglabs/es/the-future-of-ai-agent-security-openclaw-security-audit/",
+          "title": "Penligent — The Future of AI Agent Security: OpenClaw Security Audit (March 13, 2026)"
+        },
+        {
+          "url": "https://www.theregister.com/2026/03/12/rogue_ai_agents_worked_together/",
+          "title": "The Register — Rogue AI Agents Can Work Together to Hack Systems and Steal Secrets (Jessica Lyons, March 12, 2026)"
+        },
+        {
+          "url": "https://thehackernews.com/2026/03/researchers-trick-perplexitys-comet-ai.html",
+          "title": "The Hacker News — Researchers Trick Perplexity's Comet AI Browser Into Phishing Scam in Under Four Minutes (March 11, 2026)"
+        },
+        {
+          "url": "https://genai.owasp.org/resource/owasp-top-10-for-agentic-applications-for-2026/",
+          "title": "OWASP GenAI Security Project — OWASP Top 10 for Agentic Applications for 2026 (December 9, 2025)"
+        },
+        {
+          "url": "https://www.gravitee.io/state-of-ai-agent-security",
+          "title": "Gravitee — State of AI Agent Security Report (2026)"
+        },
+        {
+          "url": "https://www.microsoft.com/en-us/security/blog/2026/02/10/80-of-fortune-500-use-active-ai-agents-observability-governance-and-security-shape-the-new-frontier/",
+          "title": "Microsoft Security Blog — 80% of Fortune 500 Use Active AI Agents (February 10, 2026)"
+        },
+        {
+          "url": "https://www.runzero.com/blog/openclaw/",
+          "title": "RunZero — CVE-2026-25253 OpenClaw Overview (February 3, 2026)"
+        }
+      ],
       "fileName": "openclaw-ai-agent-flaws-could-enable-prompt-injection-and-data-exfiltration.md"
     },
     {
       "title": "Australia's Privacy Act Reforms 2026: What You Need to Know",
       "slug": "australias-privacy-act-reforms-2026",
       "date": "2026-03-14",
-      "author": "AI Security Brief",
+      "author": {
+        "name": "Josh Cabana",
+        "role": "Editor & Publisher"
+      },
       "excerpt": "Australia's Privacy Act has undergone its most significant overhaul since 1988 — with new penalties reaching $50 million, mandatory disclosure of AI decision-making systems, and a new statutory tort for serious privacy invasions. Here's what changed and what it means for your organisation.",
       "category": "Privacy",
       "featured": false,
@@ -265,13 +716,34 @@
         "Privacy Act AI provisions"
       ],
       "readTime": "7 min",
+      "primarySources": [
+        {
+          "url": "https://www.landers.com.au/legal-insights-news/australian-privacy-law-update-what-app-entities-need-to-know-in-2026",
+          "title": "Lander & Rogers — Australian Privacy Law Update 2026: APP 1.7 automated decision-making transparency requirements, December 2026 deadline"
+        },
+        {
+          "url": "https://www.clydeco.com/en/insights/2025/10/cyber-and-privacy-law-update-accountability-gets-r",
+          "title": "Clyde & Co — Cyber and Privacy Law Update: Accountability Gets Real (October 2025): $5.8M ACL penalty, tiered penalty structure, new OAIC enforcement powers"
+        },
+        {
+          "url": "https://secureprivacy.ai/blog/what-australia-privacy-act-reforms-mean-for-your-business-2025",
+          "title": "Secure Privacy — What the Australia Privacy Act Reforms Mean for Your Business 2025: Full breakdown of POLA Act provisions, statutory tort timeline, GDPR comparison, small business exemption status"
+        },
+        {
+          "url": "https://www.minterellison.com/articles/oaic-ramps-up-privacy-enforcement-are-you-ready",
+          "title": "MinterEllison — OAIC Ramps Up Privacy Enforcement: Are You Ready? (February 2026): ADM disclosure compliance sweep, Bunnings APP 1.3 case, December 2026 enforcement context"
+        }
+      ],
       "fileName": "australias-privacy-act-reforms-2026.md"
     },
     {
       "title": "Agentic AI Security Risks: What Every Developer Must Know",
       "slug": "agentic-ai-security-risks",
       "date": "2026-03-12",
-      "author": "AI Security Brief",
+      "author": {
+        "name": "Josh Cabana",
+        "role": "Editor & Publisher"
+      },
       "excerpt": "Autonomous AI agents are now embedded in enterprise workflows with privileged access to databases, APIs, and critical systems — but the security infrastructure governing them hasn't kept pace. Here's what developers and security teams need to understand right now.",
       "category": "AI Threats",
       "featured": false,
@@ -285,13 +757,34 @@
         "OWASP LLM vulnerabilities"
       ],
       "readTime": "7 min",
+      "primarySources": [
+        {
+          "url": "https://genai.owasp.org/llm-top-10/",
+          "title": "OWASP — Top 10 for LLM Applications 2025: Prompt injection, excessive agency, supply chain vulnerabilities for AI systems"
+        },
+        {
+          "url": "https://www.nist.gov/news-events/news/2026/02/announcing-ai-agent-standards-initiative-interoperable-and-secure",
+          "title": "NIST — AI Agent Standards Initiative (February 2026): CAISI launches framework for interoperable and secure AI agent deployment"
+        },
+        {
+          "url": "https://www.tenable.com/press-releases/tenable-research-reveals-growing-ai-exposure-gap-fueled-by-supply-chain-risks-and-lack-of-identity-controls",
+          "title": "Tenable — Cloud and AI Security Risk Report 2026: 86% of organisations host third-party packages with critical CVEs; non-human identities carry higher risk than humans"
+        },
+        {
+          "url": "https://www.kiteworks.com/cybersecurity-risk-management/ai-agents-ungoverned-data-security-threat/",
+          "title": "Kiteworks — AI Agents Are the Biggest Data Security Threat You're Not Governing: 32% of organisations cite unsupervised agent data access as critical; Trend Micro zero-click exfiltration demo"
+        }
+      ],
       "fileName": "agentic-ai-security-risks.md"
     },
     {
       "title": "How AI Is Being Used to Launch Cyberattacks in 2026",
       "slug": "how-ai-is-being-used-to-launch-cyberattacks-in-2026",
       "date": "2026-03-10",
-      "author": "AI Security Brief",
+      "author": {
+        "name": "Josh Cabana",
+        "role": "Editor & Publisher"
+      },
       "excerpt": "AI has crossed a threshold in 2026 — adversaries are no longer just using it to write phishing emails. Autonomous attack agents, AI-generated malware, and deepfake social engineering are redefining the threat landscape at machine speed.",
       "category": "AI Threats",
       "featured": true,
@@ -305,13 +798,34 @@
         "AI-powered malware"
       ],
       "readTime": "6 min",
+      "primarySources": [
+        {
+          "url": "https://finance.yahoo.com/news/ai-email-attacks-grew-5x-120000223.html",
+          "title": "AegisAI — State of the AI Threat in Email Report 2025: AI email attacks grew 5x in 2025, 75% more effective at bypassing filters"
+        },
+        {
+          "url": "https://www.crowdstrike.com/en-us/resources/articles/crowdstrike-2025-global-threat-report-genai-powers-social-engineering/",
+          "title": "CrowdStrike — 2025 Global Threat Report: How GenAI Powers Social Engineering: Deepfake BEC, $25.6M incident, AI-generated social media profiles"
+        },
+        {
+          "url": "https://www.crn.com/news/security/2026/how-autonomous-ai-cyberattacks-will-transform-security-experts",
+          "title": "CRN — How Autonomous AI Cyberattacks Will Transform Security: Anthropic's November 2025 AI-orchestrated espionage campaign disclosure"
+        },
+        {
+          "url": "https://www.brside.com/blog/ai-generated-phishing-vs-human-attacks-2025-risk-analysis",
+          "title": "BrightSide Technologies — AI-Generated Phishing vs Human Attacks: 2025 Risk Analysis: 1,265% phishing surge, 82.6% of emails use AI-generated content, 95% cost reduction"
+        }
+      ],
       "fileName": "how-ai-is-being-used-to-launch-cyberattacks-in-2026.md"
     },
     {
       "title": "AI Model Prompt Injection Attacks Explained",
       "slug": "ai-model-prompt-injection-attacks-explained",
       "date": "2026-03-08",
-      "author": "AI Security Brief",
+      "author": {
+        "name": "Josh Cabana",
+        "role": "Editor & Publisher"
+      },
       "excerpt": "Prompt injection is the #1 vulnerability in deployed AI systems — and unlike traditional software flaws, it cannot be patched. Here's how direct and indirect attacks work, real-world exploits from 2024–2026, and the defence strategies that actually reduce risk.",
       "category": "AI Threats",
       "featured": false,
@@ -325,6 +839,24 @@
         "AI model security"
       ],
       "readTime": "7 min",
+      "primarySources": [
+        {
+          "url": "https://genai.owasp.org/llmrisk/llm01-prompt-injection/",
+          "title": "OWASP Gen AI Security Project — LLM01:2025 Prompt Injection: Definition, attack types, example scenarios for direct and indirect injection"
+        },
+        {
+          "url": "https://www.microsoft.com/en-us/msrc/blog/2025/07/how-microsoft-defends-against-indirect-prompt-injection-attacks",
+          "title": "Microsoft Security Response Centre — How Microsoft Defends Against Indirect Prompt Injection Attacks (July 2025): Spotlighting technique, Prompt Shields, EchoLeak context, defence-in-depth architecture"
+        },
+        {
+          "url": "https://fortune.com/2025/11/07/ai-reasoning-models-more-vulnerable-jailbreak-attacks-study/",
+          "title": "Fortune — AI Reasoning Models More Vulnerable to Jailbreak Attacks (November 2025): Chain-of-Thought Hijacking study by Anthropic, Oxford, and Stanford; 80%+ success rates on frontier models"
+        },
+        {
+          "url": "https://www.lasso.security/blog/prompt-injection-examples",
+          "title": "Lasso Security — Prompt Injection Examples That Expose Real AI Security Risks (January 2026): EchoLeak CVE-2025-32711, Gemini memory poisoning, MCP exploitation, AI Recommendation Poisoning"
+        }
+      ],
       "fileName": "ai-model-prompt-injection-attacks-explained.md"
     }
   ]

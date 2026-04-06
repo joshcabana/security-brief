@@ -43,8 +43,6 @@ primarySources:
   - url: "https://blogs.cisco.com/ai/open-model-vulnerability-analysis"
     title: "Cisco — Death by a Thousand Prompts: Open Model Vulnerability Analysis, November 2025: Multi-turn ASR up to 92.78%; 87% single-turn block rate collapses under persistence"
 ---
-# LLM Guardrails Are Failing: What the 2025–2026 Research Actually Shows
-
 The enterprise pitch for generative AI has always carried a reassuring footnote: safety guardrails are in place. Content filters, AI judges, alignment training, and red-teaming pipelines collectively stand between the model and misuse. The research published between mid-2025 and early 2026 systematically dismantles that reassurance.
 
 **The attack success rates are no longer marginal. In several documented cases, they approach or exceed 99%.** The techniques are named, reproducible, and increasingly automated. In one of the more uncomfortable findings, researchers from OpenAI, Anthropic, and Google DeepMind jointly tested 12 AI defences that claimed near-zero attack success rates under adaptive conditions — and [broke all of them](https://venturebeat.com/security/12-ai-defenses-claimed-near-zero-attack-success-researchers-broke-all-of-them).

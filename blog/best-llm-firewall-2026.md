@@ -18,6 +18,16 @@ keywords:
   - "enterprise AI security"
 read_time: "7 min"
 primarySources:
+  - url: "https://docs.nvidia.com/nemo-guardrails/index.html"
+    title: "NVIDIA NeMo Guardrails Documentation"
+  - url: "https://docs.nvidia.com/nemo/guardrails/latest/configure-rails/guardrail-catalog.html"
+    title: "NVIDIA NeMo Guardrails — Guardrail Catalog"
+  - url: "https://docs.lakera.ai/docs/defenses"
+    title: "Lakera Guard — Guardrails Documentation"
+  - url: "https://github.com/protectai/rebuff"
+    title: "Protect AI Rebuff — LLM Prompt Injection Detector"
+  - url: "https://developers.cloudflare.com/ai-gateway/features/dlp/"
+    title: "Cloudflare AI Gateway — Data Loss Prevention (DLP)"
 ---
 As enterprise deployments of autonomous agents and LLMs shift into production, the attack surface has fundamentally altered. We are no longer just securing static APIs; we operate in a landscape where an input string can manipulate logic, trigger unauthorized function calls, and exfiltrate sensitive context windows. 
 
@@ -107,3 +117,11 @@ In extensive testing against Lakera and Cloudflare last month, our lab demonstra
 To defend against this, your architecture **must** implement a rolling-context semantic evaluator. We have documented the exact implementation blueprint for this in our repository.
 
 *For the full source code on building a custom rolling-context evaluator, download this week's technical vault from the Pro dashboard.*
+
+## References
+
+1. NVIDIA NeMo Guardrails Documentation — [https://docs.nvidia.com/nemo-guardrails/index.html](https://docs.nvidia.com/nemo-guardrails/index.html)
+2. NVIDIA NeMo Guardrails, Guardrail Catalog — [https://docs.nvidia.com/nemo/guardrails/latest/configure-rails/guardrail-catalog.html](https://docs.nvidia.com/nemo/guardrails/latest/configure-rails/guardrail-catalog.html)
+3. Lakera Guard, Guardrails Documentation — [https://docs.lakera.ai/docs/defenses](https://docs.lakera.ai/docs/defenses)
+4. Protect AI Rebuff, GitHub Repository — [https://github.com/protectai/rebuff](https://github.com/protectai/rebuff)
+5. Cloudflare AI Gateway, Data Loss Prevention (DLP) — [https://developers.cloudflare.com/ai-gateway/features/dlp/](https://developers.cloudflare.com/ai-gateway/features/dlp/)

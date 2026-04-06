@@ -18,8 +18,16 @@ keywords:
   - "enterprise AI security"
 read_time: "6 min"
 primarySources:
+  - url: "https://cheatsheetseries.owasp.org/cheatsheets/LLM_Prompt_Injection_Prevention_Cheat_Sheet.html"
+    title: "OWASP Cheat Sheet Series — LLM Prompt Injection Prevention Cheat Sheet"
+  - url: "https://genai.owasp.org/llmrisk/llm01-prompt-injection/"
+    title: "OWASP Gen AI Security Project — LLM01:2025 Prompt Injection"
+  - url: "https://www.microsoft.com/en-us/msrc/blog/2025/07/how-microsoft-defends-against-indirect-prompt-injection-attacks"
+    title: "Microsoft Security Response Centre — How Microsoft Defends Against Indirect Prompt Injection Attacks"
+  - url: "https://docs.anthropic.com/en/docs/test-and-evaluate/strengthen-guardrails/mitigate-jailbreaks"
+    title: "Anthropic — Mitigate jailbreaks and prompt injections"
 ---
-If your application takes untrusted user input and feeds it directly into a Large Language Model (LLM), you are vulnerable. 
+If your application takes untrusted user input and feeds it directly into a Large Language Model (LLM), you are vulnerable.
 
 Because LLMs do not inherently distinguish between "system instructions" and "user data" the way compiled code does, they are uniquely susceptible to **prompt injection attacks**, where an attacker manipulates the input to override the system prompt and force the AI into unintended behavior.
 
@@ -27,7 +35,7 @@ In this guide, we bypass the theoretical fluff and focus on exactly how you shou
 
 ## Why Regex and Heuristics Fail
 
-Initial attempts to secure LLMs relied on blocklists: blocking words like "ignore previous instructions", "override", or "DAN" (Do Anything Now). 
+Initial attempts to secure LLMs relied on blocklists: blocking words like "ignore previous instructions", "override", or "DAN" (Do Anything Now).
 
 This approach is fundamentally flawed. Attackers quickly evolve permutations (e.g., using leetspeak, Base64 encoding, or translated languages) to bypass lexical filters. A sophisticated attack does not look like an attack; it often looks like a benign roleplay scenario or a corrupted JSON payload.
 
@@ -62,6 +70,7 @@ While not a silver bullet against advanced jailbreaks, data framing gives modern
 If your LLM has the ability to execute function calls (e.g., querying a database or hitting an external API), prompt injection escalates from "reputational damage" to "remote code execution".
 
 **Implementing least privilege is critical:**
+
 - If the AI only needs to read a database, provision a read-only database user for that specific function.
 - If the AI writes data, ensure it goes into a quarantine table requiring human review.
 - Never grant an autonomous agent destructive permissions (DELETE or DROP) based on natural language inference.
@@ -75,8 +84,16 @@ To build a truly resilient system against state-actor level injections, you must
 In our internal tests, we found that isolating the vector retrieval step from the generative synthesis step was the only way to prevent **Indirect Prompt Injection** (where an attacker poisons the documents ingested by a RAG pipeline).
 
 **The exact architecture:**
+
 1. RAG retrieval pulls source documents.
 2. An intermediate sanitizer model specifically trained on anomaly detection scrubs the RAG output.
 3. The scrubbed context is fed to the Final Generator.
 
 *Attached below is the Terraform module for deploying this intermediate sanitization gateway on AWS.*
+
+## References
+
+1. OWASP Cheat Sheet Series, LLM Prompt Injection Prevention Cheat Sheet — [https://cheatsheetseries.owasp.org/cheatsheets/LLM_Prompt_Injection_Prevention_Cheat_Sheet.html](https://cheatsheetseries.owasp.org/cheatsheets/LLM_Prompt_Injection_Prevention_Cheat_Sheet.html)
+2. OWASP Gen AI Security Project, LLM01:2025 Prompt Injection — [https://genai.owasp.org/llmrisk/llm01-prompt-injection/](https://genai.owasp.org/llmrisk/llm01-prompt-injection/)
+3. Microsoft Security Response Centre, How Microsoft Defends Against Indirect Prompt Injection Attacks — [https://www.microsoft.com/en-us/msrc/blog/2025/07/how-microsoft-defends-against-indirect-prompt-injection-attacks](https://www.microsoft.com/en-us/msrc/blog/2025/07/how-microsoft-defends-against-indirect-prompt-injection-attacks)
+4. Anthropic, Mitigate jailbreaks and prompt injections — [https://docs.anthropic.com/en/docs/test-and-evaluate/strengthen-guardrails/mitigate-jailbreaks](https://docs.anthropic.com/en/docs/test-and-evaluate/strengthen-guardrails/mitigate-jailbreaks)

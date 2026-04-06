@@ -18,6 +18,18 @@ keywords:
   - "team password management 2026"
 read_time: "8 min"
 primarySources:
+  - url: "https://www.hypr.com/resource/state-of-passwordless-security"
+    title: "HYPR — 2026 State of Passwordless Identity Security Report"
+  - url: "https://www.verizon.com/business/resources/reports/dbir/"
+    title: "Verizon — 2025 Data Breach Investigations Report"
+  - url: "https://1password.com/soc/"
+    title: "1Password — SOC 2 Certification"
+  - url: "https://bitwarden.com/products/enterprise/"
+    title: "Bitwarden — Enterprise Password Manager"
+  - url: "https://www.dashlane.com/blog/feb-2026-whats-new"
+    title: "Dashlane — What's New at Dashlane: February 2026"
+  - url: "https://nordpass.com/plans/business/"
+    title: "NordPass — Business Plans and Pricing"
 ---
 # Best Password Managers for Security Teams 2026
 
