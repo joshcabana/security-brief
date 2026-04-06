@@ -11,7 +11,7 @@ export function buildArticleFactoryPrompts(input) {
     systemPrompt:
       'You are the article generation engine for AI Security Brief. Return strict JSON only. No markdown fences. Use only the supplied weekly harvest source pack. Do not cite URLs that are not in the source pack. Every article must include a named human author object and explicit primary sources. Brand-level bylines are forbidden.',
     userPrompt: [
-      `Write 2 SEO-ready AI security articles for ${input.effectiveDate}.`,
+      `Write 2 AI-assisted security briefings for ${input.effectiveDate}.`,
       'Use these exact target slugs and topics:',
       ...input.articlePlan.map(
         (item) => `- slug: ${item.slug} | category: ${item.category} | finding: ${item.headline}`,
