@@ -1,6 +1,5 @@
 import ToolsMatrix from '@/components/ToolsMatrix';
 import type { Metadata } from 'next';
-import Link from 'next/link';
 
 export const metadata: Metadata = {
   title: 'AI Security Matrix Q2 2026 | AI Threat Brief',
@@ -37,7 +36,7 @@ export default function MatrixReportPage() {
           </p>
           <ul className="list-disc pl-6 mb-6 space-y-2">
             <li><strong>The Core Problem:</strong> LLMs cannot fundamentally distinguish between system instructions and untrusted user input within the same context window.</li>
-            <li><strong>The Industry Pivot:</strong> Security budgets are shifting from experimental "AI-SPM" point solutions toward integrated platform capabilities.</li>
+            <li><strong>The Industry Pivot:</strong> Security budgets are shifting from experimental &quot;AI-SPM&quot; point solutions toward integrated platform capabilities.</li>
             <li><strong>Open Source Momentum:</strong> Projects like Garak and Rebuff are setting the standard for baseline red-teaming.</li>
           </ul>
 
@@ -65,7 +64,7 @@ export default function MatrixReportPage() {
                 <span className="bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-400 text-xs font-bold px-2 py-1 rounded">LLM Firewall</span>
               </div>
               <p className="text-slate-600 dark:text-slate-400 text-sm mb-6 leading-relaxed">
-                Lakera's Guard sits as an API gateway in front of any LLM. It inspects every prompt and completion for injection patterns, PII leakage, and harmful content in real-time. The free tier makes it the lowest-friction entry point for teams shipping their first LLM feature.
+                Lakera&#39;s Guard sits as an API gateway in front of any LLM. It inspects every prompt and completion for injection patterns, PII leakage, and harmful content in real-time. The free tier makes it the lowest-friction entry point for teams shipping their first LLM feature.
               </p>
               <div className="flex justify-between items-center text-sm">
                 <span className="text-slate-500 font-medium">Free tier available</span>
@@ -79,7 +78,7 @@ export default function MatrixReportPage() {
                 <span className="bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400 text-xs font-bold px-2 py-1 rounded">Enterprise</span>
               </div>
               <p className="text-slate-600 dark:text-slate-400 text-sm mb-6 leading-relaxed">
-                HiddenLayer's MLDR platform monitors deployed models for adversarial manipulation, model theft via side channels, and supply chain compromise. Think of it as EDR for your ML models. Best suited for organisations running ML inference at scale.
+                HiddenLayer&#39;s MLDR platform monitors deployed models for adversarial manipulation, model theft via side channels, and supply chain compromise. Think of it as EDR for your ML models. Best suited for organisations running ML inference at scale.
               </p>
               <div className="flex justify-between items-center text-sm">
                 <span className="text-slate-500 font-medium">Enterprise pricing</span>
@@ -107,7 +106,7 @@ export default function MatrixReportPage() {
                 <span className="bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-400 text-xs font-bold px-2 py-1 rounded">GenAI Governance</span>
               </div>
               <p className="text-slate-600 dark:text-slate-400 text-sm mb-6 leading-relaxed">
-                The governance layer for enterprise GenAI adoption. Gives CISOs visibility into which LLMs employees are using and ensures interactions comply with corporate policy, directly addressing the "shadow AI" problem.
+                The governance layer for enterprise GenAI adoption. Gives CISOs visibility into which LLMs employees are using and ensures interactions comply with corporate policy, directly addressing the &quot;shadow AI&quot; problem.
               </p>
               <div className="flex justify-between items-center text-sm">
                 <span className="text-slate-500 font-medium">Enterprise pricing</span>
@@ -135,7 +134,7 @@ export default function MatrixReportPage() {
                 <span className="bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-400 text-xs font-bold px-2 py-1 rounded">Open Source</span>
               </div>
               <p className="text-slate-600 dark:text-slate-400 text-sm mb-6 leading-relaxed">
-                The "nmap for LLMs." NVIDIA's Garak probes language models for hallucination vulnerabilities, prompt injection susceptibility, and jailbreak vectors. Essential for red teams assessing LLM deployments.
+                The &quot;nmap for LLMs.&quot; NVIDIA&#39;s Garak probes language models for hallucination vulnerabilities, prompt injection susceptibility, and jailbreak vectors. Essential for red teams assessing LLM deployments.
               </p>
               <div className="flex justify-between items-center text-sm">
                 <span className="text-slate-500 font-medium">Free (Apache 2.0)</span>
