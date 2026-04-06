@@ -38,6 +38,16 @@ test('README and STATUS reflect the published MIT license and canonical PR gate'
   assert.equal(statusSource.includes('| Public status surface | `/status` and `/status.json` (runtime snapshot) |'), true);
 });
 
+test('README documents the full optional runtime env surface used by the app', () => {
+  const readmeSource = readFileSync(readmePath, 'utf8');
+
+  assert.match(readmeSource, /\| `BEEHIIV_WELCOME_AUTOMATION_ID` \| Optional \|/);
+  assert.match(readmeSource, /\| `BEEHIIV_LEAD_AUTOMATION_ID` \| Optional \|/);
+  assert.match(readmeSource, /\| `NEXT_PUBLIC_PLAUSIBLE_DOMAIN` \| Optional \|/);
+  assert.match(readmeSource, /\| `NEXT_PUBLIC_LINKEDIN_PARTNER_ID` \| Optional \|/);
+  assert.match(readmeSource, /\| `NEXT_PUBLIC_LINKEDIN_CONVERSION_PRO_SIGNUP` \| Optional \|/);
+});
+
 test('STATUS documents the active distributed subscribe rate limit', () => {
   const statusSource = readFileSync(statusPath, 'utf8');
   const limitPerMinute = getSlidingWindowLimitPerMinute();

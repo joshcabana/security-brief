@@ -92,9 +92,13 @@ The app will be available at `http://localhost:3000`.
 | `BEEHIIV_PUBLICATION_ID` | Yes for signup and performance logging | Beehiiv publication target |
 | `UPSTASH_REDIS_REST_URL` | Yes for signup rate limiting | Upstash Redis REST endpoint for distributed rate limiting |
 | `UPSTASH_REDIS_REST_TOKEN` | Yes for signup rate limiting | Upstash Redis REST authentication token |
+| `BEEHIIV_WELCOME_AUTOMATION_ID` | Optional | Beehiiv automation ID for newsletter welcome-email enrollment |
 | `BEEHIIV_LEAD_AUTOMATION_ID` | Optional | Beehiiv automation ID for gated lead capture (PDF delivery); falls back to `BEEHIIV_WELCOME_AUTOMATION_ID` |
 | `NEXT_PUBLIC_SITE_URL` | Yes for `verify:ops` readiness | Canonical site URL |
 | `NEXT_PUBLIC_SITE_NAME` | Yes for `verify:ops` readiness | Public site name |
+| `NEXT_PUBLIC_PLAUSIBLE_DOMAIN` | Optional | Enables Plausible analytics script injection for the configured public domain |
+| `NEXT_PUBLIC_LINKEDIN_PARTNER_ID` | Optional | LinkedIn Insight Tag partner ID for site-wide tracking |
+| `NEXT_PUBLIC_LINKEDIN_CONVERSION_PRO_SIGNUP` | Optional | LinkedIn conversion ID used for Pro signup intent tracking |
 | `AFFILIATE_NORDVPN` | Optional | Runtime link for NordVPN |
 | `AFFILIATE_PUREVPN` | Optional | Runtime link for PureVPN |
 | `AFFILIATE_PROTON` | Optional | Legacy Proton fallback |
