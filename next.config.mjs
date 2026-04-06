@@ -14,6 +14,11 @@ const nextConfig = {
   async redirects() {
     return [
       {
+        source: '/reports/ai-security-matrix-q2-2026.html',
+        destination: '/reports/matrix',
+        permanent: true,
+      },
+      {
         source: '/assets/2026-ai-threat-landscape.pdf',
         destination: '/report/2026-ai-threat-landscape',
         permanent: true,
