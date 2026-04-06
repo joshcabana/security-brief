@@ -23,6 +23,10 @@ The `/pro` page is live at `aithreatbrief.com/pro`. Pro CTAs are present in the 
 
 LinkedIn Insight Tag base script is wired in `app/layout.tsx`. Production tracking still requires `NEXT_PUBLIC_LINKEDIN_PARTNER_ID` and `NEXT_PUBLIC_LINKEDIN_CONVERSION_PRO_SIGNUP` in Vercel.
 
+LinkedIn Company Page `AI Security Brief` is now live, and the new Campaign Manager ad account `521990231` has been created with locked settings `AI Security Brief — Main`, `AUD`, and associated Page `AI Security Brief`.
+
+Campaign Manager now blocks further launch work behind a mandatory LinkedIn two-step verification prompt, and the new ad account currently shows `On hold` until that operational setup is completed.
+
 ## Content
 
 | Metric | Count |
@@ -39,7 +43,7 @@ LinkedIn Insight Tag base script is wired in `app/layout.tsx`. Production tracki
 | Tools page CTA | ✅ Upgraded — Pro-forward with free sub secondary |
 | Beehiiv Pro tier checkout | ⚠️ Pending — configure in Beehiiv dashboard |
 | LinkedIn Insight Tag | ⚠️ Pending — add `NEXT_PUBLIC_LINKEDIN_PARTNER_ID` and `NEXT_PUBLIC_LINKEDIN_CONVERSION_PRO_SIGNUP` to Vercel |
-| LinkedIn Campaigns | ⚠️ Pending — account access fix required (see playbook) |
+| LinkedIn Campaigns | ⚠️ Partial — ad account `521990231` is created, but Campaign Manager requires two-step verification and hold-resolution before campaign launch |
 
 ## Open PRs
 
@@ -59,6 +63,7 @@ Update this file whenever `main` advances. Pin the SHA in the header. External t
 
 1. **Beehiiv Pro tier** — Set up paid tier checkout in Beehiiv dashboard so `/pro` CTA has a real destination
 2. **LinkedIn Insight Tag** — Get Partner ID and Pro signup conversion ID from Campaign Manager → add `NEXT_PUBLIC_LINKEDIN_PARTNER_ID` and `NEXT_PUBLIC_LINKEDIN_CONVERSION_PRO_SIGNUP` to Vercel
-3. **LinkedIn Account Access** — Identify which account owns `509494393`, grant Josh Cabana Account Manager role
-4. **Pause active campaigns** — Once in Campaign Manager, pause all active campaigns (driving traffic to non-Pro pages)
-5. **Build new campaigns** — Follow `marketing/linkedin-campaign-playbook.md` Steps 3–6
+3. **LinkedIn Campaign Manager security gate** — Complete the LinkedIn two-step verification flow prompted inside Campaign Manager for the profile using account `521990231`
+4. **LinkedIn account hold resolution** — Add billing or clear any remaining setup prompts until account `521990231` is no longer `On hold`
+5. **Pause legacy campaigns if still spending** — If any older LinkedIn ad account is still active, pause campaigns driving traffic to non-Pro pages
+6. **Build new campaigns** — Follow `marketing/linkedin-campaign-playbook.md` Steps 3–6 using ad account `521990231`
