@@ -12,6 +12,8 @@ const statusPath = path.join(repoRoot, 'STATUS.md');
 const rateLimitPath = path.join(repoRoot, 'lib', 'rate-limit.ts');
 const beehiivSetupPath = path.join(repoRoot, 'beehiiv-setup.md');
 const generateStatusScriptPath = path.join(repoRoot, 'scripts', 'generate-status.mjs');
+const trackedAffiliateStatusPath = 'ops/affiliate-status.md';
+const trackedAffiliateIntakePath = 'ops/affiliate-intake.md';
 
 function getSlidingWindowLimitPerMinute(): string {
   const rateLimitSource = readFileSync(rateLimitPath, 'utf8');
@@ -62,6 +64,20 @@ test('Beehiiv setup guide includes the first live send runbook', () => {
   assert.match(beehiivSetupSource, /## First Live Send and Metrics Runbook/);
   assert.match(beehiivSetupSource, /python3 scripts\/update-completion-guide\.py/);
   assert.match(beehiivSetupSource, /gh workflow run "Performance Logger"/);
+});
+
+test('affiliate status docs required by content verification are tracked in git', () => {
+  const statusDoc = spawnSync('git', ['ls-files', '--error-unmatch', trackedAffiliateStatusPath], {
+    cwd: repoRoot,
+    encoding: 'utf8',
+  });
+  const intakeDoc = spawnSync('git', ['ls-files', '--error-unmatch', trackedAffiliateIntakePath], {
+    cwd: repoRoot,
+    encoding: 'utf8',
+  });
+
+  assert.equal(statusDoc.status, 0, statusDoc.stderr);
+  assert.equal(intakeDoc.status, 0, intakeDoc.stderr);
 });
 
 test('generate-status records repository license metadata from LICENSE', () => {

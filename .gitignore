@@ -33,5 +33,7 @@ next-env.d.ts
 
 # Internal Docs
 marketing/
-ops/
 logs/
+ops/*
+!ops/affiliate-intake.md
+!ops/affiliate-status.md
