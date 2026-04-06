@@ -1,23 +1,47 @@
 ---
-title: >-
-  LLM Guardrails Are Failing: What the 2025–2026 Research Actually Shows
-slug: researchers-discover-major-security-gaps-in-llm-guardrails
-date: '2026-03-17'
-author: AI Security Brief
-excerpt: >-
-  Palo Alto Networks' Unit 42, Oxford researchers, and a Nature Communications study converge on the same finding: the safety layers enterprises rely on to govern generative AI can be bypassed at scale, by automated tools, in under 60 seconds. The attack success rates are not marginal — they are, in several documented cases, approaching 100%.
-category: AI Threats
+title: "LLM Guardrails Are Failing: What the 2025–2026 Research Actually Shows"
+slug: "researchers-discover-major-security-gaps-in-llm-guardrails"
+date: "2026-03-17"
+author:
+  name: "Josh Cabana"
+  role: "Editor & Publisher"
+excerpt: "Palo Alto Networks' Unit 42, Oxford researchers, and a Nature Communications study converge on the same finding: the safety layers enterprises rely on to govern generative AI can be bypassed at scale, by automated tools, in under 60 seconds. The attack success rates are not marginal — they are, in several documented cases, approaching 100%."
+category: "AI Threats"
 featured: false
-meta_title: LLM Guardrails Are Failing — 2025–2026 Research and Attack Success Rates
-meta_description: >-
-  Unit 42, Oxford, and Nature Communications research shows LLM guardrails failing at scale. Named jailbreak techniques, CVEs, attack success rates, and what defenders should actually do.
+meta_title: "LLM Guardrails Are Failing — 2025–2026 Research and Attack Success Rates"
+meta_description: "Unit 42, Oxford, and Nature Communications research shows LLM guardrails failing at scale. Named jailbreak techniques, CVEs, attack success rates, and what defenders should actually do."
 keywords:
-  - LLM guardrails bypass
-  - jailbreak attack success rates
-  - generative AI vulnerabilities
-  - prompt injection
-  - OWASP LLM security
-read_time: 8 min
+  - "LLM guardrails bypass"
+  - "jailbreak attack success rates"
+  - "generative AI vulnerabilities"
+  - "prompt injection"
+  - "OWASP LLM security"
+read_time: "8 min"
+primarySources:
+  - url: "https://unit42.paloaltonetworks.com/multi-turn-technique-jailbreaks-llms/"
+    title: "Palo Alto Networks Unit 42 — Bad Likert Judge: A Multi-Turn Technique to Jailbreak LLMs: Named technique, ASR data, 89.2 pp filter reduction"
+  - url: "https://unit42.paloaltonetworks.com/jailbreaking-generative-ai-web-products/"
+    title: "Palo Alto Networks Unit 42 — Jailbreaking 17 GenAI Web Products: Bad Likert Judge 45.9% ASR, Crescendo 43.2% ASR"
+  - url: "https://unit42.paloaltonetworks.com/fuzzing-ai-judges-security-bypass/"
+    title: "Palo Alto Networks Unit 42 — AdvJudge-Zero: Fuzzing AI Judges Security Bypass: 99% bypass rate against AI judge architectures"
+  - url: "https://arxiv.org/html/2503.08990v1"
+    title: "Gohil et al. — JBFuzz (arXiv 2025): 99% ASR across 9 LLMs in under 60 seconds"
+  - url: "https://arxiv.org/abs/2510.26418"
+    title: "Zhao, Fu, Schaeffer et al. — Chain-of-Thought Hijacking (Oxford Martin / Anthropic / Stanford, November 2025): 94–100% ASR on frontier LRMs"
+  - url: "https://www.nature.com/articles/s41467-026-69010-1"
+    title: "Hagendorff et al. — Autonomous Jailbreak Agents via LRMs, Nature Communications, February 2026: 97.14% overall ASR"
+  - url: "https://www.hiddenlayer.com/research/same-model-different-hat"
+    title: "HiddenLayer Research — Same Model, Different Hat, October 2025: OpenAI Guardrails bypass via judge manipulation"
+  - url: "https://iclr.cc/virtual/2026/poster/10007213"
+    title: "Jha et al. — HMNS: Head-Masked Nullspace Steering, ICLR 2026: Circuit-level safety subversion"
+  - url: "https://thehackernews.com/2025/12/critical-langchain-core-vulnerability.html"
+    title: "The Hacker News — CVE-2025-68664: Critical LangChain Core Vulnerability: Serialisation injection, RCE via Jinja2"
+  - url: "https://nvd.nist.gov/vuln/detail/CVE-2025-3248"
+    title: "NIST NVD — CVE-2025-3248: Langflow Unauthenticated RCE (CVSS 9.8): CISA KEV May 2025; exploited by Flodrix botnet"
+  - url: "https://owasp.org/www-project-top-10-for-large-language-model-applications/assets/PDF/OWASP-Top-10-for-LLMs-v2025.pdf"
+    title: "OWASP — Top 10 for Large Language Model Applications 2025: LLM01 Prompt Injection at 1"
+  - url: "https://blogs.cisco.com/ai/open-model-vulnerability-analysis"
+    title: "Cisco — Death by a Thousand Prompts: Open Model Vulnerability Analysis, November 2025: Multi-turn ASR up to 92.78%; 87% single-turn block rate collapses under persistence"
 ---
 # LLM Guardrails Are Failing: What the 2025–2026 Research Actually Shows
 

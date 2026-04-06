@@ -1,27 +1,31 @@
 ---
-title: Claude Extension Flaw Enabled Zero-Click XSS Prompt Injection via Any Website
-slug: claude-extension-flaw-enabled-zero-click-xss-prompt-injection-via-any-website
-date: '2026-03-30'
-author: AI Security Brief
-excerpt: >-
-  A critical vulnerability in Anthropic's Claude Chrome Extension exposes users
-  to zero-click XSS prompt injection attacks, allowing malicious actors to
-  execute commands without user interaction. This article examines the technical
-  details, risks, and defensive strategies for organizations and individuals.
-category: AI Threats
+title: "Claude Extension Flaw Enabled Zero-Click XSS Prompt Injection via Any Website"
+slug: "claude-extension-flaw-enabled-zero-click-xss-prompt-injection-via-any-website"
+date: "2026-03-30"
+author:
+  name: "Josh Cabana"
+  role: "Editor & Publisher"
+excerpt: "A critical vulnerability in Anthropic's Claude Chrome Extension exposes users to zero-click XSS prompt injection attacks, allowing malicious actors to execute commands without user interaction. This article examines the technical details, risks, and defensive strategies for organizations and individuals."
+category: "AI Threats"
 featured: false
-meta_title: 'Claude Extension Flaw: Zero-Click XSS Prompt Injection Threatens Chrome Users'
-meta_description: >-
-  A newly discovered flaw in the Claude Chrome Extension enables zero-click XSS
-  prompt injection via any website. Learn about the risks, technical details,
-  and mitigation strategies for this high-impact vulnerability.
+meta_title: "Claude Extension Flaw: Zero-Click XSS Prompt Injection Threatens Chrome Users"
+meta_description: "A newly discovered flaw in the Claude Chrome Extension enables zero-click XSS prompt injection via any website. Learn about the risks, technical details, and mitigation strategies for this high-impact vulnerability."
 keywords:
-  - Claude extension vulnerability
-  - zero-click XSS
-  - prompt injection
-  - AI security
-  - Chrome extension flaw
-read_time: 5 min
+  - "Claude extension vulnerability"
+  - "zero-click XSS"
+  - "prompt injection"
+  - "AI security"
+  - "Chrome extension flaw"
+read_time: "5 min"
+primarySources:
+  - url: "https://thehackernews.com/2026/03/claude-extension-flaw-enabled-zero.html"
+    title: "The Hacker News — Claude Extension Flaw Enabled Zero-Click XSS Prompt Injection via Any Website"
+  - url: "https://www.infosecurity-magazine.com/news/ai-top-cyber-priority-defenders-pwc/"
+    title: "Infosecurity Magazine — AI Becomes the Top Cybersecurity Priority for Defenders as Criminals Exploit It, PwC Warns"
+  - url: "https://www.helpnetsecurity.com/2026/03/27/cve-2026-33017-cve-2026-33634-exploited/"
+    title: "Help Net Security — CISA sounds alarm on Langflow RCE, Trivy supply chain compromise after rapid exploitation"
+  - url: "https://thehackernews.com/2026/03/langchain-langgraph-flaws-expose-files.html"
+    title: "The Hacker News — LangChain, LangGraph Flaws Expose Files, Secrets, Databases in Widely Used AI Frameworks"
 ---
 # Claude Extension Flaw Enabled Zero-Click XSS Prompt Injection via Any Website
 

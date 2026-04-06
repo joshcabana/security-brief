@@ -64,13 +64,16 @@ async function migrateArticle(fileName) {
   const source = await fs.readFile(filePath, 'utf8');
   const nextSource = migrateArticleSource(source, fileName);
   const frontmatter = matter(nextSource).data;
+  const primarySourceCount = Array.isArray(frontmatter.primarySources)
+    ? frontmatter.primarySources.length
+    : 0;
 
   if (nextSource === source) {
-    return { fileName, changed: false, primarySourceCount: frontmatter.primarySources.length };
+    return { fileName, changed: false, primarySourceCount };
   }
 
   await fs.writeFile(filePath, nextSource, 'utf8');
-  return { fileName, changed: true, primarySourceCount: frontmatter.primarySources.length };
+  return { fileName, changed: true, primarySourceCount };
 }
 
 export function migrateArticleSource(source, fileName) {

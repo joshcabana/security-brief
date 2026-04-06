@@ -1,29 +1,33 @@
 ---
-title: Security Researchers Sound the Alarm on Vulnerabilities in AI-Generated Code
-slug: security-researchers-sound-the-alarm-on-vulnerabilities-in-ai-generated-code
-date: '2026-03-30'
-author: AI Security Brief
-excerpt: >-
-  A surge in vulnerabilities linked to AI-generated code has prompted security
-  researchers to call for urgent improvements in code review and development
-  practices. This article explores the risks, trends, and defensive strategies
-  for organizations leveraging AI in software development.
-category: AI Threats
+title: "Security Researchers Sound the Alarm on Vulnerabilities in AI-Generated Code"
+slug: "security-researchers-sound-the-alarm-on-vulnerabilities-in-ai-generated-code"
+date: "2026-03-30"
+author:
+  name: "Josh Cabana"
+  role: "Editor & Publisher"
+excerpt: "A surge in vulnerabilities linked to AI-generated code has prompted security researchers to call for urgent improvements in code review and development practices. This article explores the risks, trends, and defensive strategies for organizations leveraging AI in software development."
+category: "AI Threats"
 featured: false
-meta_title: >-
-  AI-Generated Code Under Scrutiny: Security Researchers Warn of Rising
-  Vulnerabilities
-meta_description: >-
-  Security researchers report a significant increase in vulnerabilities tied to
-  AI-generated code. Discover the risks, trends, and best practices for securing
-  AI-assisted software development.
+meta_title: "AI-Generated Code Under Scrutiny: Security Researchers Warn of Rising Vulnerabilities"
+meta_description: "Security researchers report a significant increase in vulnerabilities tied to AI-generated code. Discover the risks, trends, and best practices for securing AI-assisted software development."
 keywords:
-  - AI-generated code
-  - software vulnerabilities
-  - secure code review
-  - AI security
-  - CVE trends
-read_time: 5 min
+  - "AI-generated code"
+  - "software vulnerabilities"
+  - "secure code review"
+  - "AI security"
+  - "CVE trends"
+read_time: "5 min"
+primarySources:
+  - url: "https://www.infosecurity-magazine.com/news/ai-generated-code-vulnerabilities/"
+    title: "Infosecurity Magazine — Security Researchers Sound the Alarm on Vulnerabilities in AI-Generated Code"
+  - url: "https://thehackernews.com/2026/03/langchain-langgraph-flaws-expose-files.html"
+    title: "The Hacker News — LangChain, LangGraph Flaws Expose Files, Secrets, Databases in Widely Used AI Frameworks"
+  - url: "https://www.helpnetsecurity.com/2026/03/27/cve-2026-33017-cve-2026-33634-exploited/"
+    title: "Help Net Security — CISA sounds alarm on Langflow RCE, Trivy supply chain compromise after rapid exploitation"
+  - url: "https://www.infosecurity-magazine.com/news/ai-top-cyber-priority-defenders-pwc/"
+    title: "Infosecurity Magazine — AI Becomes the Top Cybersecurity Priority for Defenders as Criminals Exploit It, PwC Warns"
+  - url: "https://www.infosecurity-magazine.com/news/openai-bug-bounty-ai-abuse-safety/"
+    title: "Infosecurity Magazine — OpenAI Expands Bug Bounty to Cover AI Abuse and 'Safety' Concerns"
 ---
 # Security Researchers Sound the Alarm on Vulnerabilities in AI-Generated Code
 

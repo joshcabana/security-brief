@@ -2,21 +2,35 @@
 title: "AI Flaws in Amazon Bedrock, LangSmith, and SGLang Enable Data Exfiltration and RCE"
 slug: "ai-flaws-in-amazon-bedrock-langsmith-and-sglang-enable-data-exfiltration-and-rce"
 date: "2026-03-19"
-author: "AI Security Brief"
+author:
+  name: "Josh Cabana"
+  role: "Editor & Publisher"
 excerpt: "Three independent research teams disclosed critical vulnerabilities across Amazon Bedrock AgentCore, LangSmith, and SGLang in March 2026 — collectively enabling DNS-based data exfiltration, account takeover, and unauthenticated remote code execution against AI infrastructure. One of these flaws remains unpatched, and CERT/CC has issued a public advisory."
 category: "AI Threats"
 featured: false
 meta_title: "AI Flaws in Amazon Bedrock, LangSmith, and SGLang: Data Exfiltration and RCE"
 meta_description: "Critical vulnerabilities in Amazon Bedrock, LangSmith (CVE-2026-25750), and SGLang (CVE-2026-3059, CVE-2026-3060) enable DNS exfiltration, account takeover, and unauthenticated RCE."
 keywords:
-  - Amazon Bedrock DNS exfiltration
-  - LangSmith CVE-2026-25750 account takeover
-  - SGLang RCE CVE-2026-3059
-  - AI infrastructure vulnerabilities 2026
-  - pickle deserialization remote code execution
+  - "Amazon Bedrock DNS exfiltration"
+  - "LangSmith CVE-2026-25750 account takeover"
+  - "SGLang RCE CVE-2026-3059"
+  - "AI infrastructure vulnerabilities 2026"
+  - "pickle deserialization remote code execution"
 read_time: "7 min"
+primarySources:
+  - url: "https://thehackernews.com/2026/03/ai-flaws-in-amazon-bedrock-langsmith.html"
+    title: "Ravie Lakshmanan — AI Flaws in Amazon Bedrock, LangSmith, and SGLang Enable Data Exfiltration and RCE, The Hacker News (March 17, 2026)"
+  - url: "https://kb.cert.org/vuls/"
+    title: "CERT/CC — Advisory on SGLang pickle deserialization vulnerabilities (CVE-2026-3059, CVE-2026-3060, CVE-2026-3989)"
+  - url: "https://nvd.nist.gov/vuln/detail/CVE-2026-25750"
+    title: "NVD — CVE-2026-25750 (LangSmith URL parameter injection, CVSS 8.5)"
+  - url: "https://nvd.nist.gov/vuln/detail/CVE-2026-3059"
+    title: "NVD — CVE-2026-3059 (SGLang unauthenticated RCE via ZMQ, CVSS 9.8)"
+  - url: "https://nvd.nist.gov/vuln/detail/CVE-2026-3060"
+    title: "NVD — CVE-2026-3060 (SGLang unauthenticated RCE via disaggregation module, CVSS 9.8)"
+  - url: "https://nvd.nist.gov/vuln/detail/CVE-2026-3989"
+    title: "NVD — CVE-2026-3989 (SGLang insecure pickle deserialization, CVSS 7.8)"
 ---
-
 # AI Flaws in Amazon Bedrock, LangSmith, and SGLang Enable Data Exfiltration and RCE
 
 Three independent security research teams published findings in March 2026 documenting significant vulnerabilities across three widely deployed AI infrastructure platforms: Amazon Bedrock AgentCore, the LangSmith LLM observability platform, and SGLang, an open-source LLM serving framework. The flaws are distinct in mechanism and severity, but share a common thread — each exploits the gap between how AI platforms are assumed to operate and how they actually behave in production.

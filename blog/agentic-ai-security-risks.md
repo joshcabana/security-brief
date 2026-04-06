@@ -2,21 +2,31 @@
 title: "Agentic AI Security Risks: What Every Developer Must Know"
 slug: "agentic-ai-security-risks"
 date: "2026-03-12"
-author: "AI Security Brief"
+author:
+  name: "Josh Cabana"
+  role: "Editor & Publisher"
 excerpt: "Autonomous AI agents are now embedded in enterprise workflows with privileged access to databases, APIs, and critical systems — but the security infrastructure governing them hasn't kept pace. Here's what developers and security teams need to understand right now."
 category: "AI Threats"
 featured: false
 meta_title: "Agentic AI Security Risks: What Developers Must Know"
 meta_description: "Agentic AI security risks are exploding in 2026. Prompt injection, excessive permissions, data exfiltration, and supply chain attacks in autonomous AI agents explained."
 keywords:
-  - agentic AI security risks
-  - autonomous AI agents security
-  - prompt injection agentic workflows
-  - AI agent supply chain attacks
-  - OWASP LLM vulnerabilities
+  - "agentic AI security risks"
+  - "autonomous AI agents security"
+  - "prompt injection agentic workflows"
+  - "AI agent supply chain attacks"
+  - "OWASP LLM vulnerabilities"
 read_time: "7 min"
+primarySources:
+  - url: "https://genai.owasp.org/llm-top-10/"
+    title: "OWASP — Top 10 for LLM Applications 2025: Prompt injection, excessive agency, supply chain vulnerabilities for AI systems"
+  - url: "https://www.nist.gov/news-events/news/2026/02/announcing-ai-agent-standards-initiative-interoperable-and-secure"
+    title: "NIST — AI Agent Standards Initiative (February 2026): CAISI launches framework for interoperable and secure AI agent deployment"
+  - url: "https://www.tenable.com/press-releases/tenable-research-reveals-growing-ai-exposure-gap-fueled-by-supply-chain-risks-and-lack-of-identity-controls"
+    title: "Tenable — Cloud and AI Security Risk Report 2026: 86% of organisations host third-party packages with critical CVEs; non-human identities carry higher risk than humans"
+  - url: "https://www.kiteworks.com/cybersecurity-risk-management/ai-agents-ungoverned-data-security-threat/"
+    title: "Kiteworks — AI Agents Are the Biggest Data Security Threat You're Not Governing: 32% of organisations cite unsupervised agent data access as critical; Trend Micro zero-click exfiltration demo"
 ---
-
 # Agentic AI Security Risks: What Every Developer Must Know
 
 Two years ago, the security conversation around AI centred on chatbots leaking system prompts. In 2026, the stakes are orders of magnitude higher. Autonomous AI agents — systems that reason, plan, and act across enterprise infrastructure without per-action human approval — are now deployed in production at 80% of Fortune 500 companies. They query databases, call external APIs, execute code, send emails, and modify cloud configurations. They do this at machine speed. And **only 21% of executives report complete visibility** into what their agents are doing.

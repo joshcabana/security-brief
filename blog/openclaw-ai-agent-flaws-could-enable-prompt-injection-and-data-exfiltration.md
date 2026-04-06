@@ -1,30 +1,54 @@
 ---
 title: "OpenClaw AI Agent Flaws: CVEs, Prompt Injection, and a Government Warning"
-slug: openclaw-ai-agent-flaws-could-enable-prompt-injection-and-data-exfiltration
-date: '2026-03-16'
-author: AI Security Brief
-excerpt: >-
-  China's CNCERT issued a formal warning on March 14 about OpenClaw's inherently
-  weak default configurations. With 97+ CVEs tracked, 135,000+ exposed instances,
-  and zero-click data exfiltration demonstrated in the wild, the open-source AI
-  agent has become a case study in what happens when autonomous systems ship
-  without a security baseline.
-category: AI Threats
+slug: "openclaw-ai-agent-flaws-could-enable-prompt-injection-and-data-exfiltration"
+date: "2026-03-16"
+author:
+  name: "Josh Cabana"
+  role: "Editor & Publisher"
+excerpt: "China's CNCERT issued a formal warning on March 14 about OpenClaw's inherently weak default configurations. With 97+ CVEs tracked, 135,000+ exposed instances, and zero-click data exfiltration demonstrated in the wild, the open-source AI agent has become a case study in what happens when autonomous systems ship without a security baseline."
+category: "AI Threats"
 featured: false
 meta_title: "OpenClaw AI Agent Flaws: CVEs, Prompt Injection, and Government Warnings"
-meta_description: >-
-  China's CNCERT warned on March 14, 2026 about OpenClaw's security flaws,
-  including CVE-2026-25253 (CVSS 8.8), CVE-2026-28363 (CVSS 9.9), zero-click
-  data exfiltration via Telegram/Discord, and 135,000+ exposed instances.
+meta_description: "China's CNCERT warned on March 14, 2026 about OpenClaw's security flaws, including CVE-2026-25253 (CVSS 8.8), CVE-2026-28363 (CVSS 9.9), zero-click data exfiltration via Telegram/Discord, and 135,000+ exposed instances."
 keywords:
-  - OpenClaw vulnerabilities
-  - CVE-2026-25253
-  - AI agent security
-  - prompt injection
-  - CNCERT warning
+  - "OpenClaw vulnerabilities"
+  - "CVE-2026-25253"
+  - "AI agent security"
+  - "prompt injection"
+  - "CNCERT warning"
 read_time: "8 min"
+primarySources:
+  - url: "https://thehackernews.com/2026/03/openclaw-ai-agent-flaws-could-enable.html"
+    title: "The Hacker News — OpenClaw AI Agent Flaws Could Enable Prompt Injection and Data Exfiltration (Ravie Lakshmanan, March 14, 2026)"
+  - url: "https://nvd.nist.gov/vuln/detail/CVE-2026-25253"
+    title: "NVD — CVE-2026-25253 detail page (CVSS 8.8, CWE-669, published February 1, 2026)"
+  - url: "https://github.com/jgamblin/OpenClawCVEs/"
+    title: "GitHub — OpenClawCVEs community tracker (jgamblin)"
+  - url: "https://www.adminbyrequest.com/en/blogs/openclaw-went-from-viral-ai-agent-to-security-crisis-in-just-three-weeks"
+    title: "Admin By Request — OpenClaw Went From Viral AI Agent to Security Crisis in Just Three Weeks (March 10, 2026)"
+  - url: "https://www.reco.ai/blog/openclaw-the-ai-agent-security-crisis-unfolding-right-now"
+    title: "Reco AI — OpenClaw: The AI Agent Security Crisis Unfolding Right Now (March 17, 2026)"
+  - url: "https://www.giskard.ai/knowledge/openclaw-security-vulnerabilities-include-data-leakage-and-prompt-injection-risks"
+    title: "Giskard — OpenClaw Security Vulnerabilities Include Data Leakage and Prompt Injection Risks (February 4, 2026)"
+  - url: "https://www.sonicwall.com/blog/openclaw-auth-token-theft-leading-to-rce-cve-2026-25253"
+    title: "SonicWall — OpenClaw Auth Token Theft Leading to RCE: CVE-2026-25253 (February 26, 2026)"
+  - url: "https://www.reuters.com/world/china/china-warns-security-risks-linked-openclaw-open-source-ai-agent-2026-02-05/"
+    title: "Reuters — China Warns of Security Risks Linked to OpenClaw Open-Source AI Agent (February 5, 2026)"
+  - url: "https://www.penligent.ai/hackinglabs/es/the-future-of-ai-agent-security-openclaw-security-audit/"
+    title: "Penligent — The Future of AI Agent Security: OpenClaw Security Audit (March 13, 2026)"
+  - url: "https://www.theregister.com/2026/03/12/rogue_ai_agents_worked_together/"
+    title: "The Register — Rogue AI Agents Can Work Together to Hack Systems and Steal Secrets (Jessica Lyons, March 12, 2026)"
+  - url: "https://thehackernews.com/2026/03/researchers-trick-perplexitys-comet-ai.html"
+    title: "The Hacker News — Researchers Trick Perplexity's Comet AI Browser Into Phishing Scam in Under Four Minutes (March 11, 2026)"
+  - url: "https://genai.owasp.org/resource/owasp-top-10-for-agentic-applications-for-2026/"
+    title: "OWASP GenAI Security Project — OWASP Top 10 for Agentic Applications for 2026 (December 9, 2025)"
+  - url: "https://www.gravitee.io/state-of-ai-agent-security"
+    title: "Gravitee — State of AI Agent Security Report (2026)"
+  - url: "https://www.microsoft.com/en-us/security/blog/2026/02/10/80-of-fortune-500-use-active-ai-agents-observability-governance-and-security-shape-the-new-frontier/"
+    title: "Microsoft Security Blog — 80% of Fortune 500 Use Active AI Agents (February 10, 2026)"
+  - url: "https://www.runzero.com/blog/openclaw/"
+    title: "RunZero — CVE-2026-25253 OpenClaw Overview (February 3, 2026)"
 ---
-
 # OpenClaw AI Agent Flaws: CVEs, Prompt Injection, and a Government Warning
 
 On March 14, 2026, China's National Computer Network Emergency Response Technical Team (CNCERT) issued a formal WeChat advisory warning that OpenClaw's **"inherently weak default security configurations,"** combined with its privileged access to the host system, create conditions for adversaries to seize complete control of an endpoint. The warning was not precautionary — it arrived weeks after **97+ CVEs** had been publicly tracked, after **135,000+ instances** had been confirmed exposed across 82 countries, and after researchers had already demonstrated zero-click data exfiltration in production deployments.

@@ -2,7 +2,9 @@
 title: "The Best LLM Firewalls Evaluated (2026 Guide)"
 slug: "best-llm-firewall-2026"
 date: "2026-04-03"
-author: "Josh Cabana"
+author:
+  name: "Josh Cabana"
+  role: "Editor & Publisher"
 excerpt: "A technical evaluation of the top MLSecOps firewalls for filtering prompts, preventing injection attacks, and securing large language model deployments in production."
 category: "Tools"
 featured: true
@@ -15,8 +17,8 @@ keywords:
   - "zero trust for AI"
   - "enterprise AI security"
 read_time: "7 min"
+primarySources:
 ---
-
 As enterprise deployments of autonomous agents and LLMs shift into production, the attack surface has fundamentally altered. We are no longer just securing static APIs; we operate in a landscape where an input string can manipulate logic, trigger unauthorized function calls, and exfiltrate sensitive context windows. 
 
 If your company runs an agentic pipeline, **an LLM firewall is no longer optional—it is critical infrastructure.**

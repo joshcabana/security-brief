@@ -2,21 +2,31 @@
 title: "Australia's Privacy Act Reforms 2026: What You Need to Know"
 slug: "australias-privacy-act-reforms-2026"
 date: "2026-03-14"
-author: "AI Security Brief"
+author:
+  name: "Josh Cabana"
+  role: "Editor & Publisher"
 excerpt: "Australia's Privacy Act has undergone its most significant overhaul since 1988 — with new penalties reaching $50 million, mandatory disclosure of AI decision-making systems, and a new statutory tort for serious privacy invasions. Here's what changed and what it means for your organisation."
 category: "Privacy"
 featured: false
 meta_title: "Australia's Privacy Act Reforms 2026: Full Breakdown"
 meta_description: "Australia's Privacy Act reforms 2025-2026 explained: $50M penalties, AI automated decision-making rules, new individual rights, GDPR comparison, and compliance deadlines."
 keywords:
-  - Australia Privacy Act reform 2026
-  - automated decision making transparency
-  - OAIC privacy enforcement 2026
-  - Australian data breach penalties
-  - Privacy Act AI provisions
+  - "Australia Privacy Act reform 2026"
+  - "automated decision making transparency"
+  - "OAIC privacy enforcement 2026"
+  - "Australian data breach penalties"
+  - "Privacy Act AI provisions"
 read_time: "7 min"
+primarySources:
+  - url: "https://www.landers.com.au/legal-insights-news/australian-privacy-law-update-what-app-entities-need-to-know-in-2026"
+    title: "Lander & Rogers — Australian Privacy Law Update 2026: APP 1.7 automated decision-making transparency requirements, December 2026 deadline"
+  - url: "https://www.clydeco.com/en/insights/2025/10/cyber-and-privacy-law-update-accountability-gets-r"
+    title: "Clyde & Co — Cyber and Privacy Law Update: Accountability Gets Real (October 2025): $5.8M ACL penalty, tiered penalty structure, new OAIC enforcement powers"
+  - url: "https://secureprivacy.ai/blog/what-australia-privacy-act-reforms-mean-for-your-business-2025"
+    title: "Secure Privacy — What the Australia Privacy Act Reforms Mean for Your Business 2025: Full breakdown of POLA Act provisions, statutory tort timeline, GDPR comparison, small business exemption status"
+  - url: "https://www.minterellison.com/articles/oaic-ramps-up-privacy-enforcement-are-you-ready"
+    title: "MinterEllison — OAIC Ramps Up Privacy Enforcement: Are You Ready? (February 2026): ADM disclosure compliance sweep, Bunnings APP 1.3 case, December 2026 enforcement context"
 ---
-
 # Australia's Privacy Act Reforms 2026: What You Need to Know
 
 For the better part of a decade, Australian privacy law lagged demonstrably behind comparable jurisdictions. The Privacy Act 1988 — designed for a pre-internet era — had not kept pace with the data practices of modern enterprise, the scale of platform-driven data collection, or the emergence of AI systems making automated decisions about individuals' rights and interests. That changed in December 2024, and the consequences for organisations operating in Australia are substantial.

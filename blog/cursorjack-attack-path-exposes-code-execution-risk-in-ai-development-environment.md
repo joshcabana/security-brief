@@ -2,21 +2,35 @@
 title: "CursorJack: How MCP Deeplinks Turn Cursor IDE Into a Code Execution Vector"
 slug: "cursorjack-attack-path-exposes-code-execution-risk-in-ai-development-environment"
 date: "2026-03-19"
-author: "AI Security Brief"
+author:
+  name: "Josh Cabana"
+  role: "Editor & Publisher"
 excerpt: "Proofpoint Threat Research has demonstrated that a single crafted deeplink can weaponise Cursor IDE's MCP installation flow to execute arbitrary commands under a developer's full privileges — exposing the structural security gap at the heart of the Model Context Protocol ecosystem."
 category: "AI Threats"
 featured: false
 meta_title: "CursorJack Attack: MCP Deeplinks and Code Execution Risk in Cursor IDE"
 meta_description: "Proofpoint's CursorJack research shows how a single crafted MCP deeplink can execute arbitrary commands in Cursor IDE. What CISOs and security engineers need to know."
 keywords:
-  - CursorJack MCP deeplink attack
-  - Cursor IDE security vulnerability
-  - Model Context Protocol security risks
-  - MCP server supply chain attack
-  - AI development tooling threats
+  - "CursorJack MCP deeplink attack"
+  - "Cursor IDE security vulnerability"
+  - "Model Context Protocol security risks"
+  - "MCP server supply chain attack"
+  - "AI development tooling threats"
 read_time: "6 min"
+primarySources:
+  - url: "https://www.proofpoint.com/us/blog/threat-insight/cursorjack-weaponizing-deeplinks-exploit-cursor-ide"
+    title: "Proofpoint Threat Research — CursorJack: Weaponizing Deeplinks to Exploit Cursor IDE (March 16, 2026): Primary technical analysis, proof-of-concept details, and mitigation recommendations"
+  - url: "https://www.infosecurity-magazine.com/news/cursor-jack-attack-path-ai/"
+    title: "Infosecurity Magazine — 'CursorJack' Attack Path Exposes Code Execution Risk in AI Development Environment (March 17, 2026): News coverage by Alessandro Mascellino"
+  - url: "https://www.anthropic.com/news/model-context-protocol"
+    title: "Anthropic — Introducing the Model Context Protocol (November 2024): Original MCP specification announcement"
+  - url: "https://zuplo.com/blog/mcp-survey"
+    title: "Zuplo — The State of MCP Report (January 2026): Industry survey on MCP adoption, security challenges, and builder practices"
+  - url: "https://www.getpanto.ai/blog/cursor-ai-statistics"
+    title: "Panto AI — Cursor AI Statistics 2026 (March 2026): Cursor user growth, DAU, enterprise penetration, and revenue milestones"
+  - url: "https://www.truefoundry.com/blog/mcp-servers-in-cursor-setup-configuration-and-security-guide"
+    title: "Truefoundry — MCP Servers in Cursor: Setup, Configuration, and Security (2026 Guide): Technical overview of CVE-2025-54136 (MCPoison) and CVE-2025-54135 (CurXecute) and MCP security posture guidance"
 ---
-
 # CursorJack: How MCP Deeplinks Turn Cursor IDE Into a Code Execution Vector
 
 The most dangerous software vulnerabilities are rarely exotic. They tend to be architectural — a design decision that made perfect sense for usability and created a structural attack surface that persists long after the original engineers moved on. CursorJack, the attack technique published by Proofpoint Threat Research on March 16, 2026, is exactly that kind of finding.

@@ -2,7 +2,9 @@
 title: "The Zero-BS Guide to Preventing Prompt Injection Attacks"
 slug: "preventing-prompt-injection-attacks"
 date: "2026-04-03"
-author: "Josh Cabana"
+author:
+  name: "Josh Cabana"
+  role: "Editor & Publisher"
 excerpt: "A tactical guide to mitigating prompt injection attacks in production. Moving beyond fragile regex filters to semantic validation and dual-LLM architectural defenses."
 category: "Security Engineering"
 featured: false
@@ -15,8 +17,8 @@ keywords:
   - "AI application security"
   - "enterprise AI security"
 read_time: "6 min"
+primarySources:
 ---
-
 If your application takes untrusted user input and feeds it directly into a Large Language Model (LLM), you are vulnerable. 
 
 Because LLMs do not inherently distinguish between "system instructions" and "user data" the way compiled code does, they are uniquely susceptible to **prompt injection attacks**, where an attacker manipulates the input to override the system prompt and force the AI into unintended behavior.

@@ -2,21 +2,31 @@
 title: "How AI Is Being Used to Launch Cyberattacks in 2026"
 slug: "how-ai-is-being-used-to-launch-cyberattacks-in-2026"
 date: "2026-03-10"
-author: "AI Security Brief"
+author:
+  name: "Josh Cabana"
+  role: "Editor & Publisher"
 excerpt: "AI has crossed a threshold in 2026 — adversaries are no longer just using it to write phishing emails. Autonomous attack agents, AI-generated malware, and deepfake social engineering are redefining the threat landscape at machine speed."
 category: "AI Threats"
 featured: true
 meta_title: "How AI Is Used to Launch Cyberattacks in 2026"
 meta_description: "AI-powered cyberattacks surged in 2025–2026. Learn how threat actors use AI phishing, deepfakes, autonomous agents, and AI malware — with real stats and examples."
 keywords:
-  - AI cyberattacks 2026
-  - AI-generated phishing
-  - deepfake social engineering
-  - autonomous attack agents
-  - AI-powered malware
+  - "AI cyberattacks 2026"
+  - "AI-generated phishing"
+  - "deepfake social engineering"
+  - "autonomous attack agents"
+  - "AI-powered malware"
 read_time: "6 min"
+primarySources:
+  - url: "https://finance.yahoo.com/news/ai-email-attacks-grew-5x-120000223.html"
+    title: "AegisAI — State of the AI Threat in Email Report 2025: AI email attacks grew 5x in 2025, 75% more effective at bypassing filters"
+  - url: "https://www.crowdstrike.com/en-us/resources/articles/crowdstrike-2025-global-threat-report-genai-powers-social-engineering/"
+    title: "CrowdStrike — 2025 Global Threat Report: How GenAI Powers Social Engineering: Deepfake BEC, $25.6M incident, AI-generated social media profiles"
+  - url: "https://www.crn.com/news/security/2026/how-autonomous-ai-cyberattacks-will-transform-security-experts"
+    title: "CRN — How Autonomous AI Cyberattacks Will Transform Security: Anthropic's November 2025 AI-orchestrated espionage campaign disclosure"
+  - url: "https://www.brside.com/blog/ai-generated-phishing-vs-human-attacks-2025-risk-analysis"
+    title: "BrightSide Technologies — AI-Generated Phishing vs Human Attacks: 2025 Risk Analysis: 1,265% phishing surge, 82.6% of emails use AI-generated content, 95% cost reduction"
 ---
-
 # How AI Is Being Used to Launch Cyberattacks in 2026
 
 The threat intelligence briefings landing on CISO desks in early 2026 share a common thread: the attack playbook has been rewritten. Adversaries who once needed weeks to craft a targeted campaign now need minutes. The weapon of choice is generative AI, and the results are measurable, alarming, and accelerating.
