@@ -134,19 +134,14 @@ function assertHttpUrl(value: unknown, field: string, fileName: string): string 
 }
 
 function assertAuthor(value: unknown, fileName: string): ArticleAuthor {
-  // Accept string format (legacy): coerce to ArticleAuthor object
-  if (typeof value === 'string' && value.trim().length > 0) {
-    const name = value.trim();
-    return {
-      name,
-      role: name === BRAND_AUTHOR_NAME ? 'Editorial Team' : 'Contributor',
-    };
-  }
-
-  // Accept object format (preferred)
   const authorRecord = assertRecord(value, 'author', fileName);
   const name = assertString(authorRecord.name, 'author.name', fileName);
   const role = assertString(authorRecord.role, 'author.role', fileName);
+
+  if (name === BRAND_AUTHOR_NAME) {
+    throw new Error(`Expected "author.name" to be a named human, not ${BRAND_AUTHOR_NAME}, in ${fileName}.`);
+  }
+
   const profileUrl = authorRecord.profileUrl === undefined
     ? undefined
     : assertHttpUrl(authorRecord.profileUrl, 'author.profileUrl', fileName);
@@ -176,13 +171,12 @@ function assertPrimarySource(value: unknown, index: number, fileName: string): P
 }
 
 function assertPrimarySources(value: unknown, fileName: string): PrimarySource[] {
-  // primarySources is optional — articles without it return an empty array
-  if (value === undefined || value === null) {
-    return [];
-  }
-
   if (!Array.isArray(value)) {
     throw new Error(`Expected "primarySources" to be an array in ${fileName}.`);
+  }
+
+  if (value.length < 3) {
+    throw new Error(`Expected "primarySources" to include at least 3 entries in ${fileName}.`);
   }
 
   return value.map((entry, index) => assertPrimarySource(entry, index, fileName));

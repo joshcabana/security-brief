@@ -106,6 +106,7 @@ export function buildSeoOptimiserPrompts(input) {
       'Return JSON in this shape:',
       '{"meta_title":"string","meta_description":"string","keywords":["one","two","three","four","five"]}',
       'Requirements:',
+      '- Optimise for click-through rate while staying accurate to the article body.',
       '- meta_title 50-60 characters.',
       '- meta_description 150-160 characters.',
       '- exactly 5 focus keywords.',
