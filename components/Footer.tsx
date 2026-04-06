@@ -33,7 +33,6 @@ const footerSections = [
       { label: 'RSS feed', href: '/feed.xml', external: true },
       { label: 'Privacy policy', href: '/privacy' },
       { label: 'Terms of service', href: '/terms' },
-      { label: 'GitHub repo', href: 'https://github.com/joshcabana/ai-security-brief', external: true },
     ],
   },
 ];
@@ -68,17 +67,7 @@ export default function Footer() {
             <p className="text-sm leading-relaxed mb-5 text-slate-400">
               AI-assisted security briefings on AI-powered threats, privacy defence, and the tooling choices that support both.
             </p>
-            <a
-              href="https://github.com/joshcabana/ai-security-brief"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 text-sm text-cyan-400 hover:text-cyan-300 transition-colors"
-            >
-              View the source repo
-              <svg width="10" height="10" viewBox="0 0 12 12" fill="currentColor" aria-hidden="true">
-                <path d="M3.5 3a.5.5 0 000 1H7.293L1.146 10.146a.5.5 0 00.708.708L8 4.707V8.5a.5.5 0 001 0v-5a.5.5 0 00-.5-.5h-5z" />
-              </svg>
-            </a>
+
           </div>
 
           {footerSections.map((section) => (
