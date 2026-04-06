@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, type FormEvent } from 'react';
+import { useState, useEffect, type FormEvent } from 'react';
 
 interface NewsletterFormProps {
   variant?: 'default' | 'hero' | 'footer' | 'page';
@@ -21,6 +21,21 @@ export default function NewsletterForm({
   const [website, setWebsite] = useState('');
   const [status, setStatus] = useState<FormStatus>('idle');
   const [message, setMessage] = useState('');
+  const [isDismissed, setIsDismissed] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
+
+  // Initialize state from localStorage after mount
+  useEffect(() => {
+    setIsMounted(true);
+    if (window.localStorage.getItem('hide-newsletter') === 'true') {
+      setIsDismissed(true);
+    }
+  }, []);
+
+  const handleDismiss = () => {
+    window.localStorage.setItem('hide-newsletter', 'true');
+    setIsDismissed(true);
+  };
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -53,6 +68,7 @@ export default function NewsletterForm({
       setMessage(payload.message || "You're in. Check your inbox for the confirmation email.");
       setEmail('');
       setWebsite('');
+      window.localStorage.setItem('hide-newsletter', 'true');
     } catch {
       setStatus('error');
       setMessage('The signup request could not reach the server. Please try again later.');
@@ -75,6 +91,11 @@ export default function NewsletterForm({
         </div>
       </div>
     );
+  }
+
+  // Only hide inline conversions if dismissed
+  if (isMounted && isDismissed && variant === 'default') {
+    return null;
   }
 
   const isHero = variant === 'hero';
@@ -142,9 +163,13 @@ export default function NewsletterForm({
         <p className="mt-2 text-xs text-red-500" role="alert" aria-live="polite">{message}</p>
       ) : null}
 
-      <p className="mt-2 text-xs text-slate-500">
-        No spam. Unsubscribe anytime. Powered by{' '}
-        <a href="https://beehiiv.com" target="_blank" rel="noopener noreferrer" className="text-slate-400 hover:underline">Beehiiv</a>.
+      <p className="mt-2 text-xs text-slate-500 flex justify-between items-center">
+        <span>No spam. Unsubscribe anytime. Powered by <a href="https://beehiiv.com" target="_blank" rel="noopener noreferrer" className="text-slate-400 hover:underline">Beehiiv</a>.</span>
+        {variant === 'default' && (
+          <button type="button" onClick={handleDismiss} className="text-slate-400 hover:underline">
+            Dismiss
+          </button>
+        )}
       </p>
     </form>
   );
