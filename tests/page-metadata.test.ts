@@ -22,7 +22,7 @@ test('createPageMetadata applies a self-canonical path to static pages', () => {
 test('createPageMetadata preserves page-specific social metadata overrides', () => {
   const metadata = createPageMetadata({
     canonicalPath: '/newsletter',
-    title: 'Newsletter — Weekly AI Threat Intelligence & Security Briefings',
+    title: 'Newsletter — Weekly AI Security Briefings',
     description: 'Subscribe to the newsletter.',
     openGraphDescription:
       'Free weekly briefings on AI-powered threats, privacy tool reviews, and defensive strategies for security teams and builders.',
@@ -32,7 +32,7 @@ test('createPageMetadata preserves page-specific social metadata overrides', () 
   });
 
   assert.deepEqual(metadata.openGraph, {
-    title: 'Newsletter — Weekly AI Threat Intelligence & Security Briefings',
+    title: 'Newsletter — Weekly AI Security Briefings',
     description:
       'Free weekly briefings on AI-powered threats, privacy tool reviews, and defensive strategies for security teams and builders.',
     url: '/newsletter',
