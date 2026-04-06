@@ -62,17 +62,16 @@ export default function NewsletterForm({
   if (status === 'success') {
     return (
       <div
-        className="flex items-start gap-3 p-4 rounded-lg"
-        style={{ background: 'rgba(63, 185, 80, 0.08)', border: '1px solid rgba(63, 185, 80, 0.25)' }}
+        className="flex items-start gap-3 p-4 rounded-lg bg-emerald-500/10 border border-emerald-500/25"
         role="alert"
         aria-live="polite"
       >
-        <svg width="18" height="18" viewBox="0 0 20 20" fill="none" style={{ color: '#3fb950', flexShrink: 0, marginTop: '1px' }} aria-hidden="true">
+        <svg width="18" height="18" viewBox="0 0 20 20" fill="none" className="text-emerald-500 shrink-0 mt-[1px]" aria-hidden="true">
           <path d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" fill="currentColor" />
         </svg>
         <div>
-          <p className="text-sm font-medium" style={{ color: '#3fb950' }}>Subscription confirmed</p>
-          <p className="text-sm mt-0.5" style={{ color: '#8b949e' }}>{message}</p>
+          <p className="text-sm font-medium text-emerald-500">Subscription confirmed</p>
+          <p className="text-sm mt-0.5 text-slate-400">{message}</p>
         </div>
       </div>
     );
@@ -82,7 +81,12 @@ export default function NewsletterForm({
   const isPage = variant === 'page';
 
   return (
-    <form onSubmit={handleSubmit} className={`w-full ${isPage ? 'max-w-lg mx-auto' : ''}`} aria-label="Newsletter subscription form">
+    <form
+      onSubmit={handleSubmit}
+      className={`w-full ${isPage ? 'max-w-lg mx-auto' : ''}`}
+      aria-label="Newsletter subscription form"
+      data-newsletter-source={source}
+    >
       <div className={`flex ${isHero || isPage ? 'flex-col sm:flex-row gap-3' : 'flex-row gap-2'}`}>
         <div className="flex-1 relative">
           <label htmlFor={`email-${variant}`} className="sr-only">Email address</label>
@@ -94,28 +98,12 @@ export default function NewsletterForm({
             placeholder={placeholder}
             required
             disabled={status === 'loading'}
-            className="w-full rounded-md text-sm transition-all duration-200 disabled:opacity-60"
-            style={{
-              background: 'rgba(22, 27, 34, 0.9)',
-              border: status === 'error' ? '1px solid #f85149' : '1px solid #30363d',
-              color: '#e6edf3',
-              outline: 'none',
-              padding: isHero || isPage ? '0.875rem 1rem' : '0.625rem 1rem',
-            }}
-            onFocus={(event) => {
-              if (status !== 'error') {
-                event.currentTarget.style.borderColor = '#00b4ff';
-                event.currentTarget.style.boxShadow = '0 0 0 3px rgba(0,180,255,0.1)';
-              }
-            }}
-            onBlur={(event) => {
-              if (status !== 'error') {
-                event.currentTarget.style.borderColor = '#30363d';
-                event.currentTarget.style.boxShadow = 'none';
-              }
-            }}
+            className={`w-full rounded-md text-sm transition-all duration-200 disabled:opacity-60 bg-slate-900/90 text-slate-200 outline-none focus:ring-4 focus:ring-cyan-500/10 ${
+              isHero || isPage ? 'px-4 py-3.5' : 'px-4 py-2.5'
+            } ${status === 'error' ? 'border border-red-500' : 'border border-slate-700 focus:border-cyan-400'}`}
           />
         </div>
+        <input type="hidden" name="source" value={source} readOnly />
         <div hidden aria-hidden="true">
           <label htmlFor={`website-${variant}`}>Website</label>
           <input
@@ -132,23 +120,9 @@ export default function NewsletterForm({
         <button
           type="submit"
           disabled={status === 'loading'}
-          className="flex-shrink-0 font-bold text-sm rounded-md transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed"
-          style={{
-            background: '#00b4ff',
-            color: '#0d1117',
-            padding: isHero || isPage ? '0.875rem 1.5rem' : '0.625rem 1.25rem',
-            whiteSpace: 'nowrap',
-          }}
-          onMouseEnter={(event) => {
-            if (status !== 'loading') {
-              event.currentTarget.style.background = '#33c3ff';
-              event.currentTarget.style.boxShadow = '0 0 16px rgba(0,180,255,0.35)';
-            }
-          }}
-          onMouseLeave={(event) => {
-            event.currentTarget.style.background = '#00b4ff';
-            event.currentTarget.style.boxShadow = 'none';
-          }}
+          className={`flex-shrink-0 font-bold text-sm text-slate-950 bg-cyan-500 hover:bg-cyan-400 hover:shadow-[0_0_16px_rgba(34,211,238,0.35)] rounded-md transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed whitespace-nowrap ${
+            isHero || isPage ? 'px-6 py-3.5' : 'px-5 py-2.5'
+          }`}
           aria-label={status === 'loading' ? 'Subscribing...' : buttonText}
         >
           {status === 'loading' ? (
@@ -165,12 +139,12 @@ export default function NewsletterForm({
       </div>
 
       {status === 'error' ? (
-        <p className="mt-2 text-xs" style={{ color: '#f85149' }} role="alert" aria-live="polite">{message}</p>
+        <p className="mt-2 text-xs text-red-500" role="alert" aria-live="polite">{message}</p>
       ) : null}
 
-      <p className="mt-2 text-xs" style={{ color: '#484f58' }}>
+      <p className="mt-2 text-xs text-slate-500">
         No spam. Unsubscribe anytime. Powered by{' '}
-        <a href="https://beehiiv.com" target="_blank" rel="noopener noreferrer" style={{ color: '#8b949e' }} className="hover:underline">Beehiiv</a>.
+        <a href="https://beehiiv.com" target="_blank" rel="noopener noreferrer" className="text-slate-400 hover:underline">Beehiiv</a>.
       </p>
     </form>
   );

@@ -29,9 +29,4 @@ protected-assets/
 # TypeScript
 *.tsbuildinfo
 next-env.d.ts
-
-# Ops and Logs Leakage Prevention
-ops/
-logs/
-STATUS.md
-STATUS 2.md
+.pnpm-store
