@@ -7,27 +7,17 @@ export default function ToolsMatrix() {
     // LLM Firewalls & MLSecOps
     { id: 'lakera', abbr: 'LG', name: 'Lakera Guard', category: 'LLM Firewall', strength: 'Prompt Inj. Blocking', pricing: 'Enterprise', hasProDiscount: true, link: '/go/lakera' },
     { id: 'protectai', abbr: 'PAI', name: 'ProtectAI Radar', category: 'SAST / DAST', strength: 'MLSecOps Scanning', pricing: 'Free Tier', hasProDiscount: false, link: '/go/protectai' },
-    { id: 'hiddenlayer', abbr: 'HL', name: 'HiddenLayer', category: 'LLM Firewall', strength: 'Adversarial ML Gen', pricing: 'Enterprise', hasProDiscount: false, link: '/go/hiddenlayer' },
     
-    // Privacy, Network & Zero-Trust
-    { id: 'mullvad', abbr: 'MV', name: 'Mullvad', category: 'VPN & Network', strength: 'No Logging, Wireguard', pricing: 'Paid ($5/mo)', hasProDiscount: true, link: '/go/mullvad' },
-    { id: 'tailscale', abbr: 'TS', name: 'Tailscale', category: 'VPN & Network', strength: 'Zero-Trust Mesh', pricing: 'Freemium', hasProDiscount: false, link: '/go/tailscale' },
-    { id: 'proton', abbr: 'PM', name: 'ProtonMail', category: 'Email & Comms', strength: 'E2E Encryption', pricing: 'Freemium', hasProDiscount: true, link: '/go/proton' },
+    // Identity & Auth
+    { id: '1password', abbr: '1P', name: '1Password for Business', category: 'Identity & Auth', strength: 'Zero-knowledge', pricing: 'Enterprise', hasProDiscount: true, link: '/go/1password' },
+    { id: 'auth0', abbr: 'A0', name: 'Auth0 / Okta', category: 'Identity & Auth', strength: 'CIAM & Workforce', pricing: 'Enterprise', hasProDiscount: false, link: '/go/auth0' },
     
-    // Identity, Auth & Secrets
-    { id: '1password', abbr: '1P', name: '1Password', category: 'Identity & Auth', strength: 'Zero-knowledge', pricing: 'Paid', hasProDiscount: true, link: '/go/1password' },
-    { id: 'yubico', abbr: 'YK', name: 'YubiKey', category: 'Identity & Auth', strength: 'Hardware FIDO2', pricing: 'One-time hardware', hasProDiscount: true, link: '/go/yubico' },
-    { id: 'auth0', abbr: 'A0', name: 'Auth0', category: 'Identity & Auth', strength: 'B2B/B2C Auth', pricing: 'Freemium', hasProDiscount: false, link: '/go/auth0' },
-    
-    // DAST/SAST & Vulnerability
-    { id: 'snyk', abbr: 'SNY', name: 'Snyk', category: 'SAST / DAST', strength: 'Container & Dep Scan', pricing: 'Freemium', hasProDiscount: true, link: '/go/snyk' },
+    // Endpoint & Cloud Security
     { id: 'wiz', abbr: 'WIZ', name: 'Wiz', category: 'Cloud Security', strength: 'Agentless CSPM', pricing: 'Enterprise', hasProDiscount: false, link: '/go/wiz' },
-    { id: 'pangea', abbr: 'PGA', name: 'Pangea', category: 'API Security', strength: 'Security Platform API', pricing: 'Pay-as-you-go', hasProDiscount: true, link: '/go/pangea' },
-    
-    // Endpoints & Compliance
     { id: 'crowdstrike', abbr: 'CS', name: 'CrowdStrike', category: 'Endpoint & XDR', strength: 'NGAV + EDR', pricing: 'Enterprise', hasProDiscount: false, link: '/go/crowdstrike' },
+    
+    // Compliance
     { id: 'vanta', abbr: 'VAN', name: 'Vanta', category: 'Compliance', strength: 'SOC2/ISO27001 Auto', pricing: 'Enterprise', hasProDiscount: true, link: '/go/vanta' },
-    { id: 'sentinelone', abbr: 'S1', name: 'SentinelOne', category: 'Endpoint & XDR', strength: 'Autonomous AI EDR', pricing: 'Enterprise', hasProDiscount: false, link: '/go/sentinelone' },
     { id: 'drata', abbr: 'DR', name: 'Drata', category: 'Compliance', strength: 'Continuous Audit', pricing: 'Enterprise', hasProDiscount: true, link: '/go/drata' },
   ];
 
@@ -53,9 +43,8 @@ export default function ToolsMatrix() {
           </Link>
         </div>
         
-        {/* Filters */}
         <div className="flex flex-wrap gap-3 mb-8">
-          {['All categories', 'SAST / DAST', 'Cloud Security', 'LLM Firewalls', 'VPN & Network', 'Identity & Auth', 'Compliance'].map((tag, i) => (
+          {['All categories', 'SAST / DAST', 'Cloud Security', 'LLM Firewalls', 'Identity & Auth', 'Endpoint & XDR', 'Compliance'].map((tag, i) => (
             <button key={tag} className={`px-4 py-1.5 rounded-full border text-sm font-semibold transition-colors ${i === 0 ? 'bg-cyan-600 text-white border-cyan-600' : 'border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 text-slate-700 dark:text-slate-300 hover:border-cyan-500 dark:hover:border-cyan-500'}`}>
               {tag}
             </button>

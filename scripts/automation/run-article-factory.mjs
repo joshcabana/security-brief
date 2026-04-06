@@ -112,10 +112,16 @@ async function main() {
     throw new Error(`Harvest file ${path.basename(harvestPath)} does not contain enough findings to draft articles.`);
   }
 
-  const existingArticleFiles = (await fs.readdir(path.join(REPO_ROOT, 'blog'))).filter((entry) => entry.endsWith('.md'));
+  const existingBlogFiles = await fs.readdir(path.join(REPO_ROOT, 'blog')).catch(() => []);
+  const existingDraftFiles = await fs.readdir(path.join(REPO_ROOT, 'drafts')).catch(() => []);
+  const allFileEntries = [
+    ...existingBlogFiles.filter((entry) => entry.endsWith('.md')).map((entry) => ({ dir: 'blog', entry })),
+    ...existingDraftFiles.filter((entry) => entry.endsWith('.md')).map((entry) => ({ dir: 'drafts', entry }))
+  ];
+
   const existingArticles = await Promise.all(
-    existingArticleFiles.map(async (entry) => {
-      const filePath = path.join(REPO_ROOT, 'blog', entry);
+    allFileEntries.map(async ({ dir, entry }) => {
+      const filePath = path.join(REPO_ROOT, dir, entry);
       const parsed = matter(await readText(filePath));
 
       return {
@@ -157,7 +163,7 @@ async function main() {
       context,
       commitMessage: `automation: refresh articles ${context.effectiveDate}`,
       model,
-      outputs: articlePlan.map((item) => `Article already exists: \`blog/${item.slug}.md\``),
+      outputs: articlePlan.map((item) => `Article already exists: \`${path.relative(REPO_ROOT, item.filePath)}\``),
       notes: ['No-op run. Weekly article files are already present.'],
     });
     return;
@@ -212,7 +218,7 @@ async function main() {
     }
 
     await writeText(planned.filePath, markdown);
-    outputs.push(`Article generated: \`blog/${planned.slug}.md\``);
+    outputs.push(`Article generated: \`drafts/${planned.slug}.md\``);
   }
 
   for (const stalePath of staleDuplicateFiles) {

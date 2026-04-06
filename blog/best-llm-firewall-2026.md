@@ -13,6 +13,7 @@ keywords:
   - "prompt injection prevention"
   - "MLSecOps"
   - "zero trust for AI"
+  - "enterprise AI security"
 read_time: "7 min"
 ---
 

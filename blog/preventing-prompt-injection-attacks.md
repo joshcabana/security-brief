@@ -13,6 +13,7 @@ keywords:
   - "prompt injection prevention"
   - "LLM security"
   - "AI application security"
+  - "enterprise AI security"
 read_time: "6 min"
 ---
 

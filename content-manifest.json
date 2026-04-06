@@ -1,10 +1,52 @@
 {
-  "articleCount": 14,
+  "articleCount": 16,
   "categories": [
     "AI Threats",
-    "Privacy"
+    "Privacy",
+    "Security Engineering",
+    "Tools"
   ],
   "articles": [
+    {
+      "title": "The Best LLM Firewalls Evaluated (2026 Guide)",
+      "slug": "best-llm-firewall-2026",
+      "date": "2026-04-03",
+      "author": "Josh Cabana",
+      "excerpt": "A technical evaluation of the top MLSecOps firewalls for filtering prompts, preventing injection attacks, and securing large language model deployments in production.",
+      "category": "Tools",
+      "featured": true,
+      "metaTitle": "Best LLM Firewalls of 2026: Preventing Prompt Injection",
+      "metaDescription": "We evaluated the top MLSecOps firewalls for securing LLMs. Compare zero-trust agent security, prompt injection filtering, and data exfiltration prevention.",
+      "keywords": [
+        "best LLM firewall 2026",
+        "prompt injection prevention",
+        "MLSecOps",
+        "zero trust for AI",
+        "enterprise AI security"
+      ],
+      "readTime": "7 min",
+      "fileName": "best-llm-firewall-2026.md"
+    },
+    {
+      "title": "The Zero-BS Guide to Preventing Prompt Injection Attacks",
+      "slug": "preventing-prompt-injection-attacks",
+      "date": "2026-04-03",
+      "author": "Josh Cabana",
+      "excerpt": "A tactical guide to mitigating prompt injection attacks in production. Moving beyond fragile regex filters to semantic validation and dual-LLM architectural defenses.",
+      "category": "Security Engineering",
+      "featured": false,
+      "metaTitle": "Preventing Prompt Injection Attacks in 2026 | Technical Guide",
+      "metaDescription": "Learn how to architect resilient defenses for preventing prompt injection attacks in enterprise LLM applications using semantic evaluation and execution sandboxes.",
+      "keywords": [
+        "preventing prompt injection attacks",
+        "prompt injection prevention",
+        "LLM security",
+        "AI application security",
+        "enterprise AI security"
+      ],
+      "readTime": "6 min",
+      "fileName": "preventing-prompt-injection-attacks.md"
+    },
     {
       "title": "Claude Extension Flaw Enabled Zero-Click XSS Prompt Injection via Any Website",
       "slug": "claude-extension-flaw-enabled-zero-click-xss-prompt-injection-via-any-website",

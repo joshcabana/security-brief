@@ -96,7 +96,7 @@ export function buildNewsletterCompilerPrompts(input) {
 export function buildSeoOptimiserPrompts(input) {
   return {
     systemPrompt:
-      'You are the SEO metadata optimiser for AI Security Brief. Return strict JSON only. No markdown fences.',
+      'You are the SEO metadata optimiser for AI Security Brief, an elite enterprise B2B threat intelligence platform. Return strict JSON only. No markdown fences.',
     userPrompt: [
       'Optimise metadata for this AI security article draft.',
       `Title: ${input.title}`,
@@ -109,7 +109,7 @@ export function buildSeoOptimiserPrompts(input) {
       '- meta_title 50-60 characters.',
       '- meta_description 150-160 characters.',
       '- exactly 5 focus keywords.',
-      '- Optimise for click-through rate without drifting from the article draft.',
+      '- Target enterprise B2B decision makers (CISOs, SecOps leads). Focus keywords must reflect high-intent enterprise security terms, NOT consumer terms.',
       "- Preserve the article's internal-link strategy and affiliate-placeholder behavior. Do not suggest removing or rewriting internal links or affiliate placeholders.",
     ].join('\n'),
   };

@@ -426,7 +426,7 @@ export function buildExpectedArticlePlan(findings, existingArticles, dateString)
       headline: finding.headline,
       finding,
       category: resolveArticleCategory(finding.category),
-      filePath: path.join(REPO_ROOT, 'blog', `${slug}.md`),
+      filePath: path.join(REPO_ROOT, 'drafts', `${slug}.md`),
     };
   });
 }

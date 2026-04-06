@@ -19,6 +19,8 @@ export default function NewsletterForm({
 }: NewsletterFormProps) {
   const [email, setEmail] = useState('');
   const [website, setWebsite] = useState('');
+  const [jobTitle, setJobTitle] = useState('');
+  const [companySize, setCompanySize] = useState('');
   const [status, setStatus] = useState<FormStatus>('idle');
   const [message, setMessage] = useState('');
   const [isDismissed, setIsDismissed] = useState(false);
@@ -53,7 +55,7 @@ export default function NewsletterForm({
       const response = await fetch('/api/subscribe', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, source, website }),
+        body: JSON.stringify({ email, source, website, jobTitle, companySize }),
       });
 
       const payload = (await response.json()) as { ok?: boolean; message?: string };
@@ -68,7 +70,6 @@ export default function NewsletterForm({
       setMessage(payload.message || "You're in. Check your inbox for the confirmation email.");
       setEmail('');
       setWebsite('');
-      window.localStorage.setItem('hide-newsletter', 'true');
     } catch {
       setStatus('error');
       setMessage('The signup request could not reach the server. Please try again later.');
@@ -104,10 +105,40 @@ export default function NewsletterForm({
   return (
     <form
       onSubmit={handleSubmit}
-      className={`w-full ${isPage ? 'max-w-lg mx-auto' : ''}`}
+      className={`w-full ${isPage ? 'max-w-lg mx-auto flex flex-col gap-3' : ''}`}
       aria-label="Newsletter subscription form"
       data-newsletter-source={source}
     >
+      {isPage && (
+        <div className="flex flex-col sm:flex-row gap-3">
+          <div className="flex-1 relative">
+            <label htmlFor={`job-title-${variant}`} className="sr-only">Job Title</label>
+            <input
+              id={`job-title-${variant}`}
+              type="text"
+              value={jobTitle}
+              onChange={(e) => setJobTitle(e.target.value)}
+              placeholder="Job Title (e.g. CISO, SecOps Engineer)"
+              className="w-full rounded-md text-sm transition-all duration-200 disabled:opacity-60 bg-slate-900/90 text-slate-200 outline-none focus:ring-4 focus:ring-cyan-500/10 px-4 py-3.5 border border-slate-700 focus:border-cyan-400"
+            />
+          </div>
+          <div className="flex-1 relative">
+            <label htmlFor={`company-size-${variant}`} className="sr-only">Company Size</label>
+            <select
+              id={`company-size-${variant}`}
+              value={companySize}
+              onChange={(e) => setCompanySize(e.target.value)}
+              className={`w-full rounded-md text-sm transition-all duration-200 disabled:opacity-60 bg-slate-900/90 ${companySize ? 'text-slate-200' : 'text-slate-400'} outline-none focus:ring-4 focus:ring-cyan-500/10 px-4 py-3.5 border border-slate-700 focus:border-cyan-400 appearance-none`}
+            >
+              <option value="" disabled>Company Size</option>
+              <option value="1-50">1-50 employees</option>
+              <option value="51-200">51-200 employees</option>
+              <option value="201-1000">201-1000 employees</option>
+              <option value="1000+">1000+ employees</option>
+            </select>
+          </div>
+        </div>
+      )}
       <div className={`flex ${isHero || isPage ? 'flex-col sm:flex-row gap-3' : 'flex-row gap-2'}`}>
         <div className="flex-1 relative">
           <label htmlFor={`email-${variant}`} className="sr-only">Email address</label>
@@ -119,9 +150,8 @@ export default function NewsletterForm({
             placeholder={placeholder}
             required
             disabled={status === 'loading'}
-            className={`w-full rounded-md text-sm transition-all duration-200 disabled:opacity-60 bg-slate-900/90 text-slate-200 outline-none focus:ring-4 focus:ring-cyan-500/10 ${
-              isHero || isPage ? 'px-4 py-3.5' : 'px-4 py-2.5'
-            } ${status === 'error' ? 'border border-red-500' : 'border border-slate-700 focus:border-cyan-400'}`}
+            className={`w-full rounded-md text-sm transition-all duration-200 disabled:opacity-60 bg-slate-900/90 text-slate-200 outline-none focus:ring-4 focus:ring-cyan-500/10 ${isHero || isPage ? 'px-4 py-3.5' : 'px-4 py-2.5'
+              } ${status === 'error' ? 'border border-red-500' : 'border border-slate-700 focus:border-cyan-400'}`}
           />
         </div>
         <input type="hidden" name="source" value={source} readOnly />
@@ -141,9 +171,8 @@ export default function NewsletterForm({
         <button
           type="submit"
           disabled={status === 'loading'}
-          className={`flex-shrink-0 font-bold text-sm text-slate-950 bg-cyan-500 hover:bg-cyan-400 hover:shadow-[0_0_16px_rgba(34,211,238,0.35)] rounded-md transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed whitespace-nowrap ${
-            isHero || isPage ? 'px-6 py-3.5' : 'px-5 py-2.5'
-          }`}
+          className={`flex-shrink-0 font-bold text-sm text-slate-950 bg-cyan-500 hover:bg-cyan-400 hover:shadow-[0_0_16px_rgba(34,211,238,0.35)] rounded-md transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed whitespace-nowrap ${isHero || isPage ? 'px-6 py-3.5' : 'px-5 py-2.5'
+            }`}
           aria-label={status === 'loading' ? 'Subscribing...' : buttonText}
         >
           {status === 'loading' ? (
