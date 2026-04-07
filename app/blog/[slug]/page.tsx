@@ -15,12 +15,10 @@ interface ArticlePageProps {
   params: Promise<{ slug: string }>;
 }
 
-export async function generateStaticParams() {
-  const articles = await getAllArticles();
-  return articles.map((article) => ({
-    slug: article.slug,
-  }));
-}
+// Article bodies embed affiliate URLs that are sourced from runtime env vars.
+// Render them dynamically so monetization links stay aligned with current
+// production config instead of being frozen into the build artifact.
+export const dynamic = 'force-dynamic';
 
 function formatDate(date: string): string {
   return new Date(date).toLocaleDateString('en-AU', {
