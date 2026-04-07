@@ -174,6 +174,7 @@ export const TRIAGE_OUTPUT_SCHEMA = {
 export function buildDefaultPolicy() {
   return {
     version: 1,
+    connector_id: GMAIL_CONNECTOR_ID,
     mailbox_email: 'cabana.collections2025@gmail.com',
     project_name: 'AI Security Brief',
     project_identifiers: [
