@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Link from 'next/link';
 import { createPageMetadata } from '@/lib/page-metadata.mjs';
 import NewsletterForm from '@/components/NewsletterForm';
 import { Shield, Zap, Check } from 'lucide-react';
@@ -17,10 +18,10 @@ export default function SubscribePage() {
   const proDescription = checkoutLive
     ? 'Paid access for teams that want deeper technical briefings, archive access, and research reports.'
     : 'Join the waitlist for deeper briefings, archive access, and research updates when paid access opens.';
-  const proButtonLabel = checkoutLive ? 'Continue to Pro Access' : 'Join Pro Waitlist';
+  const proButtonLabel = checkoutLive ? 'View Pro Access' : 'View Pro Details';
   const proFootnote = checkoutLive
-    ? 'Checkout is live through Beehiiv.'
-    : 'Paid access is not live yet. No card required.';
+    ? 'Checkout continues from the Pro overview.'
+    : 'The Pro overview includes the current waitlist flow. No card required.';
 
   return (
     <div className="min-h-[calc(100vh-80px)] bg-slate-50 dark:bg-[#080d14] flex flex-col items-center justify-center pt-24 pb-24">
@@ -106,7 +107,7 @@ export default function SubscribePage() {
                 'Deeper technical briefings',
                 'Searchable archive access',
                 'Research report updates',
-                'Member-content launch notifications',
+                checkoutLive ? 'Live Pro checkout access' : 'Member-content launch notifications',
                 'Disclosure-first tooling coverage'
               ].map((feature, i) => (
                 <li key={i} className="flex items-start gap-3">
@@ -117,12 +118,12 @@ export default function SubscribePage() {
             </ul>
 
             <div className="mt-auto">
-              <a 
-                href="/upgrade" 
+              <Link 
+                href="/pro" 
                 className="flex items-center justify-center w-full px-6 py-4 rounded-xl font-bold text-slate-900 bg-cyan-400 hover:bg-cyan-300 hover:shadow-[0_0_20px_rgba(34,211,238,0.4)] transition-all duration-300"
               >
                 {proButtonLabel}
-              </a>
+              </Link>
               <p className="text-center text-xs text-slate-500 mt-4">
                 {proFootnote}
               </p>

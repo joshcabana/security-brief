@@ -59,6 +59,18 @@ test('verified metadata and privacy analytics declarations match the live contra
       canonicalPath: '/privacy',
     },
     {
+      path: '/about',
+      canonicalPath: '/about',
+    },
+    {
+      path: '/archive',
+      canonicalPath: '/archive',
+    },
+    {
+      path: '/methodology',
+      canonicalPath: '/methodology',
+    },
+    {
       path: '/pro',
       canonicalPath: '/pro',
       ogDescription:
@@ -83,10 +95,18 @@ test('verified metadata and privacy analytics declarations match the live contra
         'Free weekly briefings on AI-powered threats, privacy tool reviews, and defensive strategies for security teams and builders.',
     },
     {
+      path: '/subscribe',
+      canonicalPath: '/subscribe',
+    },
+    {
       path: '/status',
       canonicalPath: '/status',
       ogDescription:
         'Public operational status for AI Security Brief: pinned main baseline, deployment context, and release verification signals.',
+    },
+    {
+      path: '/terms',
+      canonicalPath: '/terms',
     },
   ]);
 });

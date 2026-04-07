@@ -5,20 +5,20 @@ import { ArrowRight } from 'lucide-react';
 export default function ToolsMatrix() {
   const tools = [
     // LLM Firewalls & MLSecOps
-    { id: 'lakera', abbr: 'LG', name: 'Lakera Guard', category: 'LLM Firewall', strength: 'Prompt Inj. Blocking', pricing: 'Enterprise', link: '/go/lakera' },
-    { id: 'protectai', abbr: 'PAI', name: 'ProtectAI Radar', category: 'SAST / DAST', strength: 'MLSecOps Scanning', pricing: 'Free Tier', link: '/go/protectai' },
+    { id: 'lakera', abbr: 'LG', name: 'Lakera Guard', category: 'LLM Firewall', strength: 'Prompt Inj. Blocking', pricing: 'Enterprise', link: '/tools' },
+    { id: 'protectai', abbr: 'PAI', name: 'ProtectAI Radar', category: 'SAST / DAST', strength: 'MLSecOps Scanning', pricing: 'Free Tier', link: '/tools' },
     
     // Identity & Auth
-    { id: '1password', abbr: '1P', name: '1Password for Business', category: 'Identity & Auth', strength: 'Zero-knowledge', pricing: 'Enterprise', link: '/go/1password' },
-    { id: 'auth0', abbr: 'A0', name: 'Auth0 / Okta', category: 'Identity & Auth', strength: 'CIAM & Workforce', pricing: 'Enterprise', link: '/go/auth0' },
+    { id: '1password', abbr: '1P', name: '1Password for Business', category: 'Identity & Auth', strength: 'Zero-knowledge', pricing: 'Enterprise', link: '/tools' },
+    { id: 'auth0', abbr: 'A0', name: 'Auth0 / Okta', category: 'Identity & Auth', strength: 'CIAM & Workforce', pricing: 'Enterprise', link: '/tools' },
     
     // Endpoint & Cloud Security
-    { id: 'wiz', abbr: 'WIZ', name: 'Wiz', category: 'Cloud Security', strength: 'Agentless CSPM', pricing: 'Enterprise', link: '/go/wiz' },
-    { id: 'crowdstrike', abbr: 'CS', name: 'CrowdStrike', category: 'Endpoint & XDR', strength: 'NGAV + EDR', pricing: 'Enterprise', link: '/go/crowdstrike' },
+    { id: 'wiz', abbr: 'WIZ', name: 'Wiz', category: 'Cloud Security', strength: 'Agentless CSPM', pricing: 'Enterprise', link: '/tools' },
+    { id: 'crowdstrike', abbr: 'CS', name: 'CrowdStrike', category: 'Endpoint & XDR', strength: 'NGAV + EDR', pricing: 'Enterprise', link: '/tools' },
     
     // Compliance
-    { id: 'vanta', abbr: 'VAN', name: 'Vanta', category: 'Compliance', strength: 'SOC2/ISO27001 Auto', pricing: 'Enterprise', link: '/go/vanta' },
-    { id: 'drata', abbr: 'DR', name: 'Drata', category: 'Compliance', strength: 'Continuous Audit', pricing: 'Enterprise', link: '/go/drata' },
+    { id: 'vanta', abbr: 'VAN', name: 'Vanta', category: 'Compliance', strength: 'SOC2/ISO27001 Auto', pricing: 'Enterprise', link: '/tools' },
+    { id: 'drata', abbr: 'DR', name: 'Drata', category: 'Compliance', strength: 'Continuous Audit', pricing: 'Enterprise', link: '/tools' },
   ];
 
   return (
@@ -84,10 +84,14 @@ export default function ToolsMatrix() {
                     </td>
                     <td className="px-6 py-5 text-slate-600 dark:text-slate-300 font-medium">{tool.pricing}</td>
                     <td className="px-6 py-5 text-right">
-                      <a href={tool.link} target="_blank" rel="noopener noreferrer sponsored nofollow" className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded border border-slate-300 dark:border-slate-700 hover:border-cyan-600 hover:text-cyan-600 dark:hover:border-cyan-400 dark:hover:text-cyan-400 font-semibold transition-colors bg-white dark:bg-transparent">
-                        View Vendor
+                      <Link
+                        href={tool.link}
+                        aria-label={`Browse the full tools directory for ${tool.name}`}
+                        className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded border border-slate-300 dark:border-slate-700 hover:border-cyan-600 hover:text-cyan-600 dark:hover:border-cyan-400 dark:hover:text-cyan-400 font-semibold transition-colors bg-white dark:bg-transparent"
+                      >
+                        See coverage
                         <ArrowRight size={14} className="opacity-0 -ml-4 group-hover:opacity-100 group-hover:ml-0 transition-all" />
-                      </a>
+                      </Link>
                     </td>
                   </tr>
                 ))}

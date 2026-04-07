@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Link from 'next/link';
 import { createPageMetadata } from '@/lib/page-metadata.mjs';
 import { Shield, Search, Lock } from 'lucide-react';
 
@@ -70,9 +71,9 @@ export default function MethodologyPage() {
               Our Pro tier completely strips all affiliate and sponsorship noise from the briefings. When you pay for intelligence, you are paying for an uncompromised raw signal. Pro members receive neutral architectural reviews stripped of all tracking parameters.
             </p>
             <div className="flex justify-center mt-6">
-              <a href="/upgrade" className="px-6 py-3 rounded-xl bg-slate-900 dark:bg-slate-800 border border-slate-700 hover:border-cyan-500 text-white font-bold transition-all text-sm flex items-center gap-2">
-                Learn about Pro Intelligence
-              </a>
+              <Link href="/pro" className="px-6 py-3 rounded-xl bg-slate-900 dark:bg-slate-800 border border-slate-700 hover:border-cyan-500 text-white font-bold transition-all text-sm flex items-center gap-2">
+                Learn about Pro access
+              </Link>
             </div>
           </section>
         </div>

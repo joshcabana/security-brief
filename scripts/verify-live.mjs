@@ -371,6 +371,28 @@ async function run() {
         }
       },
     },
+    {
+      name: 'homepage-navigation',
+      path: '/',
+      method: 'GET',
+      assert: async (response) => {
+        const body = await response.text();
+
+        if (response.status !== 200) {
+          throw new Error(`Expected HTTP 200, received ${response.status}`);
+        }
+
+        for (const requiredPath of ['/about', '/archive', '/methodology', '/pro']) {
+          if (!body.includes(`href="${requiredPath}"`)) {
+            throw new Error(`Homepage is missing the expected internal navigation link ${requiredPath}.`);
+          }
+        }
+
+        if (body.includes('/go/')) {
+          throw new Error('Homepage still renders stale /go/* internal links.');
+        }
+      },
+    },
     ...VERIFIED_PAGE_METADATA.map((pageMetadata) => ({
       name: `metadata:${pageMetadata.path === '/' ? 'home' : pageMetadata.path.slice(1).replace(/\//g, '-')}`,
       path: pageMetadata.path,

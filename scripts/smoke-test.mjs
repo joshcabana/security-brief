@@ -353,9 +353,28 @@ async function main() {
     assert.match(homeHtml, /Intelligence Feed/);
     assert.match(homeHtml, /Get the next briefing in your inbox/);
     assert.doesNotMatch(homeHtml, /Join the launch list|publication goes live/i);
+    assert.match(homeHtml, /href="\/about"/);
+    assert.match(homeHtml, /href="\/archive"/);
+    assert.match(homeHtml, /href="\/methodology"/);
+    assert.match(homeHtml, /href="\/pro"/);
+    assert.doesNotMatch(homeHtml, /\/go\//);
+    assert.doesNotMatch(homeHtml, /Join Pro Waitlist|Join the Pro Waitlist/);
 
     const privacyHtml = await fetch(`http://127.0.0.1:${coldStartPort}/blog?category=Privacy`).then((response) => response.text());
     assert.deepEqual(extractArticleLinks(privacyHtml, articleSlugs), privacyArticles.map((a) => a.slug));
+
+    for (const [path, expectedMarker] of [
+      ['/about', 'About the Analyst'],
+      ['/archive', 'Intelligence Archive'],
+      ['/methodology', 'Research Methodology'],
+      ['/pro', 'AI Security Brief Pro'],
+      ['/upgrade', 'Join the Pro Waitlist'],
+    ]) {
+      const response = await fetch(`http://127.0.0.1:${coldStartPort}${path}`);
+      const html = await response.text();
+      assert.equal(response.status, 200, `Expected ${path} to return 200.`);
+      assert.match(html, new RegExp(expectedMarker.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')));
+    }
 
     assert.doesNotMatch(homeHtml, /protected-assets\//);
     const privacyPolicyHtml = await fetch(`http://127.0.0.1:${coldStartPort}/privacy`).then((response) => response.text());

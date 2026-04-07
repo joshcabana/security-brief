@@ -28,7 +28,7 @@ const footerSections = [
       { label: 'Methodology', href: '/methodology' },
       { label: 'About', href: '/about' },
       { label: 'Subscribe Free', href: '/subscribe' },
-      { label: 'Upgrade to Pro', href: '/upgrade' },
+      { label: 'Pro access', href: '/pro' },
       { label: 'RSS feed', href: '/feed.xml', external: true },
       { label: 'Privacy policy', href: '/privacy' },
       { label: 'Terms of service', href: '/terms' },

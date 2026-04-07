@@ -20,7 +20,7 @@ export default async function ArchivePage() {
   const bannerCopy = checkoutLive
     ? 'Public briefings are listed below. Continue to Pro for member content and report access.'
     : 'Public briefings are listed below. Join the waitlist to hear when member archive access and paid content open.';
-  const bannerCta = checkoutLive ? 'View Pro Access' : 'Join Pro Waitlist';
+  const bannerCta = checkoutLive ? 'View Pro Access' : 'View Pro Details';
 
   return (
     <div style={{ background: '#0d1117', minHeight: '100vh' }}>
@@ -54,7 +54,7 @@ export default async function ArchivePage() {
           </div>
           <div className="relative z-10 shrink-0 w-full md:w-auto">
             <Link 
-              href="/upgrade" 
+              href="/pro" 
               className="flex items-center justify-center gap-2 w-full px-6 py-3.5 bg-cyan-500 hover:bg-cyan-400 hover:shadow-[0_0_20px_rgba(34,211,238,0.3)] text-slate-950 font-bold rounded-xl transition-all"
             >
               <Lock size={16} /> {bannerCta}

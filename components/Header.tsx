@@ -12,6 +12,7 @@ const navLinks = [
   { href: '/tools', label: 'Tools' },
   { href: '/archive', label: 'Archive' },
   { href: '/methodology', label: 'Methodology' },
+  { href: '/about', label: 'About' },
 ];
 
 export default function Header() {
@@ -79,7 +80,7 @@ export default function Header() {
               Subscribe Free
             </Link>
             <Link
-              href="/upgrade"
+              href="/pro"
               id="header-pro-cta"
               className="ml-1 px-4 py-2 rounded-md text-sm font-bold transition-all duration-200 bg-cyan-500 hover:bg-cyan-400 text-slate-900 shadow-[0_0_15px_rgba(34,211,238,0.3)] hover:shadow-[0_0_20px_rgba(34,211,238,0.5)]"
             >
@@ -130,7 +131,7 @@ export default function Header() {
                 Subscribe Free
               </Link>
               <Link
-                href="/upgrade"
+                href="/pro"
                 id="header-pro-cta-mobile"
                 className="mt-1 px-4 py-2.5 rounded-md text-sm font-bold text-center transition-all duration-200 bg-cyan-500 text-slate-900"
                 onClick={() => setMobileOpen(false)}
