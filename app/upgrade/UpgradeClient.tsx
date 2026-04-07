@@ -85,18 +85,12 @@ function RedirectFlow() {
         </p>
       </div>
 
-      {/* noinspection HtmlInlineStyle */}
-      <div
-        className="w-full rounded-full overflow-hidden mb-4 h-[3px] bg-[var(--border)]"
-        role="progressbar"
+      <progress
+        className="w-full h-[3px] rounded-full overflow-hidden mb-4 appearance-none [&::-webkit-progress-bar]:bg-[var(--border)] [&::-webkit-progress-value]:bg-[linear-gradient(90deg,var(--accent-dim),var(--accent))] [&::-webkit-progress-value]:shadow-[0_0_8px_rgba(0,180,255,0.5)] [&::-webkit-progress-value]:transition-[width] [&::-webkit-progress-value]:duration-75 [&::-webkit-progress-value]:ease-linear [&::-moz-progress-bar]:bg-[linear-gradient(90deg,var(--accent-dim),var(--accent))] [&::-moz-progress-bar]:shadow-[0_0_8px_rgba(0,180,255,0.5)] bg-[var(--border)]"
+        value={progress}
+        max={100}
         aria-label="Redirect progress"
-        {...{ 'aria-valuenow': progress, 'aria-valuemin': 0, 'aria-valuemax': 100 }}
-      >
-        <div
-          className="h-full rounded-full bg-[linear-gradient(90deg,var(--accent-dim),var(--accent))] shadow-[0_0_8px_rgba(0,180,255,0.5)] transition-[width] duration-75 ease-linear"
-          {...{ style: { width: `${progress}%` } }}
-        />
-      </div>
+      />
     </>
   );
 }
@@ -274,7 +268,7 @@ export default function UpgradeClient() {
             <div
               className="absolute -top-2 -right-2 w-7 h-7 rounded-full flex items-center justify-center bg-[var(--surface)] border border-[rgba(0,180,255,0.4)]"
             >
-              <Zap size={14} style={{ color: 'var(--accent)' }} />
+              <Zap size={14} className="text-[var(--accent)]" />
             </div>
           </div>
         </div>

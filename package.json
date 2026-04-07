@@ -28,6 +28,7 @@
     "verify:status-doc": "node scripts/verify-status-doc.mjs",
     "verify:trust": "node scripts/verify-trust.mjs",
     "verify:release": "pnpm check:content && pnpm typecheck && pnpm test:unit && pnpm build && pnpm test:smoke",
+    "status:sync": "node scripts/sync-status-doc.mjs",
     "build": "next build",
     "start": "next start",
     "lint": "eslint . --ext .js,.mjs,.ts,.tsx"

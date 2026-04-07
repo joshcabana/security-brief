@@ -196,16 +196,13 @@ export default function ProPage() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {proFeatures.map((feature, i) => {
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 stagger">
+            {proFeatures.map((feature) => {
               const Icon = feature.icon;
-              // noinspection HtmlInlineStyle
-              // noinspection HtmlInlineStyle
               return (
                 <div
                   key={feature.title}
                   className="card p-6 group cursor-default"
-                  {...{ style: { animationDelay: `${i * 0.05}s` } }}
                 >
                   <div
                     className="w-10 h-10 rounded-lg flex items-center justify-center mb-4 transition-all duration-200 group-hover:scale-110 bg-[rgba(0,180,255,0.1)] border border-[rgba(0,180,255,0.2)]"
@@ -215,7 +212,7 @@ export default function ProPage() {
                   <h3 className="font-bold text-base mb-2 text-[var(--text-primary)]">
                     {feature.title}
                   </h3>
-                  <p className=" ">
+                  <p className="text-[var(--text-muted)]">
                     {feature.description}
                   </p>
                 </div>

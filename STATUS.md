@@ -1,7 +1,7 @@
 <!-- markdownlint-disable MD034 -->
 # AI Security Brief — Project Status
 
-**Pinned baseline:** `origin/main` @ `16a4112861561a8c2df81700bed85f2b2a7a6ab2` **Last updated:** 07 April 2026 **Updated by:** Codex
+**Pinned baseline:** `origin/main` @ `264b1c263cab85076c29630c1c4c073a077b7d91` **Last updated:** 07 April 2026 **Updated by:** Codex
 
 **Verification pipeline:** `pnpm verify:pr`, `pnpm verify:ops`, `NEXT_PUBLIC_PLAUSIBLE_DOMAIN=aithreatbrief.com pnpm verify:live`, plus cache-bypassed checks against the production runtime
 
@@ -10,14 +10,14 @@
 | Component | Status |
 | --- | --- |
 | Live URL | https://aithreatbrief.com |
-| Latest deploy | `main` @ `16a4112861561a8c2df81700bed85f2b2a7a6ab2` — runtime reported active deployment |
+| Latest deploy | `main` @ `264b1c263cab85076c29630c1c4c073a077b7d91` — runtime reported active deployment |
 | Rate limiting | Upstash-backed distributed 5 req/min per IP on `/api/subscribe` |
 | Repository license | MIT (`LICENSE`) |
 | Public status surface | `/status` and `/status.json` (runtime snapshot) |
 
 ## Current Status
 
-The production site is live on Vercel and, after cache-bypassed verification, is serving commit `16a4112861561a8c2df81700bed85f2b2a7a6ab2`.
+The production site is live on Vercel and, after cache-bypassed verification, is serving commit `264b1c263cab85076c29630c1c4c073a077b7d91`.
 
 The `/pro` and `/upgrade` flows now present waitlist-safe copy instead of promising immediate paid checkout. The status runtime payload is sanitized and no longer exposes internal Vercel deployment URLs.
 
@@ -53,13 +53,13 @@ None.
 
 Most recent merges:
 
-- refactor: implement security header middleware, update Pro checkout UI, sanitize status route, and standardize GITHUB_MODELS_MODEL configuration
-- feat: add NEXT_PUBLIC_PRO_CHECKOUT_LIVE environment variable to toggle Beehiiv checkout and update upgrade page messaging
-- feat(pro): Add /pro page, Pro CTAs in header/footer/tools, fix ToolsMatrix dead link
+- fix: update GITHUB_MODELS_MODEL resolution to ensure proper variable access in workflow environments
+- refactor: migrate inline styles to Tailwind classes, update metadata descriptions, and fix GitHub Actions variable syntax.
+- refactor: update report preview page to use dynamic site configuration for Pro access and CTA routing
 
 ## System Notes
 
-Update this file whenever `main` advances. Pin the SHA in the header. External tooling should verify state against this file, not against prior conversation context.
+Run `pnpm status:sync` before pushing a change that advances `main` so the header, Latest deploy row, and recent merges stay aligned with the current `origin/main` baseline. Review and update the narrative sections manually. External tooling should verify state against this file, not against prior conversation context.
 
 ## Remaining Blockers
 

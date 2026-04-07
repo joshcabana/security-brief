@@ -51,6 +51,14 @@ test('README documents the full optional runtime env surface used by the app', (
   assert.match(readmeSource, /\| `NEXT_PUBLIC_LINKEDIN_CONVERSION_PRO_SIGNUP` \| Optional \|/);
 });
 
+test('README documents the status sync workflow and the analytics-aware live verification command', () => {
+  const readmeSource = readFileSync(readmePath, 'utf8');
+
+  assert.match(readmeSource, /pnpm status:sync/);
+  assert.match(readmeSource, /NEXT_PUBLIC_PLAUSIBLE_DOMAIN=aithreatbrief\.com pnpm verify:live/);
+  assert.match(readmeSource, /syncs the `?STATUS\.md`? header, latest deploy row, and recent merges against the current `origin\/main` snapshot/i);
+});
+
 test('STATUS documents the active distributed subscribe rate limit', () => {
   const statusSource = readFileSync(statusPath, 'utf8');
   const limitPerMinute = getSlidingWindowLimitPerMinute();

@@ -180,6 +180,7 @@ pnpm lint
 pnpm verify:release
 pnpm verify:ops:contract
 pnpm verify:live
+pnpm status:sync
 pnpm audit --prod
 ```
 
@@ -188,6 +189,7 @@ pnpm audit --prod
 - `pnpm verify:release` runs the full local content, type, unit-test, build, and smoke-test gate.
 - `pnpm verify:ops:contract` verifies that `.env.example` still matches the required runtime contract.
 - `pnpm verify:live` validates the production deployment contract against `https://aithreatbrief.com`.
+- `pnpm status:sync` syncs the `STATUS.md` header, latest deploy row, and recent merges against the current `origin/main` snapshot before you push a change that advances `main`.
 - `pnpm audit --prod` checks production dependencies for known vulnerabilities.
 
 ### Ops Verification
@@ -195,13 +197,15 @@ pnpm audit --prod
 ```bash
 pnpm verify:ops
 pnpm verify:ops:contract
-pnpm verify:live
+NEXT_PUBLIC_PLAUSIBLE_DOMAIN=aithreatbrief.com pnpm verify:live
+pnpm status:sync
 pnpm ops:check-monday-pipeline -- --date YYYY-MM-DD
 ```
 
 - `pnpm verify:ops` loads `.env.local` when present and checks required runtime variables plus banned stale variables.
 - `pnpm verify:ops:contract` checks `.env.example` against the expected env contract.
-- `pnpm verify:live` validates the deployed site: route reachability, security response headers, per-page canonical URLs, page-specific `og:description` values for `/tools` and `/newsletter`, article canonical correctness, and a privacy truth-regression guard that fails if the privacy page claims no analytics while analytics integration markers exist in source (or vice versa).
+- `NEXT_PUBLIC_PLAUSIBLE_DOMAIN=aithreatbrief.com pnpm verify:live` is the production-safe command when live Plausible analytics is enabled; it validates the deployed site: route reachability, security response headers, per-page canonical URLs, page-specific `og:description` values for `/tools` and `/newsletter`, article canonical correctness, and a privacy truth-regression guard that fails if the privacy page claims no analytics while analytics integration markers exist in source (or vice versa).
+- `pnpm status:sync` refreshes the machine-managed `STATUS.md` fields from the current `origin/main` baseline while leaving the narrative sections for operator review.
 - `pnpm ops:check-monday-pipeline` checks the expected open PRs and workflow runs for a Monday content cycle.
 
 ### Automation Commands

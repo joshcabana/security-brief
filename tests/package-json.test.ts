@@ -65,6 +65,13 @@ test('verify:live:matrix script points at the local matrix runner', () => {
   );
 });
 
+test('status:sync script points at the repo-local status sync runner', () => {
+  assert.equal(
+    packageJson.scripts?.['status:sync'],
+    'node scripts/sync-status-doc.mjs',
+  );
+});
+
 test('trust and production verification scripts point at the new repo-local runners', () => {
   assert.equal(
     packageJson.scripts?.['verify:trust'],
