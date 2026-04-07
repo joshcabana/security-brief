@@ -23,7 +23,7 @@ export default async function ArchivePage() {
   const bannerCta = checkoutLive ? 'View Pro Access' : 'View Pro Details';
 
   return (
-    <div style={{ background: '#0d1117', minHeight: '100vh' }}>
+    <div className="bg-[#0d1117] min-h-screen">
       
       {/* Hero Header */}
       <div className="relative overflow-hidden pt-20 pb-16 bg-slate-900 border-b border-slate-800">
