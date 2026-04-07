@@ -8,6 +8,10 @@ import { siteConfig } from '@/lib/site';
 export default function PaywallCTA() {
   const [isDismissed, setIsDismissed] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
+  const checkoutLive = siteConfig.beehiiv.checkoutLive;
+  const primaryLabel = checkoutLive ? 'Upgrade to Pro' : 'Join Pro Waitlist';
+  const secondaryHref = checkoutLive ? siteConfig.beehiiv.loginUrl : '/subscribe';
+  const secondaryLabel = checkoutLive ? "I'm already a member" : 'Subscribe Free';
 
   useEffect(() => {
     setIsMounted(true);
@@ -40,7 +44,7 @@ export default function PaywallCTA() {
         </div>
         <h3 className="text-2xl font-bold text-white mb-3">Unlock the Full Threat Briefing</h3>
         <p className="text-slate-400 mb-8 max-w-lg leading-relaxed">
-          The remainder of this analysis, including complete mitigation scripts, zero-day proofs of concept, and exclusive premium tool discounts, is restricted to <span className="text-cyan-400 font-semibold">Pro Intelligence</span> subscribers.
+          The remainder of this article is reserved for the <span className="text-cyan-400 font-semibold">Pro Intelligence</span> tier. {checkoutLive ? 'Continue to the upgrade flow to unlock member content.' : 'Paid access is not live yet, but you can join the waitlist for launch updates.'}
         </p>
         
         <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
@@ -48,16 +52,16 @@ export default function PaywallCTA() {
             href="/upgrade"
             className="inline-flex items-center justify-center gap-2 px-8 py-3 rounded-lg bg-cyan-600 hover:bg-cyan-500 text-white font-bold transition-all shadow-[0_0_15px_rgba(0,180,255,0.4)]"
           >
-            Upgrade to Pro
+            {primaryLabel}
             <ArrowRight size={18} />
           </Link>
           <Link
-            href={siteConfig.beehiiv.loginUrl}
-            target="_blank"
-            rel="noopener noreferrer"
+            href={secondaryHref}
+            target={checkoutLive ? '_blank' : undefined}
+            rel={checkoutLive ? 'noopener noreferrer' : undefined}
             className="inline-flex items-center justify-center px-8 py-3 rounded-lg bg-transparent border border-slate-700 hover:border-slate-500 text-slate-300 font-medium transition-colors"
           >
-            I&apos;m already a member
+            {secondaryLabel}
           </Link>
         </div>
       </div>

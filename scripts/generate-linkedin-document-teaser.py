@@ -178,7 +178,7 @@ def draw_footer(pdf: canvas.Canvas) -> None:
     pdf.drawString(
         42,
         39,
-        "Founding access is locked to the Pro launch funnel. Upload this PDF as the native LinkedIn document creative.",
+        "Use this PDF as the native LinkedIn document creative for the Pro waitlist campaign.",
     )
 
 

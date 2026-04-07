@@ -62,13 +62,13 @@ test('verified metadata and privacy analytics declarations match the live contra
       path: '/pro',
       canonicalPath: '/pro',
       ogDescription:
-        'The AI threat feed built for CISOs, SecOps leads, and AI security engineers. Exclusive briefings, threat advisories, and analysis — no fluff, no affiliate noise.',
+        'Overview of AI Security Brief Pro, including the current waitlist state and member-content plan.',
     },
     {
       path: '/upgrade',
       canonicalPath: '/upgrade',
       ogDescription:
-        'Join the AI Security Brief Pro founding cohort to lock in the founding rate and get notified when paid access opens.',
+        'Join the Pro waitlist and get notified when paid access opens.',
     },
     {
       path: '/tools',

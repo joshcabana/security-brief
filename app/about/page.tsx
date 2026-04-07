@@ -9,7 +9,7 @@ export const metadata: Metadata = createPageMetadata({
   canonicalPath: '/about',
   title: 'About Josh Cabana — AI Security Brief',
   description:
-    'The uncompromising briefing for technology professionals defending against autonomous agents, prompt injection, and MLSecOps vulnerabilities.',
+    'Independent briefings on AI application security, privacy tooling, and defensive engineering for technical teams.',
 });
 
 export default function AboutPage() {
@@ -76,13 +76,13 @@ export default function AboutPage() {
           <div className="space-y-6">
             <h2 className="text-3xl font-bold text-slate-900 dark:text-white">Why trust this brief?</h2>
             <p className="text-slate-600 dark:text-slate-400 leading-relaxed text-lg">
-              The security landscape is actively fracturing. Traditional WAFs and EDRs are blind to context-window injections, zero-day data poisoning, and autonomous lateral movement. 
+              AI Security Brief focuses on AI application security, privacy tooling, and defensive engineering for teams evaluating real-world AI risk.
             </p>
             <p className="text-slate-600 dark:text-slate-400 leading-relaxed">
-              I built AI Security Brief because enterprise teams are starving for high-signal intelligence that bridges the gap between machine learning and offensive security. Most AI newsletters are written by hype-mongers. Most security blogs ignore LLM mechanics.
+              The goal is straightforward: publish concise briefings that connect AI system behavior, attack surface, and practical mitigation guidance.
             </p>
             <p className="text-slate-600 dark:text-slate-400 leading-relaxed">
-              As an active practitioner intersecting Offensive Security and ML pipelines, I don&apos;t just report on the latest CVEs—I supply the actual Regex patterns, isolation blueprints, and execution context you need to patch your endpoints before a rogue agent executes a payload.
+              When articles include tool recommendations or affiliate links, those disclosures are called out in the article and in the privacy policy.
             </p>
             
             <div className="flex flex-wrap gap-3 pt-4">
@@ -101,7 +101,7 @@ export default function AboutPage() {
       */}
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-2 text-center">Our Coverage Matrix</h2>
-        <p className="text-slate-600 dark:text-slate-400 text-center mb-12 max-w-2xl mx-auto">The three pillars of coverage delivered exclusively to your inbox.</p>
+        <p className="text-slate-600 dark:text-slate-400 text-center mb-12 max-w-2xl mx-auto">The three recurring coverage areas across the briefing.</p>
         
         <div className="grid sm:grid-cols-3 gap-6">
           <div className="p-6 rounded-2xl bg-white dark:bg-slate-900/50 border border-slate-200 dark:border-slate-800 hover:border-cyan-500/50 transition-colors shadow-sm dark:shadow-none">
@@ -137,12 +137,10 @@ export default function AboutPage() {
         <div className="p-6 rounded-2xl bg-amber-50 dark:bg-amber-900/10 border border-amber-200 dark:border-amber-500/20">
           <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-2 flex items-center gap-2">
             <span className="w-2 h-2 rounded-full bg-amber-500"></span>
-            Operational Transparency & Integrity
+            Operational Transparency & Disclosure
           </h3>
           <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
-            While we operate the $9/mo Pro Intelligence tier, our free briefings occasionally contain vetted affiliate links. 
-            <strong> We do not accept sponsored placements for tools we have not personally audited and run in production environments.</strong>
-            {' '}If an endpoint solution or VPN cannot withstand our internal evasion testing, it never reaches your inbox. Period. Read our full <Link href="/privacy" className="text-cyan-600 dark:text-cyan-400 hover:underline">Privacy Policy</Link>.
+            AI Security Brief is independently run. Some free briefings contain disclosed affiliate links, and those disclosures are documented in the article and in the <Link href="/privacy" className="text-cyan-600 dark:text-cyan-400 hover:underline">Privacy Policy</Link>.
           </p>
         </div>
       </div>
@@ -160,10 +158,10 @@ export default function AboutPage() {
           <div className="relative z-10">
             <h2 className="text-3xl font-extrabold text-slate-900 dark:text-white mb-4">Don&apos;t leave your perimeter to chance.</h2>
             <p className="text-slate-600 dark:text-slate-400 text-lg mb-8 max-w-2xl mx-auto">
-              Join 4,500+ CISOs, Security Engineers, and Red Teamers receiving the definitive briefing on agentic security risks.
+              Subscribe for weekly briefings on AI security risks, defensive controls, and tooling coverage.
             </p>
             <div className="max-w-md mx-auto">
-              <NewsletterForm variant="page" buttonText="Access the Briefing" source="about-page" />
+              <NewsletterForm variant="page" buttonText="Subscribe to the Briefing" source="about-page" />
             </div>
           </div>
         </div>

@@ -50,10 +50,10 @@ export default async function Hero() {
             className="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-cyan-500 border border-cyan-400 text-slate-950 font-extrabold shadow-[0_0_20px_rgba(34,211,238,0.3)] hover:shadow-[0_0_30px_rgba(34,211,238,0.5)] hover:bg-cyan-400 transition-all flex items-center justify-center gap-2"
           >
             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-zap"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-            Unlock Pro Access
+            Join Pro Waitlist
           </Link>
         </div>
-        <p className="mt-6 text-sm font-medium text-slate-500 dark:text-slate-500">Join 4,500+ security professionals. No fluff, just signal.</p>
+        <p className="mt-6 text-sm font-medium text-slate-500 dark:text-slate-500">Independent analysis for security teams.</p>
       </div>
     </section>
   );

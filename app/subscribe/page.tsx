@@ -2,14 +2,26 @@ import type { Metadata } from 'next';
 import { createPageMetadata } from '@/lib/page-metadata.mjs';
 import NewsletterForm from '@/components/NewsletterForm';
 import { Shield, Zap, Check } from 'lucide-react';
+import { siteConfig } from '@/lib/site';
 
 export const metadata: Metadata = createPageMetadata({
   canonicalPath: '/subscribe',
   title: 'Subscribe | AI Security Brief',
-  description: 'Join 4,500+ security leaders. Get weekly AI security briefings or upgrade to Pro for early access, threat playbooks, and vulnerability deep dives.',
+  description: 'Subscribe for weekly AI security briefings and join the Pro waitlist for deeper analysis when paid access opens.',
 });
 
 export default function SubscribePage() {
+  const checkoutLive = siteConfig.beehiiv.checkoutLive;
+  const proBadge = checkoutLive ? 'Pro Access' : 'Pro Waitlist';
+  const proTitle = checkoutLive ? 'Pro Access' : 'Pro Waitlist';
+  const proDescription = checkoutLive
+    ? 'Paid access for teams that want deeper technical briefings, archive access, and research reports.'
+    : 'Join the waitlist for deeper briefings, archive access, and research updates when paid access opens.';
+  const proButtonLabel = checkoutLive ? 'Continue to Pro Access' : 'Join Pro Waitlist';
+  const proFootnote = checkoutLive
+    ? 'Checkout is live through Beehiiv.'
+    : 'Paid access is not live yet. No card required.';
+
   return (
     <div className="min-h-[calc(100vh-80px)] bg-slate-50 dark:bg-[#080d14] flex flex-col items-center justify-center pt-24 pb-24">
       {/* Background elements */}
@@ -26,7 +38,7 @@ export default function SubscribePage() {
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">that actually matters</span>
           </h1>
           <p className="mt-6 text-lg text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
-            Choose your intelligence tier. From high-level summaries for the curious, to actionable vulnerability playbooks for the paranoid.
+            Start with the free weekly briefing, then join the Pro waitlist if you want deeper analysis when paid access opens.
           </p>
         </div>
 
@@ -72,7 +84,7 @@ export default function SubscribePage() {
             <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-cyan-400 to-blue-600"></div>
             <div className="absolute top-0 right-0 p-4">
               <div className="px-3 py-1 bg-cyan-500/20 border border-cyan-500/30 text-cyan-400 text-xs font-bold uppercase tracking-wider rounded-full">
-                Most Popular
+                {proBadge}
               </div>
             </div>
             
@@ -81,23 +93,21 @@ export default function SubscribePage() {
                 <Zap size={24} className="text-cyan-400 shadow-[0_0_15px_rgba(34,211,238,0.5)]" />
               </div>
               <div className="flex items-end gap-2 mb-2">
-                <h2 className="text-2xl font-bold text-white">Pro Access</h2>
-                <span className="text-slate-400 font-mono text-xl line-through decoration-red-500/50">$15/mo</span>
-                <span className="text-cyan-400 text-sm font-bold bg-cyan-900/40 px-2 py-0.5 rounded ml-2">-40% Off</span>
+                <h2 className="text-2xl font-bold text-white">{proTitle}</h2>
               </div>
               <p className="text-slate-400 text-sm">
-                For security engineers and leaders who need the actual exploit POCs, mitigation playbooks, and vendor-neutral intel.
+                {proDescription}
               </p>
             </div>
             
             <ul className="space-y-4 mb-10 flex-grow">
               {[
                 'Everything in Free',
-                'Priority vulnerability advisories (24-48hr early)',
-                'Technical teardowns & architecture guides',
-                'Unlimited access to the searchable archive',
-                'Quarterly Research Reports (Digital Delivery)',
-                'No affiliate or vendor sponsorship noise'
+                'Deeper technical briefings',
+                'Searchable archive access',
+                'Research report updates',
+                'Member-content launch notifications',
+                'Disclosure-first tooling coverage'
               ].map((feature, i) => (
                 <li key={i} className="flex items-start gap-3">
                   <Check size={18} className="text-cyan-400 mt-0.5 shrink-0" />
@@ -111,10 +121,10 @@ export default function SubscribePage() {
                 href="/upgrade" 
                 className="flex items-center justify-center w-full px-6 py-4 rounded-xl font-bold text-slate-900 bg-cyan-400 hover:bg-cyan-300 hover:shadow-[0_0_20px_rgba(34,211,238,0.4)] transition-all duration-300"
               >
-                Secure Pro Intel — $9/mo
+                {proButtonLabel}
               </a>
               <p className="text-center text-xs text-slate-500 mt-4">
-                Founding member rate locked forever. Cancel anytime.
+                {proFootnote}
               </p>
             </div>
           </div>

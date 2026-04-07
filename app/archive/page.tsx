@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { getAllArticles } from '@/lib/articles';
 import { createPageMetadata } from '@/lib/page-metadata.mjs';
 import { Lock, Zap } from 'lucide-react';
+import { siteConfig } from '@/lib/site';
 
 export const metadata: Metadata = createPageMetadata({
   canonicalPath: '/archive',
@@ -12,6 +13,14 @@ export const metadata: Metadata = createPageMetadata({
 
 export default async function ArchivePage() {
   const articles = await getAllArticles();
+  const checkoutLive = siteConfig.beehiiv.checkoutLive;
+  const bannerTitle = checkoutLive
+    ? 'Explore Pro archive access'
+    : 'Join the Pro waitlist for archive updates';
+  const bannerCopy = checkoutLive
+    ? 'Public briefings are listed below. Continue to Pro for member content and report access.'
+    : 'Public briefings are listed below. Join the waitlist to hear when member archive access and paid content open.';
+  const bannerCta = checkoutLive ? 'View Pro Access' : 'Join Pro Waitlist';
 
   return (
     <div style={{ background: '#0d1117', minHeight: '100vh' }}>
@@ -38,9 +47,9 @@ export default async function ArchivePage() {
             <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-cyan-500/20 border border-cyan-500/30 text-[10px] font-bold text-cyan-400 uppercase tracking-widest mb-3">
               <Zap size={12} /> Pro Intelligence
             </div>
-            <h2 className="text-xl md:text-2xl font-bold text-white mb-2">Upgrade for Early Access & Threat POCs</h2>
+            <h2 className="text-xl md:text-2xl font-bold text-white mb-2">{bannerTitle}</h2>
             <p className="text-sm text-slate-400 max-w-xl leading-relaxed">
-              Free subscribers receive high-level summaries. Pro members get 48-hour early access, the actual exploit scripts, mitigation code, and exclusive vendor discounts.
+              {bannerCopy}
             </p>
           </div>
           <div className="relative z-10 shrink-0 w-full md:w-auto">
@@ -48,7 +57,7 @@ export default async function ArchivePage() {
               href="/upgrade" 
               className="flex items-center justify-center gap-2 w-full px-6 py-3.5 bg-cyan-500 hover:bg-cyan-400 hover:shadow-[0_0_20px_rgba(34,211,238,0.3)] text-slate-950 font-bold rounded-xl transition-all"
             >
-              <Lock size={16} /> Unlock Pro Access
+              <Lock size={16} /> {bannerCta}
             </Link>
           </div>
         </div>

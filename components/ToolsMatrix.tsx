@@ -1,24 +1,24 @@
 import React from 'react';
 import Link from 'next/link';
-import { ArrowRight, Tag } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 
 export default function ToolsMatrix() {
   const tools = [
     // LLM Firewalls & MLSecOps
-    { id: 'lakera', abbr: 'LG', name: 'Lakera Guard', category: 'LLM Firewall', strength: 'Prompt Inj. Blocking', pricing: 'Enterprise', hasProDiscount: true, link: '/go/lakera' },
-    { id: 'protectai', abbr: 'PAI', name: 'ProtectAI Radar', category: 'SAST / DAST', strength: 'MLSecOps Scanning', pricing: 'Free Tier', hasProDiscount: false, link: '/go/protectai' },
+    { id: 'lakera', abbr: 'LG', name: 'Lakera Guard', category: 'LLM Firewall', strength: 'Prompt Inj. Blocking', pricing: 'Enterprise', link: '/go/lakera' },
+    { id: 'protectai', abbr: 'PAI', name: 'ProtectAI Radar', category: 'SAST / DAST', strength: 'MLSecOps Scanning', pricing: 'Free Tier', link: '/go/protectai' },
     
     // Identity & Auth
-    { id: '1password', abbr: '1P', name: '1Password for Business', category: 'Identity & Auth', strength: 'Zero-knowledge', pricing: 'Enterprise', hasProDiscount: true, link: '/go/1password' },
-    { id: 'auth0', abbr: 'A0', name: 'Auth0 / Okta', category: 'Identity & Auth', strength: 'CIAM & Workforce', pricing: 'Enterprise', hasProDiscount: false, link: '/go/auth0' },
+    { id: '1password', abbr: '1P', name: '1Password for Business', category: 'Identity & Auth', strength: 'Zero-knowledge', pricing: 'Enterprise', link: '/go/1password' },
+    { id: 'auth0', abbr: 'A0', name: 'Auth0 / Okta', category: 'Identity & Auth', strength: 'CIAM & Workforce', pricing: 'Enterprise', link: '/go/auth0' },
     
     // Endpoint & Cloud Security
-    { id: 'wiz', abbr: 'WIZ', name: 'Wiz', category: 'Cloud Security', strength: 'Agentless CSPM', pricing: 'Enterprise', hasProDiscount: false, link: '/go/wiz' },
-    { id: 'crowdstrike', abbr: 'CS', name: 'CrowdStrike', category: 'Endpoint & XDR', strength: 'NGAV + EDR', pricing: 'Enterprise', hasProDiscount: false, link: '/go/crowdstrike' },
+    { id: 'wiz', abbr: 'WIZ', name: 'Wiz', category: 'Cloud Security', strength: 'Agentless CSPM', pricing: 'Enterprise', link: '/go/wiz' },
+    { id: 'crowdstrike', abbr: 'CS', name: 'CrowdStrike', category: 'Endpoint & XDR', strength: 'NGAV + EDR', pricing: 'Enterprise', link: '/go/crowdstrike' },
     
     // Compliance
-    { id: 'vanta', abbr: 'VAN', name: 'Vanta', category: 'Compliance', strength: 'SOC2/ISO27001 Auto', pricing: 'Enterprise', hasProDiscount: true, link: '/go/vanta' },
-    { id: 'drata', abbr: 'DR', name: 'Drata', category: 'Compliance', strength: 'Continuous Audit', pricing: 'Enterprise', hasProDiscount: true, link: '/go/drata' },
+    { id: 'vanta', abbr: 'VAN', name: 'Vanta', category: 'Compliance', strength: 'SOC2/ISO27001 Auto', pricing: 'Enterprise', link: '/go/vanta' },
+    { id: 'drata', abbr: 'DR', name: 'Drata', category: 'Compliance', strength: 'Continuous Audit', pricing: 'Enterprise', link: '/go/drata' },
   ];
 
   return (
@@ -73,11 +73,6 @@ export default function ToolsMatrix() {
                         <div>
                           <div className="font-bold text-slate-900 dark:text-white text-base flex items-center gap-2">
                             {tool.name}
-                            {tool.hasProDiscount && (
-                              <span className="flex items-center gap-1 bg-amber-100 dark:bg-amber-500/20 text-amber-700 dark:text-amber-400 text-[10px] uppercase font-bold tracking-wider px-1.5 py-0.5 rounded border border-amber-200 dark:border-amber-500/30">
-                                <Tag size={10} /> Pro Discount
-                              </span>
-                            )}
                           </div>
                           <div className="text-xs text-slate-500 md:hidden mt-1">{tool.category}</div>
                         </div>
@@ -100,8 +95,8 @@ export default function ToolsMatrix() {
             </table>
           </div>
           <div className="p-4 bg-slate-50 dark:bg-slate-800/40 border-t border-slate-200 dark:border-slate-800 text-center text-xs text-slate-500 dark:text-slate-400">
-            Affiliate links support our independent threat research. Tools marked <strong className="text-amber-600 dark:text-amber-400">Pro Discount</strong> include exclusive pricing for Pro members.{' '}
-            <Link href="/pro" className="text-cyan-600 dark:text-cyan-400 hover:underline font-semibold">Upgrade to Pro →</Link>
+            Affiliate links support our independent threat research. Read the article-level disclosure before purchasing any tool.{' '}
+            <Link href="/pro" className="text-cyan-600 dark:text-cyan-400 hover:underline font-semibold">View Pro details →</Link>
           </div>
         </div>
       </div>

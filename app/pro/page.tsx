@@ -8,208 +8,191 @@ import {
   Zap,
   Lock,
   FileText,
-  Bell,
-  Users,
   Check,
   Brain,
   Database,
-  AlertTriangle,
 } from 'lucide-react';
 
 export const metadata: Metadata = createPageMetadata({
   canonicalPath: '/pro',
-  title: 'AI Security Brief Pro — Intelligence for Security Leaders',
+  title: 'AI Security Brief Pro',
   description:
-    'The AI threat feed built for CISOs, SecOps leads, and AI security engineers. Exclusive briefings, threat advisories, and analysis — no fluff, no affiliate noise.',
-  openGraphTitle: 'AI Security Brief Pro — Intelligence for Security Leaders',
+    'Overview of AI Security Brief Pro, including the current waitlist state and planned member content.',
+  openGraphTitle: 'AI Security Brief Pro',
   openGraphDescription:
-    'The AI threat feed built for CISOs, SecOps leads, and AI security engineers. Exclusive briefings, threat advisories, and analysis — no fluff, no affiliate noise.',
+    'Overview of AI Security Brief Pro, including the current waitlist state and planned member content.',
   twitterTitle: 'AI Security Brief Pro',
   twitterDescription:
-    'Priority AI threat advisories, deep technical briefings, and the full archive for security leaders.',
+    'Overview of AI Security Brief Pro, including the current waitlist state and planned member content.',
 });
 
 const proFeatures = [
   {
-    icon: Bell,
-    title: 'Priority Threat Advisories',
-    description:
-      'First-alert notifications on critical AI-specific CVEs, model supply-chain attacks, and agentic exploits — before they hit mainstream press.',
-  },
-  {
     icon: Brain,
-    title: 'Deep-Dive Technical Briefings',
+    title: 'Technical Briefings',
     description:
-      'Complete architecture-level analysis of AI attack vectors: context-window injections, RAG poisoning, sandbox escapes, and LLM jailbreak chains.',
-  },
-  {
-    icon: Database,
-    title: 'Security Briefing Matrix',
-    description:
-      'Continuously updated matrix of vetted AI security tooling — detection layers, LLM firewalls, zero-trust integrations — rated by real operational value.',
-  },
-  {
-    icon: FileText,
-    title: 'Exclusive Research Reports',
-    description:
-      'Quarterly research reports covering the AI threat landscape. Structured for exec briefings or direct import into your threat register.',
+      'Longer-form analysis of AI security issues, architecture tradeoffs, and mitigation patterns.',
   },
   {
     icon: Lock,
-    title: 'Searchable Brief Archive',
+    title: 'Member-Only Content',
     description:
-      'Full access to every briefing, going back to launch. Search by threat type, vendor, attack surface, or CVE.',
+      'Reserved articles and report sections are routed through the Pro upgrade flow.',
   },
   {
-    icon: Users,
-    title: 'Early Cohort Pricing',
+    icon: Database,
+    title: 'Archive Access',
     description:
-      'Lock in founding-member pricing before the public launch. Rate never increases as long as you stay subscribed.',
+      'The Pro tier is intended to include access to a searchable archive of deeper briefings.',
+  },
+  {
+    icon: FileText,
+    title: 'Research Reports',
+    description:
+      'Report-style pages and longer research material are part of the paid-content plan.',
+  },
+  {
+    icon: Shield,
+    title: 'Disclosure-First Coverage',
+    description:
+      'Tooling coverage is paired with disclosure language when affiliate links are present.',
+  },
+  {
+    icon: Zap,
+    title: 'Launch Updates',
+    description:
+      'The current upgrade flow collects waitlist signups until paid access is confirmed live.',
   },
 ];
 
 const freeVsPro = [
-  { feature: 'Weekly free briefings (curated)', free: true, pro: true },
-  { feature: 'Priority threat advisories (24–48h early)', free: false, pro: true },
-  { feature: 'Technical deep-dives & architecture analysis', free: false, pro: true },
-  { feature: 'Full briefing archive (searchable)', free: false, pro: true },
-  { feature: 'AI Stack Matrix (rated & updated weekly)', free: 'Partial', pro: true },
-  { feature: 'Quarterly research reports', free: false, pro: true },
-  { feature: 'No affiliate recommendations', free: false, pro: true },
-  { feature: 'Founding member pricing lock', free: false, pro: true },
+  { feature: 'Weekly email briefings', free: true, pro: true },
+  { feature: 'Public blog articles', free: true, pro: true },
+  { feature: 'Member-only content access', free: false, pro: true },
+  { feature: 'Searchable archive access', free: false, pro: true },
+  { feature: 'Research report access', free: false, pro: true },
+  { feature: 'Paid-tier launch updates', free: false, pro: true },
 ];
 
-const socialProof = [
-  { role: 'CISO', org: 'Mid-market fintech', quote: 'The only threat feed I actually read end-to-end every week.' },
-  { role: 'VP Security Engineering', org: 'SaaS platform', quote: 'Replaced three newsletters. The AI-specific coverage is unmatched.' },
-  { role: 'Threat Intelligence Lead', org: 'Government contractor', quote: 'Technical depth without the vendor noise. Exactly what we needed.' },
+const operationalNotes = [
+  {
+    title: 'Current checkout state',
+    description:
+      'The repository uses an environment flag to decide whether `/upgrade` redirects to checkout or captures waitlist signups.',
+  },
+  {
+    title: 'Current public content',
+    description:
+      'Public briefings remain available through the blog and archive pages while paid access is not live.',
+  },
+  {
+    title: 'Current disclosure model',
+    description:
+      'Affiliate language is disclosed in articles and supporting policy pages rather than hidden in marketing copy.',
+  },
 ];
 
 export default function ProPage() {
   const checkoutLive = siteConfig.beehiiv.checkoutLive;
-  const primaryCtaLabel = checkoutLive ? 'Get Pro Access — $9/mo' : 'Join the Pro Waitlist — $9/mo';
+  const primaryCtaLabel = checkoutLive ? 'Continue to Pro Access' : 'Join the Pro Waitlist';
   const heroSupportCopy = checkoutLive
-    ? 'Cancel anytime. Founding rate locked for life.'
-    : 'No card required yet. Founding rate locked for life when checkout opens.';
+    ? 'Paid access is live through the current Beehiiv checkout flow.'
+    : 'Paid access is not live yet. Join the waitlist for launch updates.';
   const pricingSupportCopy = checkoutLive
-    ? 'Secure checkout. Cancel from your account anytime.'
-    : "Join the founding waitlist now. We'll email you first when checkout opens.";
+    ? 'Upgrade flow is active.'
+    : 'Waitlist signup is active. No card required.';
+  const statusBadge = checkoutLive ? 'Paid access live' : 'Waitlist open';
+  const summaryHeading = checkoutLive ? 'What Pro includes' : 'What Pro is intended to include';
 
   return (
-    <div className="min-h-screen" style={{ background: 'var(--bg)' }}>
-      {/* ── Hero ── */}
+    <div className="min-h-screen bg-[var(--bg)]">
       <section className="relative overflow-hidden pt-24 pb-20">
-        {/* Background effects */}
         <div
-          className="absolute inset-0 pointer-events-none"
-          style={{
-            background:
-              'radial-gradient(ellipse 80% 60% at 50% -10%, rgba(0,180,255,0.12) 0%, transparent 70%)',
-          }}
+          className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_80%_60%_at_50%_-10%,rgba(0,180,255,0.12)_0%,transparent_70%)]"
           aria-hidden="true"
         />
         <div
-          className="absolute inset-0 pointer-events-none opacity-40"
-          style={{
-            backgroundImage:
-              'radial-gradient(circle at 1px 1px, rgba(0,180,255,0.07) 1px, transparent 0)',
-            backgroundSize: '28px 28px',
-          }}
+          className="absolute inset-0 pointer-events-none opacity-40 bg-[radial-gradient(circle_at_1px_1px,rgba(0,180,255,0.07)_1px,transparent_0)] bg-[size:28px_28px]"
           aria-hidden="true"
         />
 
         <div className="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          {/* Alert badge */}
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-8 text-xs font-mono font-bold uppercase tracking-widest border"
-            style={{
-              background: 'rgba(0,180,255,0.08)',
-              borderColor: 'rgba(0,180,255,0.3)',
-              color: 'var(--accent)',
-            }}
+          <div
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-8 text-xs font-mono font-bold uppercase tracking-widest border bg-[rgba(0,180,255,0.08)] border-[rgba(0,180,255,0.3)] text-[var(--accent)]"
           >
             <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75"
-                style={{ background: 'var(--accent)' }} />
-              <span className="relative inline-flex rounded-full h-2 w-2"
-                style={{ background: 'var(--accent)' }} />
+              <span
+                className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 bg-[var(--accent)]"
+              />
+              <span
+                className="relative inline-flex rounded-full h-2 w-2 bg-[var(--accent)]"
+              />
             </span>
-            Founding Member Access — Limited Cohort
+            {statusBadge}
           </div>
 
-          <h1 className="text-5xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight mb-6"
-            style={{ color: 'var(--text-primary)', letterSpacing: '-0.03em' }}>
-            The AI Threat Feed{' '}
+          <h1
+            className="text-5xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight mb-6 text-[var(--text-primary)] tracking-[-0.03em]"
+          >
+            AI Security Brief Pro
             <span
-              className="block"
-              style={{
-                background: 'linear-gradient(135deg, #00b4ff 0%, #0086bd 60%, #00e5ff 100%)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                backgroundClip: 'text',
-              }}
+              className="block bg-[linear-gradient(135deg,#00b4ff_0%,#0086bd_60%,#00e5ff_100%)] text-transparent bg-clip-text"
             >
-              Built for Security Leaders
+              Member Content Overview
             </span>
           </h1>
 
           <p className="text-xl text-slate-400 max-w-2xl mx-auto mb-10 leading-relaxed">
-            CISOs and SecOps leads use AI Security Brief Pro to stay ahead of AI-powered threats —
-            before they become incidents. 3 briefings/week. Zero fluff. No vendor noise.
+            This page describes the current Pro access flow and the member-content structure reflected in the repository.
           </p>
 
-          {/* CTA block */}
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-6">
             <ProCTAButton id="pro-cta-hero" variant="primary">
               {primaryCtaLabel}
             </ProCTAButton>
             <ProCTAButton id="pro-cta-sample" variant="ghost" href="/blog">
-              Read sample briefings first
+              Read public briefings
             </ProCTAButton>
           </div>
 
-          <p className="text-xs font-mono" style={{ color: 'var(--text-faint)' }}>
+          <p className="text-xs font-mono text-[var(--text-faint)]">
             {heroSupportCopy}
           </p>
         </div>
       </section>
 
-      {/* ── Social Proof ── */}
-      <section className="py-16 border-y" style={{ borderColor: 'var(--border-subtle)', background: 'var(--surface)' }}
-        aria-label="Testimonials">
+      <section
+        className="py-16 border-y border-[var(--border-subtle)] bg-[var(--surface)]"
+        aria-label="Operational notes"
+      >
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {socialProof.map((item, i) => (
+            {operationalNotes.map((item) => (
               <div
-                key={i}
-                className="rounded-lg p-6 transition-all duration-200"
-                style={{
-                  border: '1px solid var(--border)',
-                  background: 'rgba(13,17,23,0.6)',
-                }}
+                key={item.title}
+                className="rounded-lg p-6 transition-all duration-200 border border-[var(--border)] bg-[rgba(13,17,23,0.6)]"
               >
-                <p className="text-sm italic mb-4 leading-relaxed" style={{ color: 'var(--text-muted)' }}>
-                  &ldquo;{item.quote}&rdquo;
+                <p className="text-sm font-bold mb-3 text-[var(--text-primary)]">
+                  {item.title}
                 </p>
-                <div>
-                  <p className="text-sm font-bold" style={{ color: 'var(--text-primary)' }}>{item.role}</p>
-                  <p className="text-xs font-mono" style={{ color: 'var(--accent)' }}>{item.org}</p>
-                </div>
+                <p className="text-sm leading-relaxed text-[var(--text-muted)]">
+                  {item.description}
+                </p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ── What's Included ── */}
       <section className="py-24" aria-label="Pro features">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <p className="section-label mb-4">What you get</p>
-            <h2 className="text-3xl md:text-4xl font-extrabold" style={{ color: 'var(--text-primary)' }}>
-              Everything a security leader needs
+            <p className="section-label mb-4">Coverage</p>
+            <h2 className="text-3xl md:text-4xl font-extrabold text-[var(--text-primary)]">
+              {summaryHeading}
             </h2>
-            <p className="mt-4 text-lg" style={{ color: 'var(--text-muted)' }}>
-              Built by a practitioner, for practitioners. No filler, no vendor partnerships.
+            <p className="mt-4 text-lg text-[var(--text-muted)]">
+              These items are derived from the current site structure and upgrade flow.
             </p>
           </div>
 
@@ -218,23 +201,19 @@ export default function ProPage() {
               const Icon = feature.icon;
               return (
                 <div
-                  key={i}
+                  key={feature.title}
                   className="card p-6 group cursor-default"
                   style={{ animationDelay: `${i * 0.05}s` }}
                 >
                   <div
-                    className="w-10 h-10 rounded-lg flex items-center justify-center mb-4 transition-all duration-200 group-hover:scale-110"
-                    style={{
-                      background: 'rgba(0,180,255,0.1)',
-                      border: '1px solid rgba(0,180,255,0.2)',
-                    }}
+                    className="w-10 h-10 rounded-lg flex items-center justify-center mb-4 transition-all duration-200 group-hover:scale-110 bg-[rgba(0,180,255,0.1)] border border-[rgba(0,180,255,0.2)]"
                   >
-                    <Icon size={18} style={{ color: 'var(--accent)' }} />
+                    <Icon size={18} className="text-[var(--accent)]" />
                   </div>
-                  <h3 className="font-bold text-base mb-2" style={{ color: 'var(--text-primary)' }}>
+                  <h3 className="font-bold text-base mb-2 text-[var(--text-primary)]">
                     {feature.title}
                   </h3>
-                  <p className="text-sm leading-relaxed" style={{ color: 'var(--text-muted)' }}>
+                  <p className=" ">
                     {feature.description}
                   </p>
                 </div>
@@ -244,28 +223,23 @@ export default function ProPage() {
         </div>
       </section>
 
-      {/* ── Comparison Table ── */}
       <section
-        className="py-24 border-y"
-        style={{ background: 'var(--surface)', borderColor: 'var(--border-subtle)' }}
+        className="py-24 border-y bg-[var(--surface)] border-[var(--border-subtle)]"
         aria-label="Free vs Pro comparison"
       >
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <p className="section-label mb-4">Comparison</p>
-            <h2 className="text-3xl font-extrabold" style={{ color: 'var(--text-primary)' }}>
+            <h2 className="text-3xl font-extrabold text-[var(--text-primary)]">
               Free vs. Pro
             </h2>
           </div>
 
           <div
-            className="rounded-xl overflow-hidden"
-            style={{ border: '1px solid var(--border)' }}
+            className="rounded-xl overflow-hidden border border-[var(--border)]"
           >
-            {/* Header */}
             <div
-              className="grid grid-cols-3 px-6 py-4 text-xs font-mono font-bold uppercase tracking-widest"
-              style={{ background: 'rgba(0,180,255,0.06)', borderBottom: '1px solid var(--border)' }}
+              className="grid grid-cols-3 px-6 py-4 text-xs font-mono font-bold uppercase tracking-widest bg-[rgba(0,180,255,0.06)] border-b border-[var(--border)]"
             >
               <div style={{ color: 'var(--text-muted)' }}>Feature</div>
               <div className="text-center" style={{ color: 'var(--text-muted)' }}>Free</div>
@@ -274,20 +248,15 @@ export default function ProPage() {
 
             {freeVsPro.map((row, i) => (
               <div
-                key={i}
-                className="grid grid-cols-3 px-6 py-4 items-center text-sm transition-colors duration-150 hover:bg-white/[0.02]"
-                style={{
-                  borderBottom: i < freeVsPro.length - 1 ? '1px solid var(--border-subtle)' : 'none',
-                }}
+                key={row.feature}
+                className={`grid grid-cols-3 px-6 py-4 items-center text-sm transition-colors duration-150 hover:bg-white/[0.02] ${i < freeVsPro.length - 1 ? 'border-b border-[var(--border-subtle)]' : ''}`}
               >
-                <div style={{ color: 'var(--text-body)' }}>{row.feature}</div>
+                <div className="text-[var(--text-body)]">{row.feature}</div>
                 <div className="flex justify-center">
-                  {row.free === true ? (
-                    <Check size={16} style={{ color: 'var(--success)' }} />
-                  ) : row.free === 'Partial' ? (
-                    <span className="text-xs font-mono" style={{ color: 'var(--warning)' }}>Partial</span>
+                  {row.free ? (
+                    <Check size={16} className="text-[var(--success)]" />
                   ) : (
-                    <span style={{ color: 'var(--text-faint)' }}>—</span>
+                    <span className="text-[var(--text-faint)]">—</span>
                   )}
                 </div>
                 <div className="flex justify-center">
@@ -303,111 +272,88 @@ export default function ProPage() {
         </div>
       </section>
 
-      {/* ── Threat Alert Preview ── */}
-      <section className="py-24" aria-label="Sample security briefing preview">
+      <section className="py-24" aria-label="Illustrative member briefing preview">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <p className="section-label mb-4">Sample Alert</p>
-            <h2 className="text-3xl font-extrabold" style={{ color: 'var(--text-primary)' }}>
-              This is what Pro looks like
+            <p className="section-label mb-4">Preview</p>
+            <h2 className="text-3xl font-extrabold text-[var(--text-primary)]">
+              Illustrative member briefing format
             </h2>
           </div>
 
           <div
-            className="rounded-xl p-6 font-mono text-sm"
-            style={{
-              background: 'var(--surface)',
-              border: '1px solid rgba(0,180,255,0.3)',
-              boxShadow: '0 0 40px rgba(0,180,255,0.08)',
-            }}
+            className="rounded-xl p-6 font-mono text-sm bg-[var(--surface)] border border-[rgba(0,180,255,0.3)] shadow-[0_0_40px_rgba(0,180,255,0.08)]"
           >
-            <div className="flex items-center gap-3 mb-5 pb-5" style={{ borderBottom: '1px solid var(--border)' }}>
-              <AlertTriangle size={16} style={{ color: '#f85149' }} />
-              <span className="font-bold text-xs uppercase tracking-widest" style={{ color: '#f85149' }}>
-                Priority Advisory · AI-SEC-2026-0041
+            <div className="flex items-center gap-3 mb-5 pb-5 border-b border-[var(--border)]">
+              <Shield size={16} style={{ color: 'var(--accent)' }} />
+              <span className="font-bold text-xs uppercase tracking-widest text-[var(--accent)]">
+                Example structure
               </span>
-              <span className="ml-auto text-xs" style={{ color: 'var(--text-faint)' }}>48h early access</span>
+              <span className="ml-auto text-xs text-[var(--text-faint)]">Preview only</span>
             </div>
-            <p className="mb-3" style={{ color: 'var(--accent)', fontWeight: 700 }}>
-              CRITICAL: RAG Pipeline Poisoning via Indirect Prompt Injection in Enterprise LLM Deployments
+            <p className="mb-3 text-[var(--accent)] font-bold">
+              Member briefings summarize the issue, affected systems, and mitigation direction.
             </p>
-            <p className="text-xs leading-relaxed mb-4" style={{ color: 'var(--text-muted)' }}>
-              Active exploitation observed targeting Retrieval-Augmented Generation pipelines across 3 enterprise
-              sectors. Attackers are embedding invisible instructions in indexed documents, causing LLM agents
-              to exfiltrate session context to attacker-controlled endpoints.
+            <p className="text-xs leading-relaxed mb-4 text-[var(--text-muted)]">
+              The current repository includes public briefings, report previews, and paywalled content placeholders. Pro pages are intended to expand on that structure with longer-form analysis and archive access.
             </p>
-            <div className="grid grid-cols-3 gap-4 pt-4" style={{ borderTop: '1px solid var(--border-subtle)' }}>
+            <div className="grid grid-cols-3 gap-4 pt-4 border-t border-[var(--border-subtle)]">
               {[
-                { label: 'Severity', value: 'Critical' },
-                { label: 'CVSS', value: '9.1' },
-                { label: 'Affected', value: 'LangChain, LlamaIndex' },
+                { label: 'Summary', value: 'Issue overview' },
+                { label: 'Scope', value: 'Affected surface' },
+                { label: 'Action', value: 'Mitigation path' },
               ].map((item) => (
                 <div key={item.label}>
-                  <p className="text-xs" style={{ color: 'var(--text-faint)' }}>{item.label}</p>
-                  <p className="font-bold" style={{ color: 'var(--text-primary)' }}>{item.value}</p>
+                  <p className="text-xs text-[var(--text-faint)]">{item.label}</p>
+                  <p className="font-bold text-[var(--text-primary)]">{item.value}</p>
                 </div>
               ))}
             </div>
-            <div className="mt-4 pt-4 text-xs" style={{ borderTop: '1px solid var(--border-subtle)', color: 'var(--text-faint)' }}>
-              🔒 Full technical breakdown, IOCs, and mitigation runbook available to Pro members only
+            <div className="mt-4 pt-4 text-xs border-t border-[var(--border-subtle)] text-[var(--text-faint)]">
+              Reserved content is routed through the current Pro upgrade flow.
             </div>
           </div>
         </div>
       </section>
 
-      {/* ── Pricing CTA ── */}
       <section
-        className="py-24 relative overflow-hidden"
-        style={{ background: 'var(--surface)', borderTop: '1px solid var(--border-subtle)' }}
-        aria-label="Pro pricing"
+        className="py-24 relative overflow-hidden bg-[var(--surface)] border-t border-[var(--border-subtle)]"
+        aria-label="Pro access"
       >
         <div
-          className="absolute inset-0 pointer-events-none"
-          style={{
-            background:
-              'radial-gradient(ellipse 70% 80% at 50% 100%, rgba(0,180,255,0.07) 0%, transparent 70%)',
-          }}
+          className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_70%_80%_at_50%_100%,rgba(0,180,255,0.07)_0%,transparent_70%)]"
           aria-hidden="true"
         />
         <div className="relative max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <div
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-8 text-xs font-mono font-bold uppercase tracking-widest"
-            style={{
-              background: 'rgba(0,180,255,0.08)',
-              border: '1px solid rgba(0,180,255,0.2)',
-              color: 'var(--accent)',
-            }}
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-8 text-xs font-mono font-bold uppercase tracking-widest bg-[rgba(0,180,255,0.08)] border border-[rgba(0,180,255,0.2)] text-[var(--accent)]"
           >
             <Zap size={12} />
-            Founding member cohort
+            {statusBadge}
           </div>
 
           <div
-            className="rounded-2xl p-10 mb-8"
-            style={{
-              border: '1px solid rgba(0,180,255,0.4)',
-              background: 'rgba(13,17,23,0.8)',
-              boxShadow: '0 0 60px rgba(0,180,255,0.1)',
-            }}
+            className="rounded-2xl p-10 mb-8 border border-[rgba(0,180,255,0.4)] bg-[rgba(13,17,23,0.8)] shadow-[0_0_60px_rgba(0,180,255,0.1)]"
           >
-            <div className="flex items-end justify-center gap-2 mb-2">
-              <span className="text-6xl font-extrabold" style={{ color: 'var(--text-primary)' }}>$9</span>
-              <span className="text-xl mb-3" style={{ color: 'var(--text-muted)' }}>/mo</span>
+            <div className="mb-6">
+              <span className="text-3xl font-extrabold" style={{ color: 'var(--text-primary)' }}>
+                {checkoutLive ? 'Pro access' : 'Waitlist'}
+              </span>
             </div>
-            <p className="text-sm mb-8" style={{ color: 'var(--text-muted)' }}>
-              Founding rate — locked for life. Cancel any time.
+            <p className="text-sm mb-8 text-[var(--text-muted)]">
+              {heroSupportCopy}
             </p>
 
             <ul className="space-y-3 mb-10 text-left max-w-sm mx-auto">
               {[
-                'All Pro features listed above',
-                'Priority threat advisories',
-                'Full searchable archive',
-                'Quarterly research reports',
-                'No affiliate recommendations',
+                'Public briefings remain available today',
+                'Upgrade flow lives at /upgrade',
+                'Waitlist signup uses the current subscribe endpoint',
+                'Research-report previews already exist in the app',
+                'Archive and member-content routes can expand from this base',
               ].map((item) => (
-                <li key={item} className="flex items-start gap-3 text-sm" style={{ color: 'var(--text-body)' }}>
-                  <Check size={16} className="mt-0.5 flex-shrink-0" style={{ color: 'var(--accent)' }} />
+                <li key={item} className="flex items-start gap-3 text-sm text-[var(--text-body)]">
+                  <Check size={16} className="mt-0.5 flex-shrink-0 text-[var(--accent)]" />
                   {item}
                 </li>
               ))}
@@ -420,26 +366,26 @@ export default function ProPage() {
             >
               {primaryCtaLabel}
             </ProCTAButton>
-            <p className="mt-4 text-xs" style={{ color: 'var(--text-faint)' }}>
+            <p className="mt-4 text-xs text-[var(--text-faint)]">
               {pricingSupportCopy}
             </p>
           </div>
 
           <div className="flex items-center justify-center gap-6">
-            <div className="flex items-center gap-2 text-sm" style={{ color: 'var(--text-muted)' }}>
+            <div className="flex items-center gap-2 text-sm text-[var(--text-muted)]">
               <Shield size={14} style={{ color: 'var(--accent)' }} />
-              No vendor affiliations
+              Affiliate disclosures when applicable
             </div>
             <div className="flex items-center gap-2 text-sm" style={{ color: 'var(--text-muted)' }}>
               <Lock size={14} style={{ color: 'var(--accent)' }} />
-              Rate locked forever
+              Waitlist state reflected in the app
             </div>
           </div>
 
-          <p className="mt-10 text-sm" style={{ color: 'var(--text-faint)' }}>
-            Already subscribed to the free brief?{' '}
-            <Link href="/upgrade" style={{ color: 'var(--accent)' }}>
-              Upgrade here →
+          <p className="mt-10 text-sm text-[var(--text-faint)]">
+            Prefer the free tier first?{' '}
+            <Link href="/subscribe" style={{ color: 'var(--accent)' }}>
+              Subscribe here →
             </Link>
           </p>
         </div>

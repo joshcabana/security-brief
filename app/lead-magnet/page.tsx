@@ -6,8 +6,8 @@ import React from 'react';
 
 export const metadata: Metadata = createPageMetadata({
   canonicalPath: '/lead-magnet',
-  title: '2026 AI Threat Landscape — Free Research Briefing',
-  description: 'Download the definitive briefing on agentic AI threats, context-window injections, and escaping isolation.',
+  title: '2026 AI Threat Landscape Preview',
+  description: 'Preview the 2026 AI Threat Landscape report and join the weekly AI Security Brief mailing list.',
 });
 
 export default function LeadMagnetPage() {
@@ -28,7 +28,7 @@ export default function LeadMagnetPage() {
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
                   <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-500"></span>
                 </span>
-                Declassified Briefing
+                Preview Report
               </div>
               
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-slate-900 dark:text-white mb-6">
@@ -37,7 +37,7 @@ export default function LeadMagnetPage() {
               </h1>
               
               <p className="text-lg md:text-xl text-slate-600 dark:text-slate-400 mb-8 leading-relaxed">
-                Autonomous agents are circumventing traditional WAFs using invisible payloads. Get the exact architecture blueprints required to isolate context-window injections and sandbox LLM execution.
+                Preview the 2026 AI Threat Landscape report and join the mailing list for future report and briefing updates.
               </p>
               
               <div className="space-y-4 mb-10 text-left">
@@ -75,20 +75,20 @@ export default function LeadMagnetPage() {
             <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-8 shadow-2xl relative">
               <div className="absolute -top-4 -right-4 w-24 h-24 bg-cyan-500/20 blur-2xl rounded-full pointer-events-none"></div>
               
-              <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">Where should we send the Briefing?</h3>
+              <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">Join the briefing list</h3>
               <p className="text-slate-600 dark:text-slate-400 mb-8 text-sm">
-                Enter your work email to receive the briefing immediately. You will also get our weekly intelligence feed.
+                Enter your work email to subscribe to the weekly briefing and hear when the full report is available.
               </p>
               
               <NewsletterForm 
                 variant="page" 
                 placeholder="your@work-email.com" 
-                buttonText="Send me the Briefing" 
+                buttonText="Join the Briefing List" 
                 source="lead-magnet-page" 
               />
               
               <div className="mt-6 pt-6 border-t border-slate-200 dark:border-slate-800 text-center text-xs text-slate-500 dark:text-slate-400">
-                Join 4,500+ security professionals. Unsubscribe anytime.
+                Weekly briefing signup. Unsubscribe anytime.
               </div>
             </div>
           </div>

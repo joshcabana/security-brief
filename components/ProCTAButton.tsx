@@ -57,7 +57,7 @@ export default function ProCTAButton({
     >
       {children ?? (
         <>
-          Get Pro Access
+          View Pro Options
           <ChevronRight size={18} className="transition-transform group-hover:translate-x-1" />
         </>
       )}
