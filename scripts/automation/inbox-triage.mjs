@@ -171,6 +171,57 @@ export const TRIAGE_OUTPUT_SCHEMA = {
   },
 };
 
+export const BROWSER_TRIAGE_OUTPUT_SCHEMA = {
+  type: 'object',
+  properties: {
+    success: { type: 'boolean' },
+    mailbox: { type: 'string' },
+    coverage: TRIAGE_OUTPUT_SCHEMA.properties.coverage,
+    summary: { type: 'string' },
+    reply: TRIAGE_OUTPUT_SCHEMA.properties.reply,
+    waiting: TRIAGE_OUTPUT_SCHEMA.properties.waiting,
+    ops_alert: TRIAGE_OUTPUT_SCHEMA.properties.ops_alert,
+    ignore: TRIAGE_OUTPUT_SCHEMA.properties.ignore,
+    advice_review: TRIAGE_OUTPUT_SCHEMA.properties.advice_review,
+    drafts_created: TRIAGE_OUTPUT_SCHEMA.properties.drafts_created,
+    follow_ups: TRIAGE_OUTPUT_SCHEMA.properties.follow_ups,
+    failures: TRIAGE_OUTPUT_SCHEMA.properties.failures,
+    notes: TRIAGE_OUTPUT_SCHEMA.properties.notes,
+    draft_requests: {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: {
+          thread_id: { type: 'string' },
+          sender: { type: 'string' },
+          subject: { type: 'string' },
+          reply_all: { type: 'boolean' },
+          body: { type: 'string' },
+        },
+        required: ['thread_id', 'sender', 'subject', 'reply_all', 'body'],
+        additionalProperties: false,
+      },
+    },
+  },
+  required: [
+    'success',
+    'mailbox',
+    'coverage',
+    'summary',
+    'reply',
+    'waiting',
+    'ops_alert',
+    'ignore',
+    'advice_review',
+    'drafts_created',
+    'follow_ups',
+    'failures',
+    'notes',
+    'draft_requests',
+  ],
+  additionalProperties: false,
+};
+
 export function buildDefaultPolicy() {
   return {
     version: 1,
@@ -217,6 +268,13 @@ export function buildDefaultPolicy() {
       never_auto_send: true,
       draft_only: true,
       sensitive_topics: ['legal', 'commercial terms', 'pricing', 'contracts', 'conflict'],
+    },
+    browser_fallback: {
+      enabled: true,
+      cdp_url: 'http://127.0.0.1:9222',
+      chrome_binary: '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
+      chrome_profile_dir: path.join(homedir(), '.gemini', 'antigravity-browser-profile'),
+      runtime_dir: path.join(homedir(), '.codex', 'automations', 'gmail-triage-runtime'),
     },
     advice_heuristics: {
       take: 'Improves conversion, trust, operations, or partnership quality with low downside.',
@@ -338,6 +396,45 @@ export function buildTriagePrompt({
     '',
     'Project context:',
     JSON.stringify(context, null, 2),
+    '',
+    'Return JSON only using the provided schema.',
+  ].join('\n');
+}
+
+export function buildBrowserTriagePrompt({
+  policy,
+  memory,
+  context,
+  browserSnapshot,
+  dryRun,
+}) {
+  return [
+    'You are triaging Gmail data that has already been collected by browser automation from an authenticated Chrome session.',
+    'Use only the supplied mailbox snapshot. Do not assume any mail outside this dataset exists.',
+    `Expected mailbox: ${policy.mailbox_email}.`,
+    `Observed mailbox: ${browserSnapshot.mailbox_email}.`,
+    `Project: ${policy.project_name}.`,
+    dryRun
+      ? 'Dry run: do not request draft creation. Return an empty draft_requests array.'
+      : 'Prepare draft_requests for reply-worthy threads when confidence is sufficient. Never send email.',
+    'Every supplied thread already includes full-thread context from Gmail before classification.',
+    'Classify each supplied thread into reply, waiting, ops_alert, or ignore.',
+    'For advice from humans or partners, label it as take, consider, or push_back.',
+    'Only include draft_requests for threads that are in the reply bucket.',
+    'Each draft request must include the full reply body and whether reply_all should be used.',
+    'Do not create duplicate drafts when memory already records a stable prior draft unless the thread materially changed.',
+    '',
+    'Policy JSON:',
+    JSON.stringify(policy, null, 2),
+    '',
+    'Memory JSON:',
+    JSON.stringify(memory, null, 2),
+    '',
+    'Project context:',
+    JSON.stringify(context, null, 2),
+    '',
+    'Browser mailbox snapshot JSON:',
+    JSON.stringify(browserSnapshot, null, 2),
     '',
     'Return JSON only using the provided schema.',
   ].join('\n');
@@ -707,4 +804,9 @@ export function validateTriageResult(result) {
   assert.equal(Array.isArray(result.drafts_created), true);
   assert.equal(Array.isArray(result.follow_ups), true);
   assert.equal(Array.isArray(result.failures), true);
+}
+
+export function validateBrowserTriageResult(result) {
+  validateTriageResult(result);
+  assert.equal(Array.isArray(result.draft_requests), true);
 }

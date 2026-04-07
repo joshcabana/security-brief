@@ -4,6 +4,7 @@ import test from 'node:test';
 import {
   buildDefaultMemory,
   buildDefaultPolicy,
+  buildBrowserTriagePrompt,
   buildFailureResult,
   buildProfilePrompt,
   buildTriagePrompt,
@@ -12,6 +13,11 @@ import {
   mergeMemory,
   renderMarkdownBrief,
 } from '../scripts/automation/inbox-triage.mjs';
+import {
+  buildBrowserSearchQueries,
+  DEFAULT_BROWSER_RUNTIME_DIR,
+  DEFAULT_CHROME_PROFILE_DIR,
+} from '../scripts/automation/gmail-browser.mjs';
 
 test('default inbox triage policy locks the mailbox, connector, and draft-only guardrails', () => {
   const policy = buildDefaultPolicy();
@@ -22,6 +28,9 @@ test('default inbox triage policy locks the mailbox, connector, and draft-only g
   assert.equal(policy.escalation_rules.never_auto_send, true);
   assert.equal(policy.search_windows.recent_days, 30);
   assert.equal(policy.search_windows.context_days, 90);
+  assert.equal(policy.browser_fallback.enabled, true);
+  assert.equal(policy.browser_fallback.runtime_dir, DEFAULT_BROWSER_RUNTIME_DIR);
+  assert.equal(policy.browser_fallback.chrome_profile_dir, DEFAULT_CHROME_PROFILE_DIR);
 });
 
 test('profile prompt explicitly uses the Gmail app connector and forbids mailbox mutations', () => {
@@ -52,6 +61,63 @@ test('triage prompt embeds memory and honors dry-run draft suppression', () => {
   assert.match(prompt, /Memory JSON:/);
   assert.match(prompt, /Project context:/);
   assert.match(prompt, /take, consider, or push_back/);
+});
+
+test('browser triage prompt uses supplied mailbox snapshot data and returns explicit draft requests', () => {
+  const prompt = buildBrowserTriagePrompt({
+    policy: buildDefaultPolicy(),
+    memory: buildDefaultMemory(),
+    context: {
+      status_excerpt: 'Pinned baseline: origin/main',
+      readme_excerpt: 'pnpm automation:inbox-triage',
+    },
+    browserSnapshot: {
+      transport: 'browser_cdp',
+      mailbox_email: 'cabana.collections2025@gmail.com',
+      cdp_url: 'http://127.0.0.1:9222',
+      threads: [
+        {
+          thread_id: '#thread-f:123',
+          subject: 'Surfshark follow-up',
+          thread_url: 'https://mail.google.com/mail/u/1/#inbox/FMfcgz',
+          messages: [
+            {
+              sender_name: 'Marija',
+              sender_email: 'marija@surfshark.com',
+              timestamp: '8 Apr 2026, 07:00',
+              body: 'Can you add our visuals to the landing page?',
+            },
+          ],
+        },
+      ],
+    },
+    dryRun: false,
+  });
+
+  assert.match(prompt, /Browser mailbox snapshot JSON:/);
+  assert.match(prompt, /Prepare draft_requests for reply-worthy threads/);
+  assert.match(prompt, /Every supplied thread already includes full-thread context/);
+});
+
+test('browser search queries include recent project, priority, ops, and memory follow-up scans', () => {
+  const queries = buildBrowserSearchQueries(buildDefaultPolicy(), {
+    ...buildDefaultMemory(),
+    open_follow_ups: {
+      'thread-1': {
+        sender: 'Marija',
+        subject: 'Surfshark follow-up',
+        status: 'awaiting-review',
+        next_action: 'Reply with placement update.',
+      },
+    },
+  });
+
+  const names = queries.map((query) => query.name);
+
+  assert.match(names.join(','), /recent_project_terms/);
+  assert.match(names.join(','), /recent_priority_contacts/);
+  assert.match(names.join(','), /recent_ops_alerts/);
+  assert.match(names.join(','), /memory_follow_up_thread-1/);
 });
 
 test('failure result renders as a visible failed operator brief', () => {
