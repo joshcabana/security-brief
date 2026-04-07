@@ -10,8 +10,8 @@ export function getSiteUrl(): URL {
   return new URL(siteUrl);
 }
 
-export function isBeehiivCheckoutLive(env: Record<string, string | undefined> = process.env): boolean {
-  return env.NEXT_PUBLIC_PRO_CHECKOUT_LIVE?.trim().toLowerCase() === 'true';
+export function isBeehiivCheckoutLive(): boolean {
+  return process.env.NEXT_PUBLIC_PRO_CHECKOUT_LIVE?.trim().toLowerCase() === 'true';
 }
 
 export const siteConfig = {
