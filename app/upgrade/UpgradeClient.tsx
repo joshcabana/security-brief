@@ -209,10 +209,10 @@ function SignupFlow() {
           className="text-3xl font-extrabold mb-3"
           style={{ color: 'var(--text-primary)', letterSpacing: '-0.02em' }}
         >
-          Get Pro Access — $9/mo
+          Join the Pro Waitlist — $9/mo
         </h1>
         <p className="text-sm" style={{ color: 'var(--text-muted)' }}>
-          Secure your founding rate. We&apos;ll notify you the moment checkout opens — you&apos;ll be first in.
+          Reserve your founding rate. We&apos;ll email you the moment checkout opens, and you&apos;ll be first in line.
         </p>
       </div>
 
@@ -261,7 +261,7 @@ function SignupFlow() {
                 Securing…
               </span>
             ) : (
-              'Lock in $9/mo'
+              'Join founding waitlist'
             )}
           </button>
         </div>
@@ -383,7 +383,7 @@ export default function UpgradeClient() {
             style={{ color: 'var(--text-faint)' }}
           >
             <Lock size={12} style={{ color: 'var(--accent)' }} />
-            Cancel anytime
+            {PRO_CHECKOUT_LIVE ? 'Cancel anytime' : 'Founding rate reserved'}
           </div>
         </div>
       </div>

@@ -61,7 +61,7 @@ jobs:
         if: ${{ steps.gate.outputs.should_run == 'true' || github.event_name == 'workflow_dispatch' }}
         env:
           GITHUB_TOKEN: ${{ github.token }}
-          GITHUB_MODELS_MODEL: ${{ vars.GITHUB_MODELS_MODEL || 'openai/gpt-4o-mini' }}
+          GITHUB_MODELS_MODEL: ${{ vars.GITHUB_MODELS_MODEL }}
           AUTOMATION_RUN_DATE: ${{ github.event.inputs.run_date }}
           AUTOMATION_DRY_RUN: ${{ github.event.inputs.dry_run }}
         run: node scripts/automation/run-seo-affiliate.mjs

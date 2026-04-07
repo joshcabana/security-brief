@@ -13,7 +13,7 @@ import {
   runContentManifestWrite,
   writeText,
 } from './common.mjs';
-import { requestJsonFromGitHubModels } from './github-models.mjs';
+import { guardedText, requestJsonFromGitHubModels } from './github-models.mjs';
 import { buildArticleFactoryPrompts } from './prompt-builders.mjs';
 import {
   buildExpectedArticlePlan,
@@ -99,7 +99,7 @@ async function main() {
     return;
   }
 
-  const model = process.env.GITHUB_MODELS_MODEL?.trim() || 'openai/gpt-4.1';
+  const model = process.env.GITHUB_MODELS_MODEL?.trim() || DEFAULT_GITHUB_MODELS_MODEL;
   const harvestPath = path.join(REPO_ROOT, 'harvests', `harvest-${context.effectiveDate}.md`);
 
   if (!(await fileExists(harvestPath))) {
@@ -194,6 +194,7 @@ async function main() {
     maxTokens: 7000,
     systemPrompt: prompts.systemPrompt,
     userPrompt: prompts.userPrompt,
+    guardedText: guardedText(harvestSourcePack),
     validate: (value) => validateArticlePayload(value, expectedSlugs, allowedReferences),
   });
 

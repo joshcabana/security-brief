@@ -28,6 +28,9 @@ test('status.json route returns the public status snapshot with no-store caching
       };
     };
     runtime: {
+      deployment_url?: string | null;
+      branch_url?: string | null;
+      git_previous_sha?: string | null;
       production_url: string;
       git_commit_ref: string | null;
       git_commit_sha: string | null;
@@ -51,6 +54,9 @@ test('status.json route returns the public status snapshot with no-store caching
     assert.equal(payload.runtime.production_url, 'https://aithreatbrief.com');
     assert.equal(payload.runtime.git_commit_ref, 'main');
     assert.equal(payload.runtime.git_commit_sha, '1234567890abcdef1234567890abcdef12345678');
+    assert.equal('deployment_url' in payload.runtime, false);
+    assert.equal('branch_url' in payload.runtime, false);
+    assert.equal('git_previous_sha' in payload.runtime, false);
   } finally {
     if (originalCommitRef === undefined) {
       delete process.env.VERCEL_GIT_COMMIT_REF;

@@ -9,6 +9,7 @@ const REQUEST_TIMEOUT_MS = 10000;
 const MAX_RETRY_ATTEMPTS = 2;
 const RETRY_BASE_DELAY_MS = 250;
 const RETRY_JITTER_MS = 100;
+const MAX_RETRY_DELAY_MS = 3000;
 const INVALID_REQUEST_MESSAGE = 'This signup request could not be verified. Refresh the page and try again.';
 const RETRYABLE_STATUS_CODES = new Set<number>([429, 503]);
 
@@ -214,13 +215,13 @@ function getRetryDelayMs(attemptNumber: number, headers: Headers): number {
   const headerDelayMs = getRetryDelayFromHeaders(headers);
 
   if (headerDelayMs !== null) {
-    return headerDelayMs;
+    return Math.min(headerDelayMs, MAX_RETRY_DELAY_MS);
   }
 
   const exponentialDelayMs = RETRY_BASE_DELAY_MS * 2 ** (attemptNumber - 1);
   const jitterMs = Math.floor(Math.random() * RETRY_JITTER_MS);
 
-  return exponentialDelayMs + jitterMs;
+  return Math.min(exponentialDelayMs + jitterMs, MAX_RETRY_DELAY_MS);
 }
 
 function logRetryWarning(attemptNumber: number, responseStatus: number, retryDelayMs: number): void {

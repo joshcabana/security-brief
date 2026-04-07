@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import ProCTAButton from '@/components/ProCTAButton';
 import { createPageMetadata } from '@/lib/page-metadata.mjs';
+import { siteConfig } from '@/lib/site';
 import {
   Shield,
   Zap,
@@ -85,6 +86,15 @@ const socialProof = [
 ];
 
 export default function ProPage() {
+  const checkoutLive = siteConfig.beehiiv.checkoutLive;
+  const primaryCtaLabel = checkoutLive ? 'Get Pro Access — $9/mo' : 'Join the Pro Waitlist — $9/mo';
+  const heroSupportCopy = checkoutLive
+    ? 'Cancel anytime. Founding rate locked for life.'
+    : 'No card required yet. Founding rate locked for life when checkout opens.';
+  const pricingSupportCopy = checkoutLive
+    ? 'Secure checkout. Cancel from your account anytime.'
+    : "Join the founding waitlist now. We'll email you first when checkout opens.";
+
   return (
     <div className="min-h-screen" style={{ background: 'var(--bg)' }}>
       {/* ── Hero ── */}
@@ -150,7 +160,7 @@ export default function ProPage() {
           {/* CTA block */}
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-6">
             <ProCTAButton id="pro-cta-hero" variant="primary">
-              Get Pro Access — $9/mo
+              {primaryCtaLabel}
             </ProCTAButton>
             <ProCTAButton id="pro-cta-sample" variant="ghost" href="/blog">
               Read sample briefings first
@@ -158,7 +168,7 @@ export default function ProPage() {
           </div>
 
           <p className="text-xs font-mono" style={{ color: 'var(--text-faint)' }}>
-            Cancel anytime. Founding rate locked for life.
+            {heroSupportCopy}
           </p>
         </div>
       </section>
@@ -408,10 +418,10 @@ export default function ProPage() {
               variant="primary"
               className="block w-full py-4 rounded-lg font-bold text-base text-center transition-all duration-200 justify-center"
             >
-              Get Pro Access — $9/mo
+              {primaryCtaLabel}
             </ProCTAButton>
             <p className="mt-4 text-xs" style={{ color: 'var(--text-faint)' }}>
-              Secure checkout. Cancel from your account anytime.
+              {pricingSupportCopy}
             </p>
           </div>
 
