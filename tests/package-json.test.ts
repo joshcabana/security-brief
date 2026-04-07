@@ -74,6 +74,13 @@ test('status:sync script points at the repo-local status sync runner', () => {
   );
 });
 
+test('automation:inbox-triage script points at the repo-local Gmail triage runner', () => {
+  assert.equal(
+    packageJson.scripts?.['automation:inbox-triage'],
+    'node scripts/automation/run-inbox-triage.mjs',
+  );
+});
+
 test('repo pins Node.js 20.x for local, CI, and Vercel builds', () => {
   assert.equal(packageJson.engines?.node, '20.x');
   assert.equal(existsSync(nvmrcPath), true);

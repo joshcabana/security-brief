@@ -13,6 +13,7 @@
     "automation:newsletter-compiler": "node scripts/automation/run-newsletter-compiler.mjs",
     "automation:seo-affiliate": "node scripts/automation/run-seo-affiliate.mjs",
     "automation:performance-logger": "node scripts/automation/run-performance-logger.mjs",
+    "automation:inbox-triage": "node scripts/automation/run-inbox-triage.mjs",
     "affiliate:dry": "node scripts/replace-affiliate-links.mjs",
     "affiliate:dry:drafts": "node scripts/replace-affiliate-links.mjs --include-drafts",
     "affiliate:apply": "node scripts/replace-affiliate-links.mjs --write",
