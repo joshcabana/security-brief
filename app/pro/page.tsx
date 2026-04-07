@@ -17,13 +17,13 @@ export const metadata: Metadata = createPageMetadata({
   canonicalPath: '/pro',
   title: 'AI Security Brief Pro',
   description:
-    'Overview of AI Security Brief Pro, including the current waitlist state and planned member content.',
+    'Overview of AI Security Brief Pro, including the current access state and member content.',
   openGraphTitle: 'AI Security Brief Pro',
   openGraphDescription:
-    'Overview of AI Security Brief Pro, including the current waitlist state and planned member content.',
+    'Overview of AI Security Brief Pro, including the current access state and member content.',
   twitterTitle: 'AI Security Brief Pro',
   twitterDescription:
-    'Overview of AI Security Brief Pro, including the current waitlist state and planned member content.',
+    'Overview of AI Security Brief Pro, including the current access state and member content.',
 });
 
 const proFeatures = [
@@ -61,39 +61,39 @@ const proFeatures = [
     icon: Zap,
     title: 'Launch Updates',
     description:
-      'The current upgrade flow collects waitlist signups until paid access is confirmed live.',
-  },
-];
-
-const freeVsPro = [
-  { feature: 'Weekly email briefings', free: true, pro: true },
-  { feature: 'Public blog articles', free: true, pro: true },
-  { feature: 'Member-only content access', free: false, pro: true },
-  { feature: 'Searchable archive access', free: false, pro: true },
-  { feature: 'Research report access', free: false, pro: true },
-  { feature: 'Paid-tier launch updates', free: false, pro: true },
-];
-
-const operationalNotes = [
-  {
-    title: 'Current checkout state',
-    description:
-      'The repository uses an environment flag to decide whether `/upgrade` redirects to checkout or captures waitlist signups.',
-  },
-  {
-    title: 'Current public content',
-    description:
-      'Public briefings remain available through the blog and archive pages while paid access is not live.',
-  },
-  {
-    title: 'Current disclosure model',
-    description:
-      'Affiliate language is disclosed in articles and supporting policy pages rather than hidden in marketing copy.',
+      'The current upgrade flow routes readers into the active Pro access path and member updates.',
   },
 ];
 
 export default function ProPage() {
   const checkoutLive = siteConfig.beehiiv.checkoutLive;
+  const freeVsPro = [
+    { feature: 'Weekly email briefings', free: true, pro: true },
+    { feature: 'Public blog articles', free: true, pro: true },
+    { feature: 'Member-only content access', free: false, pro: true },
+    { feature: 'Searchable archive access', free: false, pro: true },
+    { feature: 'Research report access', free: false, pro: true },
+    { feature: checkoutLive ? 'Live Pro checkout access' : 'Paid-tier launch updates', free: false, pro: true },
+  ];
+  const operationalNotes = [
+    {
+      title: 'Current checkout state',
+      description: checkoutLive
+        ? 'The repository is currently configured so `/upgrade` routes readers into the live Beehiiv checkout flow.'
+        : 'The repository uses an environment flag to decide whether `/upgrade` redirects to checkout or captures waitlist signups.',
+    },
+    {
+      title: 'Current public content',
+      description: checkoutLive
+        ? 'Public briefings remain available through the blog and archive pages while Pro access routes through the live Beehiiv checkout.'
+        : 'Public briefings remain available through the blog and archive pages while paid access is not live.',
+    },
+    {
+      title: 'Current disclosure model',
+      description:
+        'Affiliate language is disclosed in articles and supporting policy pages rather than hidden in marketing copy.',
+    },
+  ];
   const primaryCtaLabel = checkoutLive ? 'Continue to Pro Access' : 'Join the Pro Waitlist';
   const heroSupportCopy = checkoutLive
     ? 'Paid access is live through the current Beehiiv checkout flow.'
@@ -192,7 +192,7 @@ export default function ProPage() {
               {summaryHeading}
             </h2>
             <p className="mt-4 text-lg text-[var(--text-muted)]">
-              These items are derived from the current site structure and upgrade flow.
+              These items are derived from the current site structure and Pro access flow.
             </p>
           </div>
 

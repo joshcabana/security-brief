@@ -7,7 +7,7 @@ import { siteConfig } from '@/lib/site';
 export const metadata: Metadata = createPageMetadata({
   canonicalPath: '/subscribe',
   title: 'Subscribe | AI Security Brief',
-  description: 'Subscribe for weekly AI security briefings and join the Pro waitlist for deeper analysis when paid access opens.',
+  description: 'Subscribe for weekly AI security briefings and access the current Pro path for deeper analysis, archive access, and reports.',
 });
 
 export default function SubscribePage() {
@@ -38,7 +38,7 @@ export default function SubscribePage() {
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">that actually matters</span>
           </h1>
           <p className="mt-6 text-lg text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
-            Start with the free weekly briefing, then join the Pro waitlist if you want deeper analysis when paid access opens.
+            Start with the free weekly briefing, then continue to Pro if you want deeper analysis, archive access, and research reports.
           </p>
         </div>
 

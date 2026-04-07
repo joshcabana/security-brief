@@ -6,13 +6,13 @@ export const metadata: Metadata = createPageMetadata({
   canonicalPath: '/upgrade',
   title: 'AI Security Brief Pro',
   description:
-    'Join the Pro waitlist and get notified when paid access opens.',
+    'Continue to the current AI Security Brief Pro access flow.',
   openGraphTitle: 'AI Security Brief Pro',
   openGraphDescription:
-    'Join the Pro waitlist and get notified when paid access opens.',
+    'Continue to the current AI Security Brief Pro access flow.',
   twitterTitle: 'AI Security Brief Pro',
   twitterDescription:
-    'Join the Pro waitlist and get notified when paid access opens.',
+    'Continue to the current AI Security Brief Pro access flow.',
 });
 
 export default function UpgradePage() {

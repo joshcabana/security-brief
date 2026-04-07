@@ -17,7 +17,17 @@ test('Beehiiv runtime config uses the same publication hostname for member flows
 
 test('Beehiiv checkout stays disabled by default until public checkout is explicitly enabled', () => {
   assert.equal(siteConfig.beehiiv.checkoutLive, false);
-  assert.equal(isBeehiivCheckoutLive({}), false);
-  assert.equal(isBeehiivCheckoutLive({ NEXT_PUBLIC_PRO_CHECKOUT_LIVE: 'false' }), false);
-  assert.equal(isBeehiivCheckoutLive({ NEXT_PUBLIC_PRO_CHECKOUT_LIVE: ' true ' }), true);
+  const originalValue = process.env.NEXT_PUBLIC_PRO_CHECKOUT_LIVE;
+
+  process.env.NEXT_PUBLIC_PRO_CHECKOUT_LIVE = 'false';
+  assert.equal(isBeehiivCheckoutLive(), false);
+
+  process.env.NEXT_PUBLIC_PRO_CHECKOUT_LIVE = ' true ';
+  assert.equal(isBeehiivCheckoutLive(), true);
+
+  if (originalValue === undefined) {
+    delete process.env.NEXT_PUBLIC_PRO_CHECKOUT_LIVE;
+  } else {
+    process.env.NEXT_PUBLIC_PRO_CHECKOUT_LIVE = originalValue;
+  }
 });

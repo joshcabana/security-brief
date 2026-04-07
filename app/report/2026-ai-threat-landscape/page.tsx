@@ -39,7 +39,7 @@ export default function ReportPage() {
             This preview page shows the structure of a longer-form AI Security Brief report. It is intended to introduce the topic area and route readers to the current Pro access flow for future full-report availability.
           </p>
           <p className="text-slate-300 mt-4 mb-0">
-            The full report content is reserved for the Pro tier. Public briefings and the waitlist remain available elsewhere in the app while paid access is not yet live.
+            The full report content is reserved for the Pro tier. Public briefings remain available elsewhere in the app while full report access routes through the current Pro flow.
           </p>
         </div>
 
@@ -71,7 +71,7 @@ export default function ReportPage() {
               </div>
               <h3 className="text-2xl font-extrabold text-white mb-3 tracking-tight">Full report access is reserved for Pro</h3>
               <p className="text-slate-300 mb-8 leading-relaxed">
-                This page is a preview excerpt. Use the current Pro flow if you want updates about full report access.
+                This page is a preview excerpt. Use the current Pro flow for full report access and member updates.
               </p>
 
               <div className="flex flex-col gap-4">
