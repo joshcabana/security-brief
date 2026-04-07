@@ -61,6 +61,8 @@ Most recent merges:
 
 Run `pnpm status:sync` before pushing a change that advances `main` so the header, Latest deploy row, and recent merges stay aligned with the current `origin/main` baseline. Review and update the narrative sections manually. External tooling should verify state against this file, not against prior conversation context.
 
+Local verification assumes the shell is actually using the pinned Node runtime from `.nvmrc`. Check `node -v` before running `pnpm verify:pr`, `pnpm verify:ops`, or `NEXT_PUBLIC_PLAUSIBLE_DOMAIN=aithreatbrief.com pnpm verify:live`; if the shell is not on `v20.20.2`, switch first so local results match CI and Vercel.
+
 ## Remaining Blockers
 
 1. **A real end-to-end paid conversion has not been executed during this audit** — The live UI and hosted upgrade handoff are verified, but no completed test purchase was run from this environment.

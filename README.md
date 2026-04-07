@@ -64,12 +64,20 @@ All five workflows also support `workflow_dispatch` for manual runs. The harvest
 
 ## Prerequisites
 
-- Node.js 20.x
+- Node.js 20.20.2
 - `pnpm` 10.23.0
 
-The repository pins Node.js 20.x through `package.json` `engines` and `.nvmrc` so local development, CI, and Vercel builds can stay on the same major runtime.
+The repository pins Node.js 20.x through `package.json` `engines` and `.nvmrc`. The verified local runtime is `v20.20.2`, so local development, CI, and Vercel builds stay on the same major runtime.
 
 If `pnpm` is not installed globally, you can use the pinned package manager via `npx pnpm@10.23.0`.
+
+Before running verification commands, make sure your shell is actually using Node `v20.20.2` from `.nvmrc` rather than a different global Node on `PATH`. A quick check is:
+
+```bash
+node -v
+```
+
+If the version does not report `v20.20.2`, switch first with your version manager, then run the verification commands.
 
 ## Getting Started
 
@@ -175,6 +183,8 @@ Run the canonical local PR gate:
 pnpm verify:pr
 ```
 
+Local verification assumes your shell is already on Node `v20.20.2`. If `node -v` reports another version, switch to `.nvmrc` first or the repo can produce false-negative toolchain failures.
+
 For targeted reruns or when you want the failing sub-step isolated:
 
 ```bash
@@ -209,6 +219,14 @@ pnpm ops:check-monday-pipeline -- --date YYYY-MM-DD
 - `NEXT_PUBLIC_PLAUSIBLE_DOMAIN=aithreatbrief.com pnpm verify:live` is the production-safe command when live Plausible analytics is enabled; it validates the deployed site: route reachability, security response headers, per-page canonical URLs, page-specific `og:description` values for `/tools` and `/newsletter`, article canonical correctness, and a privacy truth-regression guard that fails if the privacy page claims no analytics while analytics integration markers exist in source (or vice versa).
 - `pnpm status:sync` refreshes the machine-managed `STATUS.md` fields from the current `origin/main` baseline while leaving the narrative sections for operator review.
 - `pnpm ops:check-monday-pipeline` checks the expected open PRs and workflow runs for a Monday content cycle.
+
+Use the same Node runtime check here before running the commands:
+
+```bash
+node -v
+```
+
+If the shell is not on `v20.20.2`, switch to `.nvmrc` first so local verification matches CI and Vercel.
 
 ### Automation Commands
 
