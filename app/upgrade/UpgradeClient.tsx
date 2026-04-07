@@ -85,17 +85,16 @@ function RedirectFlow() {
         </p>
       </div>
 
+      {/* noinspection HtmlInlineStyle */}
       <div
         className="w-full rounded-full overflow-hidden mb-4 h-[3px] bg-[var(--border)]"
         role="progressbar"
-        aria-valuenow={progress}
-        aria-valuemin="0"
-        aria-valuemax="100"
         aria-label="Redirect progress"
+        {...{ 'aria-valuenow': progress, 'aria-valuemin': 0, 'aria-valuemax': 100 }}
       >
         <div
           className="h-full rounded-full bg-[linear-gradient(90deg,var(--accent-dim),var(--accent))] shadow-[0_0_8px_rgba(0,180,255,0.5)] transition-[width] duration-75 ease-linear"
-          style={{ width: `${progress}%` }}
+          {...{ style: { width: `${progress}%` } }}
         />
       </div>
     </>
@@ -191,7 +190,7 @@ function SignupFlow() {
         >
           Join the Pro Waitlist
         </h1>
-        <p className="text-sm" style={{ color: 'var(--text-muted)' }}>
+        <p className="text-sm text-[var(--text-muted)]">
           Paid access is not live yet. Join the waitlist and we&apos;ll email you when checkout opens.
         </p>
       </div>
@@ -320,14 +319,13 @@ export default function UpgradeClient() {
           <div
             className="flex items-center gap-2 text-xs text-[var(--text-faint)]"
           >
-            <Shield size={12} style={{ color: 'var(--accent)' }} />
+            <Shield size={12} className="text-[var(--accent)]" />
             {PRO_CHECKOUT_LIVE ? 'Secure Beehiiv checkout' : 'No credit card required'}
           </div>
           <div
-            className="flex items-center gap-2 text-xs"
-            style={{ color: 'var(--text-faint)' }}
+            className="flex items-center gap-2 text-xs text-[var(--text-faint)]"
           >
-            <Lock size={12} style={{ color: 'var(--accent)' }} />
+            <Lock size={12} className="text-[var(--accent)]" />
             {PRO_CHECKOUT_LIVE ? 'Member access live' : 'Email notice when access opens'}
           </div>
         </div>

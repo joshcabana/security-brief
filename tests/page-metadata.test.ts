@@ -62,7 +62,7 @@ test('verified metadata and privacy analytics declarations match the live contra
       path: '/pro',
       canonicalPath: '/pro',
       ogDescription:
-        'Overview of AI Security Brief Pro, including the current waitlist state and member-content plan.',
+        'Overview of AI Security Brief Pro, including the current waitlist state and planned member content.',
     },
     {
       path: '/upgrade',

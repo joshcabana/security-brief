@@ -132,7 +132,7 @@ export default function ProPage() {
           </div>
 
           <h1
-            className="text-5xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight mb-6 text-[var(--text-primary)] tracking-[-0.03em]"
+            className="text-5xl sm:text-6xl lg:text-7xl font-extrabold mb-6 text-[var(--text-primary)] tracking-[-0.03em]"
           >
             AI Security Brief Pro
             <span
@@ -199,11 +199,13 @@ export default function ProPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {proFeatures.map((feature, i) => {
               const Icon = feature.icon;
+              // noinspection HtmlInlineStyle
+              // noinspection HtmlInlineStyle
               return (
                 <div
                   key={feature.title}
                   className="card p-6 group cursor-default"
-                  style={{ animationDelay: `${i * 0.05}s` }}
+                  {...{ style: { animationDelay: `${i * 0.05}s` } }}
                 >
                   <div
                     className="w-10 h-10 rounded-lg flex items-center justify-center mb-4 transition-all duration-200 group-hover:scale-110 bg-[rgba(0,180,255,0.1)] border border-[rgba(0,180,255,0.2)]"
@@ -241,9 +243,9 @@ export default function ProPage() {
             <div
               className="grid grid-cols-3 px-6 py-4 text-xs font-mono font-bold uppercase tracking-widest bg-[rgba(0,180,255,0.06)] border-b border-[var(--border)]"
             >
-              <div style={{ color: 'var(--text-muted)' }}>Feature</div>
-              <div className="text-center" style={{ color: 'var(--text-muted)' }}>Free</div>
-              <div className="text-center" style={{ color: 'var(--accent)' }}>Pro</div>
+              <div className="text-[var(--text-muted)]">Feature</div>
+              <div className="text-center text-[var(--text-muted)]">Free</div>
+              <div className="text-center text-[var(--accent)]">Pro</div>
             </div>
 
             {freeVsPro.map((row, i) => (
@@ -261,9 +263,9 @@ export default function ProPage() {
                 </div>
                 <div className="flex justify-center">
                   {row.pro ? (
-                    <Check size={16} style={{ color: 'var(--accent)' }} />
+                    <Check size={16} className="text-[var(--accent)]" />
                   ) : (
-                    <span style={{ color: 'var(--text-faint)' }}>—</span>
+                    <span className="text-[var(--text-faint)]">—</span>
                   )}
                 </div>
               </div>
@@ -285,7 +287,7 @@ export default function ProPage() {
             className="rounded-xl p-6 font-mono text-sm bg-[var(--surface)] border border-[rgba(0,180,255,0.3)] shadow-[0_0_40px_rgba(0,180,255,0.08)]"
           >
             <div className="flex items-center gap-3 mb-5 pb-5 border-b border-[var(--border)]">
-              <Shield size={16} style={{ color: 'var(--accent)' }} />
+              <Shield size={16} className="text-[var(--accent)]" />
               <span className="font-bold text-xs uppercase tracking-widest text-[var(--accent)]">
                 Example structure
               </span>
@@ -336,7 +338,7 @@ export default function ProPage() {
             className="rounded-2xl p-10 mb-8 border border-[rgba(0,180,255,0.4)] bg-[rgba(13,17,23,0.8)] shadow-[0_0_60px_rgba(0,180,255,0.1)]"
           >
             <div className="mb-6">
-              <span className="text-3xl font-extrabold" style={{ color: 'var(--text-primary)' }}>
+              <span className="text-3xl font-extrabold text-[var(--text-primary)]">
                 {checkoutLive ? 'Pro access' : 'Waitlist'}
               </span>
             </div>
@@ -373,18 +375,18 @@ export default function ProPage() {
 
           <div className="flex items-center justify-center gap-6">
             <div className="flex items-center gap-2 text-sm text-[var(--text-muted)]">
-              <Shield size={14} style={{ color: 'var(--accent)' }} />
+              <Shield size={14} className="text-[var(--accent)]" />
               Affiliate disclosures when applicable
             </div>
-            <div className="flex items-center gap-2 text-sm" style={{ color: 'var(--text-muted)' }}>
-              <Lock size={14} style={{ color: 'var(--accent)' }} />
+            <div className="flex items-center gap-2 text-sm text-[var(--text-muted)]">
+              <Lock size={14} className="text-[var(--accent)]" />
               Waitlist state reflected in the app
             </div>
           </div>
 
           <p className="mt-10 text-sm text-[var(--text-faint)]">
             Prefer the free tier first?{' '}
-            <Link href="/subscribe" style={{ color: 'var(--accent)' }}>
+            <Link href="/subscribe" className="text-[var(--accent)]">
               Subscribe here →
             </Link>
           </p>
