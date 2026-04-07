@@ -92,7 +92,6 @@ export default function Header() {
             className="md:hidden p-2 rounded-md text-slate-400 hover:text-slate-200 transition-colors"
             onClick={() => setMobileOpen(!mobileOpen)}
             aria-label={mobileOpen ? 'Close menu' : 'Open menu'}
-            aria-expanded={mobileOpen ? 'true' : 'false'}
           >
             <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
               {mobileOpen ? (
