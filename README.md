@@ -64,8 +64,10 @@ All five workflows also support `workflow_dispatch` for manual runs. The harvest
 
 ## Prerequisites
 
-- Node.js 20 or newer
+- Node.js 20.x
 - `pnpm` 10.23.0
+
+The repository pins Node.js 20.x through `package.json` `engines` and `.nvmrc` so local development, CI, and Vercel builds can stay on the same major runtime.
 
 If `pnpm` is not installed globally, you can use the pinned package manager via `npx pnpm@10.23.0`.
 

@@ -6,9 +6,11 @@ import test from 'node:test';
 const repoRoot = process.cwd();
 const packageJsonPath = path.join(repoRoot, 'package.json');
 const eslintConfigPath = path.join(repoRoot, 'eslint.config.mjs');
+const nvmrcPath = path.join(repoRoot, '.nvmrc');
 const packageJson = JSON.parse(readFileSync(packageJsonPath, 'utf8')) as {
   dependencies?: Record<string, string>;
   devDependencies?: Record<string, string>;
+  engines?: Record<string, string>;
   scripts?: Record<string, string>;
 };
 
@@ -70,6 +72,12 @@ test('status:sync script points at the repo-local status sync runner', () => {
     packageJson.scripts?.['status:sync'],
     'node scripts/sync-status-doc.mjs',
   );
+});
+
+test('repo pins Node.js 20.x for local, CI, and Vercel builds', () => {
+  assert.equal(packageJson.engines?.node, '20.x');
+  assert.equal(existsSync(nvmrcPath), true);
+  assert.equal(readFileSync(nvmrcPath, 'utf8').trim(), '20');
 });
 
 test('trust and production verification scripts point at the new repo-local runners', () => {

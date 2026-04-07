@@ -2,6 +2,9 @@
   "name": "ai-security-brief",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": "20.x"
+  },
   "packageManager": "pnpm@10.23.0",
   "scripts": {
     "dev": "next dev",
