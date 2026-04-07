@@ -379,7 +379,8 @@ async function main() {
     assert.doesNotMatch(homeHtml, /protected-assets\//);
     const privacyPolicyHtml = await fetch(`http://127.0.0.1:${coldStartPort}/privacy`).then((response) => response.text());
     const coldStartPrivacyContract = evaluatePrivacyAnalyticsContract({
-      analyticsEnabled: homeHtml.includes(PLAUSIBLE_SCRIPT_URL),
+      plausibleEnabled: homeHtml.includes(PLAUSIBLE_SCRIPT_URL),
+      linkedInInsightEnabled: false,
       html: privacyPolicyHtml,
     });
     assert.equal(coldStartPrivacyContract.ok, true, coldStartPrivacyContract.message);
@@ -445,7 +446,7 @@ async function main() {
     assert.match(configuredHomeHtml, new RegExp(PLAUSIBLE_SCRIPT_URL.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')));
 
     const configuredPrivacyHtml = await fetch(`http://127.0.0.1:${configuredPort}/privacy`).then((response) => response.text());
-    assert.match(configuredPrivacyHtml, new RegExp(PRIVACY_ANALYTICS_COPY.enabled.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')));
+    assert.match(configuredPrivacyHtml, new RegExp(PRIVACY_ANALYTICS_COPY.plausible.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')));
     assert.match(configuredPrivacyHtml, new RegExp(PLAUSIBLE_SCRIPT_URL.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')));
 
     const invalidJsonResult = await requestJson(`http://127.0.0.1:${configuredPort}/api/subscribe`, {
@@ -492,7 +493,10 @@ async function main() {
       body: JSON.stringify({ email: 'error@example.com' }),
     });
     assert.equal(upstreamErrorResult.response.status, 422);
-    assert.equal(upstreamErrorResult.payload.message, 'Mock Beehiiv rejected the signup request.');
+    assert.equal(
+      upstreamErrorResult.payload.message,
+      'The signup request was rejected. Double-check the submitted details and try again.',
+    );
 
     const successResult = await requestJson(`http://127.0.0.1:${configuredPort}/api/subscribe`, {
       method: 'POST',

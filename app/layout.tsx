@@ -79,7 +79,10 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const analyticsState = resolveAnalyticsState(process.env.NEXT_PUBLIC_PLAUSIBLE_DOMAIN);
+  const analyticsState = resolveAnalyticsState(
+    process.env.NEXT_PUBLIC_PLAUSIBLE_DOMAIN,
+    process.env.NEXT_PUBLIC_LINKEDIN_PARTNER_ID,
+  );
 
   return (
     <html
@@ -115,7 +118,7 @@ export default function RootLayout({
         <Header />
         <main className="flex-1">{children}</main>
         <Footer />
-        {analyticsState.analyticsEnabled ? (
+        {analyticsState.plausibleEnabled ? (
           <Script
             defer
             data-domain={analyticsState.plausibleDomain}
@@ -123,13 +126,13 @@ export default function RootLayout({
             strategy="afterInteractive"
           />
         ) : null}
-        {process.env.NEXT_PUBLIC_LINKEDIN_PARTNER_ID && (
+        {analyticsState.linkedInInsightEnabled ? (
           <Script
             id="linkedin-insight"
             strategy="afterInteractive"
             dangerouslySetInnerHTML={{
               __html: `
-                _linkedin_partner_id = "${process.env.NEXT_PUBLIC_LINKEDIN_PARTNER_ID}";
+                _linkedin_partner_id = "${analyticsState.linkedInPartnerId}";
                 window._linkedin_data_partner_ids = window._linkedin_data_partner_ids || [];
                 window._linkedin_data_partner_ids.push(_linkedin_partner_id);
                 (function(l) {

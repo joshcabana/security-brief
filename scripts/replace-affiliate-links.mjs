@@ -3,6 +3,7 @@
 import fs from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
+import { normalizeOutboundUrl } from '../lib/url-safety.mjs';
 
 const root = process.cwd();
 const blogDir = path.join(root, 'blog');
@@ -101,8 +102,26 @@ async function loadMappings() {
     assert(typeof value === 'string', `Invalid ${mappingSource.displayPath}: expected "${key}" to map to a string.`);
   }
 
+  const normalizedMappings = {};
+
+  for (const [key, value] of Object.entries(parsed)) {
+    const trimmedValue = value.trim();
+
+    if (trimmedValue.length === 0) {
+      normalizedMappings[key] = '';
+      continue;
+    }
+
+    const normalizedUrl = normalizeOutboundUrl(trimmedValue);
+    assert(
+      normalizedUrl,
+      `Invalid ${mappingSource.displayPath}: expected "${key}" to map to an absolute HTTPS URL.`,
+    );
+    normalizedMappings[key] = normalizedUrl;
+  }
+
   return {
-    mappings: parsed,
+    mappings: normalizedMappings,
     mappingSource,
   };
 }

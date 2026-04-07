@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { getAffiliateUrlByPriority } from '@/lib/affiliate-links';
 import { createPageMetadata } from '@/lib/page-metadata.mjs';
+import { normalizeOutboundUrl } from '@/lib/url-safety.mjs';
 
 export const dynamic = 'force-dynamic';
 
@@ -208,6 +209,21 @@ const toolCategories: ToolCategory[] = [
   },
 ];
 
+function resolveToolHref(tool: Tool): string {
+  const affiliateUrl = tool.affiliateKeys
+    ? getAffiliateUrlByPriority(tool.affiliateKeys, process.env)
+    : null;
+  const configuredUrl = normalizeOutboundUrl(tool.url);
+  const fallbackUrl = normalizeOutboundUrl(tool.fallbackUrl);
+  const href = affiliateUrl ?? configuredUrl ?? fallbackUrl;
+
+  if (!href) {
+    throw new Error(`Missing safe outbound href for tool "${tool.name}".`);
+  }
+
+  return href;
+}
+
 function generateToolsJsonLd() {
   const items = [
     { name: 'NordVPN', description: 'Advanced threat protection VPN with dark web monitoring.', category: 'VPN', rating: 4.7, price: '$3.09/mo' },
@@ -221,7 +237,7 @@ function generateToolsJsonLd() {
     '@type': 'ItemList',
     name: 'Security Tools & Resources — AI Security Brief',
     description: 'Curated security tools for AI-era defence: VPNs, password managers, encrypted email, and endpoint protection.',
-    url: 'https://aisecuritybrief.com/tools',
+    url: 'https://aithreatbrief.com/tools',
     numberOfItems: items.length,
     itemListElement: items.map((item, index) => ({
       '@type': 'ListItem',
@@ -346,14 +362,7 @@ export default function ToolsPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
               {category.tools.map((tool) => (
                 (() => {
-                  const affiliateUrl = tool.affiliateKeys
-                    ? getAffiliateUrlByPriority(tool.affiliateKeys, process.env)
-                    : null;
-                  const href = affiliateUrl ?? tool.url ?? tool.fallbackUrl;
-
-                  if (!href) {
-                    throw new Error(`Missing href for tool "${tool.name}".`);
-                  }
+                  const href = resolveToolHref(tool);
 
                   return (
                     <div

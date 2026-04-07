@@ -1,6 +1,5 @@
 import type { Metadata } from 'next';
 import {
-  PRIVACY_ANALYTICS_COPY,
   resolveAnalyticsState,
 } from '@/lib/analytics-config.mjs';
 import { createPageMetadata } from '@/lib/page-metadata.mjs';
@@ -13,7 +12,10 @@ export const metadata: Metadata = createPageMetadata({
 });
 
 export default function PrivacyPage() {
-  const analyticsState = resolveAnalyticsState(process.env.NEXT_PUBLIC_PLAUSIBLE_DOMAIN);
+  const analyticsState = resolveAnalyticsState(
+    process.env.NEXT_PUBLIC_PLAUSIBLE_DOMAIN,
+    process.env.NEXT_PUBLIC_LINKEDIN_PARTNER_ID,
+  );
 
   return (
     <div style={{ background: '#0d1117', minHeight: '100vh' }}>
@@ -61,11 +63,18 @@ export default function PrivacyPage() {
                 <p className="text-sm leading-relaxed" style={{ color: '#8b949e' }}>
                   {analyticsState.analyticsEnabled ? (
                     <>
-                      {PRIVACY_ANALYTICS_COPY.enabled} Plausible does not collect personal data, does not use cookies, and does not track users across websites. All data is aggregated and no individual visitor profiles are created. You can review Plausible&apos;s data policy at plausible.io/data-policy. Vercel, our hosting provider, also collects basic request-level data such as access logs as part of normal platform operation.
+                      {analyticsState.privacyDeclaration}{' '}
+                      {analyticsState.plausibleEnabled ? (
+                        <>Plausible does not collect personal data, does not use cookies, and does not track users across websites. All data is aggregated and no individual visitor profiles are created. You can review Plausible&apos;s data policy at plausible.io/data-policy. </>
+                      ) : null}
+                      {analyticsState.linkedInInsightEnabled ? (
+                        <>The LinkedIn Insight Tag helps us measure campaign attribution and conversions. LinkedIn may process request metadata, set cookies or similar identifiers, and combine those signals according to LinkedIn&apos;s own privacy terms. </>
+                      ) : null}
+                      Vercel, our hosting provider, also collects basic request-level data such as access logs as part of normal platform operation.
                     </>
                   ) : (
                     <>
-                      {PRIVACY_ANALYTICS_COPY.disabled} We still rely on Vercel for hosting, which means Vercel collects basic request-level operational logs as part of normal platform operation.
+                      {analyticsState.privacyDeclaration} We still rely on Vercel for hosting, which means Vercel collects basic request-level operational logs as part of normal platform operation.
                     </>
                   )}
                 </p>
@@ -73,8 +82,10 @@ export default function PrivacyPage() {
               <div>
                 <h3 className="text-base font-bold text-white mb-2">Cookies</h3>
                 <p className="text-sm leading-relaxed" style={{ color: '#8b949e' }}>
-                  {analyticsState.analyticsEnabled ? (
+                  {analyticsState.plausibleEnabled && !analyticsState.linkedInInsightEnabled ? (
                     <>Plausible is cookie-free, so we do not use analytics cookies or cross-site tracking cookies on this site. Beehiiv may set cookies if you interact directly with its hosted newsletter pages or email preference flows.</>
+                  ) : analyticsState.linkedInInsightEnabled ? (
+                    <>The LinkedIn Insight Tag can set cookies or similar identifiers for attribution and ad measurement. Plausible remains cookie-free when enabled. Beehiiv may also set cookies if you interact directly with its hosted newsletter pages or email preference flows.</>
                   ) : (
                     <>We do not use analytics or advertising cookies on this site. Beehiiv may still set cookies if you interact directly with its hosted newsletter pages or email preference flows.</>
                   )}
@@ -143,6 +154,12 @@ export default function PrivacyPage() {
                 <li className="flex items-start gap-2">
                   <span style={{ color: '#00b4ff' }} aria-hidden="true">&bull;</span>
                   <strong className="text-white">Plausible Analytics</strong> &mdash; privacy-focused website analytics
+                </li>
+              ) : null}
+              {analyticsState.linkedInInsightEnabled ? (
+                <li className="flex items-start gap-2">
+                  <span style={{ color: '#00b4ff' }} aria-hidden="true">&bull;</span>
+                  <strong className="text-white">LinkedIn</strong> &mdash; campaign attribution and conversion measurement via the Insight Tag
                 </li>
               ) : null}
               <li className="flex items-start gap-2">

@@ -1,6 +1,12 @@
 import { NextResponse } from 'next/server';
 import { ratelimit } from '@/lib/rate-limit';
 import { sanitizeNewsletterSource } from '@/lib/newsletter-source.mjs';
+import {
+  getAllowedOrigins,
+  getRequestIp,
+  getSubmittedOrigin,
+  isVerifiedSameSiteRequest,
+} from '@/lib/request-security.mjs';
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const DEFAULT_SOURCE = 'unknown';
@@ -80,66 +86,10 @@ function getBeehiivConfig(): BeehiivConfig {
   };
 }
 
-function getRequestIp(request: Request): string {
-  const forwardedFor = request.headers.get('x-forwarded-for');
-
-  if (!forwardedFor) {
-    return 'anonymous';
-  }
-
-  const [requestIp] = forwardedFor.split(',');
-  const normalizedRequestIp = requestIp?.trim();
-
-  if (!normalizedRequestIp) {
-    return 'anonymous';
-  }
-
-  return normalizedRequestIp;
-}
-
 function getRetryAfterSeconds(resetAt: number): string {
   const secondsUntilReset = Math.ceil((resetAt - Date.now()) / 1000);
 
   return String(Math.max(secondsUntilReset, 1));
-}
-
-function getAllowedOrigins(request: Request): string[] {
-  const allowedOrigins = new Set<string>([new URL(request.url).origin]);
-  const configuredSiteUrl = process.env.NEXT_PUBLIC_SITE_URL?.trim();
-
-  if (configuredSiteUrl) {
-    try {
-      allowedOrigins.add(new URL(configuredSiteUrl).origin);
-    } catch {
-      return Array.from(allowedOrigins);
-    }
-  }
-
-  return Array.from(allowedOrigins);
-}
-
-function getSubmittedOrigin(request: Request): string | null {
-  const originHeader = request.headers.get('origin');
-
-  if (originHeader) {
-    try {
-      return new URL(originHeader).origin;
-    } catch {
-      return null;
-    }
-  }
-
-  const refererHeader = request.headers.get('referer');
-
-  if (!refererHeader) {
-    return null;
-  }
-
-  try {
-    return new URL(refererHeader).origin;
-  } catch {
-    return null;
-  }
 }
 
 function normalizeSource(source: unknown): string {
@@ -158,16 +108,6 @@ function getBeehiivWelcomeAutomationIds(): string[] {
   }
 
   return [automationId];
-}
-
-function isVerifiedSignupRequest(request: Request): boolean {
-  const submittedOrigin = getSubmittedOrigin(request);
-
-  if (!submittedOrigin) {
-    return false;
-  }
-
-  return getAllowedOrigins(request).includes(submittedOrigin);
 }
 
 function hasFilledHoneypot(value: unknown): boolean {
@@ -334,6 +274,18 @@ function getUpstreamMessage(upstreamPayload: unknown): string {
   return '';
 }
 
+function getPublicUpstreamMessage(status: number): string {
+  if (status === 429) {
+    return 'Too many signup attempts are being processed right now. Please try again in a minute.';
+  }
+
+  if (status >= 400 && status < 500) {
+    return 'The signup request was rejected. Double-check the submitted details and try again.';
+  }
+
+  return 'Newsletter signup is temporarily unavailable. Try again shortly.';
+}
+
 export async function POST(request: Request): Promise<Response> {
   let payload: SubscribeRequestPayload | null = null;
 
@@ -350,7 +302,7 @@ export async function POST(request: Request): Promise<Response> {
   const source = normalizeSource(payload?.source);
   const honeypotFilled = hasFilledHoneypot(payload?.website);
 
-  if (!isVerifiedSignupRequest(request)) {
+  if (!isVerifiedSameSiteRequest(request)) {
     logRequestRejection('origin_mismatch', request, source);
     return NextResponse.json(
       { ok: false, message: INVALID_REQUEST_MESSAGE },
@@ -476,13 +428,12 @@ export async function POST(request: Request): Promise<Response> {
 
   if (!upstreamResponse.ok) {
     const upstreamMessage = getUpstreamMessage(upstreamPayload);
+    logFailure('beehiiv_upstream', upstreamMessage || `HTTP ${upstreamResponse.status}`);
 
     return NextResponse.json(
       {
         ok: false,
-        message:
-          upstreamMessage ||
-          'Beehiiv rejected the signup request. Double-check the publication settings and try again.',
+        message: getPublicUpstreamMessage(upstreamResponse.status),
       },
       { status: upstreamResponse.status },
     );

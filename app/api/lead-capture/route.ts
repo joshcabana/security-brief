@@ -1,5 +1,12 @@
 import { NextResponse } from 'next/server';
 import { ratelimit } from '@/lib/rate-limit';
+import {
+  getAllowedOrigins,
+  getRequestIp,
+  getSubmittedOrigin,
+  isVerifiedSameSiteRequest,
+  sanitizeMarketingField,
+} from '@/lib/request-security.mjs';
 
 /* ────────────────────────────────────────────────────────────────────────────
  * B2B Lead Capture API route
@@ -167,42 +174,8 @@ function getLeadAutomationIds(): string[] {
   return [];
 }
 
-function getRequestIp(request: Request): string {
-  const forwardedFor = request.headers.get('x-forwarded-for');
-  if (!forwardedFor) return 'anonymous';
-  const firstIp = forwardedFor.split(',')[0]?.trim();
-  return firstIp || 'anonymous';
-}
-
 function getRetryAfterSeconds(resetAt: number): string {
   return String(Math.max(Math.ceil((resetAt - Date.now()) / 1000), 1));
-}
-
-function getAllowedOrigins(request: Request): string[] {
-  const origins = new Set<string>([new URL(request.url).origin]);
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL?.trim();
-  if (siteUrl) {
-    try { origins.add(new URL(siteUrl).origin); } catch { /* ignore bad URL */ }
-  }
-  return Array.from(origins);
-}
-
-function getSubmittedOrigin(request: Request): string | null {
-  const originHeader = request.headers.get('origin');
-  if (originHeader) {
-    try { return new URL(originHeader).origin; } catch { return null; }
-  }
-  const referer = request.headers.get('referer');
-  if (referer) {
-    try { return new URL(referer).origin; } catch { return null; }
-  }
-  return null;
-}
-
-function isVerifiedOrigin(request: Request): boolean {
-  const submitted = getSubmittedOrigin(request);
-  if (!submitted) return false;
-  return getAllowedOrigins(request).includes(submitted);
 }
 
 function isWorkEmail(email: string): boolean {
@@ -294,6 +267,18 @@ function getUpstreamErrorMessage(payload: unknown): string {
   return '';
 }
 
+function getPublicUpstreamMessage(status: number): string {
+  if (status === 429) {
+    return 'Too many report requests are being processed right now. Please try again in a minute.';
+  }
+
+  if (status >= 400 && status < 500) {
+    return 'The report request was rejected. Double-check the submitted details and try again.';
+  }
+
+  return 'Could not process your request right now. Try again in a moment.';
+}
+
 // ── Structured logging ────────────────────────────────────────────────────
 
 function logLeadCapture(email: string, jobTitle: string, source: string, asset: string): void {
@@ -344,12 +329,12 @@ export async function POST(request: Request): Promise<Response> {
 
   const email = payload?.email?.trim().toLowerCase() ?? '';
   const jobTitle = payload?.jobTitle?.trim() ?? '';
-  const source = payload?.source?.trim() || 'lead-capture';
-  const asset = payload?.asset?.trim() || 'unknown';
+  const source = sanitizeMarketingField(payload?.source, 'lead-capture');
+  const asset = sanitizeMarketingField(payload?.asset, 'unknown');
   const honeypot = payload?.website?.trim() ?? '';
 
   // 2. Origin check
-  if (!isVerifiedOrigin(request)) {
+  if (!isVerifiedSameSiteRequest(request)) {
     logRejection('origin_mismatch', request, source);
     return NextResponse.json(
       { ok: false, message: 'This request could not be verified. Refresh the page and try again.' },
@@ -474,7 +459,7 @@ export async function POST(request: Request): Promise<Response> {
     logError('beehiiv_upstream', upstreamMessage || `HTTP ${upstreamResponse.status}`);
 
     return NextResponse.json(
-      { ok: false, message: upstreamMessage || 'Could not process your request. Try again shortly.' },
+      { ok: false, message: getPublicUpstreamMessage(upstreamResponse.status) },
       { status: upstreamResponse.status },
     );
   }

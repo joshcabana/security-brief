@@ -7,6 +7,7 @@ import matter from 'gray-matter';
 import { remark } from 'remark';
 import remarkGfm from 'remark-gfm';
 import remarkHtml from 'remark-html';
+import sanitizeHtml from 'sanitize-html';
 import { replaceAffiliateTokens } from './affiliate-links';
 
 export const BLOG_DIR = path.join(process.cwd(), 'blog');
@@ -73,6 +74,25 @@ function assertString(value: unknown, field: string, fileName: string): string {
   return value.trim();
 }
 
+function stripHtmlToPlainText(value: string): string {
+  return value
+    .replace(/<script[\s\S]*?<\/script>/gi, ' ')
+    .replace(/<style[\s\S]*?<\/style>/gi, ' ')
+    .replace(/<\/?[^>]+>/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function assertPlainText(value: unknown, field: string, fileName: string): string {
+  const normalizedValue = stripHtmlToPlainText(assertString(value, field, fileName));
+
+  if (!normalizedValue) {
+    throw new Error(`Expected "${field}" to contain plain text in ${fileName}.`);
+  }
+
+  return normalizedValue;
+}
+
 function assertOptionalString(value: unknown, field: string, fileName: string): string | undefined {
   if (value === undefined || value === null) {
     return undefined;
@@ -94,7 +114,7 @@ function assertStringArray(value: unknown, field: string, fileName: string): str
     throw new Error(`Expected "${field}" to be a non-empty string array in ${fileName}.`);
   }
 
-  return value.map((item) => item.trim());
+  return value.map((item) => assertPlainText(item, field, fileName));
 }
 
 function assertReadTime(value: unknown, field: string, fileName: string): string {
@@ -135,8 +155,8 @@ function assertHttpUrl(value: unknown, field: string, fileName: string): string 
 
 function assertAuthor(value: unknown, fileName: string): ArticleAuthor {
   const authorRecord = assertRecord(value, 'author', fileName);
-  const name = assertString(authorRecord.name, 'author.name', fileName);
-  const role = assertString(authorRecord.role, 'author.role', fileName);
+  const name = assertPlainText(authorRecord.name, 'author.name', fileName);
+  const role = assertPlainText(authorRecord.role, 'author.role', fileName);
 
   if (name === BRAND_AUTHOR_NAME) {
     throw new Error(`Expected "author.name" to be a named human, not ${BRAND_AUTHOR_NAME}, in ${fileName}.`);
@@ -145,7 +165,9 @@ function assertAuthor(value: unknown, fileName: string): ArticleAuthor {
   const profileUrl = authorRecord.profileUrl === undefined
     ? undefined
     : assertHttpUrl(authorRecord.profileUrl, 'author.profileUrl', fileName);
-  const bio = assertOptionalString(authorRecord.bio, 'author.bio', fileName);
+  const bio = authorRecord.bio === undefined
+    ? undefined
+    : assertPlainText(authorRecord.bio, 'author.bio', fileName);
 
   return {
     name,
@@ -158,9 +180,11 @@ function assertAuthor(value: unknown, fileName: string): ArticleAuthor {
 function assertPrimarySource(value: unknown, index: number, fileName: string): PrimarySource {
   const sourceRecord = assertRecord(value, `primarySources[${index}]`, fileName);
   const url = assertHttpUrl(sourceRecord.url, `primarySources[${index}].url`, fileName);
-  const title = assertString(sourceRecord.title, `primarySources[${index}].title`, fileName);
+  const title = assertPlainText(sourceRecord.title, `primarySources[${index}].title`, fileName);
   const date = assertOptionalString(sourceRecord.date, `primarySources[${index}].date`, fileName);
-  const excerpt = assertOptionalString(sourceRecord.excerpt, `primarySources[${index}].excerpt`, fileName);
+  const excerpt = sourceRecord.excerpt === undefined
+    ? undefined
+    : assertPlainText(sourceRecord.excerpt, `primarySources[${index}].excerpt`, fileName);
 
   return {
     url,
@@ -188,17 +212,64 @@ async function renderMarkdown(markdown: string, title: string): Promise<string> 
     .use(remarkHtml)
     .process(markdown);
 
-  return String(processed).replace(
-    new RegExp(`^<h1>${title.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}</h1>\\s*`),
-    '',
-  );
+  const sanitizedHtml = sanitizeHtml(String(processed), {
+    allowedTags: [
+      'a',
+      'blockquote',
+      'br',
+      'code',
+      'em',
+      'h1',
+      'h2',
+      'h3',
+      'h4',
+      'h5',
+      'h6',
+      'hr',
+      'img',
+      'li',
+      'ol',
+      'p',
+      'pre',
+      'strong',
+      'table',
+      'tbody',
+      'td',
+      'th',
+      'thead',
+      'tr',
+      'ul',
+    ],
+    allowedAttributes: {
+      a: ['href'],
+      img: ['src', 'alt', 'title'],
+    },
+    allowedSchemes: ['http', 'https'],
+    allowedSchemesAppliedToAttributes: ['href', 'src'],
+    allowProtocolRelative: false,
+    transformTags: {
+      a: (_tagName, attribs) => {
+        const { href } = attribs;
+        const safeHref = href ? href : undefined;
+
+        return {
+          tagName: 'a',
+          attribs: safeHref ? { href: safeHref, rel: 'noopener noreferrer nofollow' } : {},
+        };
+      },
+    },
+  });
+
+  void title;
+
+  return sanitizedHtml.replace(/^<h1[^>]*>[\s\S]*?<\/h1>\s*/i, '');
 }
 
 export async function parseArticleSource(fileName: string, source: string): Promise<ArticleDocument> {
   const { data, content } = matter(source);
-  const title = assertString(data.title, 'title', fileName);
+  const title = assertPlainText(data.title, 'title', fileName);
   const keywords = assertStringArray(data.keywords, 'keywords', fileName);
-  const category = assertString(data.category, 'category', fileName);
+  const category = assertPlainText(data.category, 'category', fileName);
   const isAffiliateEnabled = category !== 'AI Threats';
   
   const rawBody = content.trim();
@@ -217,11 +288,11 @@ export async function parseArticleSource(fileName: string, source: string): Prom
     slug,
     date: assertDateString(data.date, 'date', fileName),
     author: assertAuthor(data.author, fileName),
-    excerpt: assertString(data.excerpt, 'excerpt', fileName),
+    excerpt: assertPlainText(data.excerpt, 'excerpt', fileName),
     category,
     featured: assertBoolean(data.featured, 'featured', fileName),
-    metaTitle: assertString(data.meta_title, 'meta_title', fileName),
-    metaDescription: assertString(data.meta_description, 'meta_description', fileName),
+    metaTitle: assertPlainText(data.meta_title, 'meta_title', fileName),
+    metaDescription: assertPlainText(data.meta_description, 'meta_description', fileName),
     keywords,
     readTime: assertReadTime(data.read_time, 'read_time', fileName),
     primarySources: assertPrimarySources(data.primarySources, fileName),

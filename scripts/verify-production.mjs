@@ -121,7 +121,8 @@ export async function runProductionVerification(baseUrl) {
 
         const renderedState = detectRenderedAnalyticsState(html);
         const evaluation = evaluatePrivacyAnalyticsContract({
-          analyticsEnabled: renderedState.hasPlausibleScript,
+          plausibleEnabled: renderedState.hasPlausibleScript,
+          linkedInInsightEnabled: renderedState.hasLinkedInInsightScript,
           html,
         });
 

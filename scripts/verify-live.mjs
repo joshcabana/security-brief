@@ -347,7 +347,10 @@ async function run() {
   const manifest = loadManifest();
   const featuredArticle = manifest.articles[0];
   const articlePath = `/blog/${featuredArticle.slug}`;
-  const analyticsState = resolveAnalyticsState(process.env.NEXT_PUBLIC_PLAUSIBLE_DOMAIN);
+  const analyticsState = resolveAnalyticsState(
+    process.env.NEXT_PUBLIC_PLAUSIBLE_DOMAIN,
+    process.env.NEXT_PUBLIC_LINKEDIN_PARTNER_ID,
+  );
   const nordVpnArticleChecks = getTokenizedAffiliateArticleChecks(
     manifest.articles,
     'NORDVPN',
@@ -421,7 +424,8 @@ async function run() {
 
         if (pageMetadata.path === '/privacy') {
           const analyticsContract = evaluatePrivacyAnalyticsContract({
-            analyticsEnabled: analyticsState.analyticsEnabled,
+            plausibleEnabled: analyticsState.plausibleEnabled,
+            linkedInInsightEnabled: analyticsState.linkedInInsightEnabled,
             html: body,
           });
 
