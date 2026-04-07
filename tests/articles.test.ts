@@ -192,3 +192,37 @@ test('parseArticleSource rejects empty categories', async () => {
     /category/,
   );
 });
+
+test('parseArticleSource strips unsafe HTML from rendered article content and metadata fields', async () => {
+  const article = await parseArticleSource(
+    'sanitised-article.md',
+    buildArticleMarkdown({
+      title: '<strong>Example</strong>',
+      slug: 'sanitised-article',
+      excerpt: '<script>alert(1)</script>Example excerpt',
+      meta_title: '<img src=x onerror=alert(1)>Meta title',
+      meta_description: '<b>Meta description</b>',
+      keywords: ['<em>first</em>', 'second', 'third', 'fourth', 'fifth'],
+      category: 'Privacy',
+      body: [
+        'Safe **bold** text.',
+        '',
+        '<script>alert(1)</script>',
+        '',
+        '<a href="javascript:alert(1)" onclick="evil()">bad link</a>',
+        '',
+        '<a href="/guides">internal link</a>',
+      ].join('\n'),
+    }),
+  );
+
+  assert.equal(article.title, 'Example');
+  assert.equal(article.excerpt, 'Example excerpt');
+  assert.equal(article.metaTitle, 'Meta title');
+  assert.equal(article.metaDescription, 'Meta description');
+  assert.deepEqual(article.keywords, ['first', 'second', 'third', 'fourth', 'fifth']);
+  assert.doesNotMatch(article.contentHtml, /<script|onclick=|javascript:/i);
+  assert.doesNotMatch(article.contentHtml, /^<h1/i);
+  assert.match(article.contentHtml, /<strong>bold<\/strong>/);
+  assert.match(article.contentHtml, /href="\/guides"/);
+});

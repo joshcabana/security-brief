@@ -272,3 +272,21 @@ test('malformed JSON and missing blog directory exit clearly', async () => {
     await missingBlogWorkspace.cleanup();
   }
 });
+
+test('invalid affiliate mapping urls fail closed before replacements are applied', async () => {
+  const workspace = await createWorkspace({
+    'ops/affiliate-links.json': JSON.stringify({
+      NORDVPN: 'javascript:alert(1)',
+    }, null, 2),
+    'blog/example.md': 'Use [AFFILIATE:NORDVPN].\n',
+  });
+
+  try {
+    const result = runReplaceAffiliateLinks(workspace.workspaceDir);
+
+    assert.equal(result.status, 1);
+    assert.match(result.stderr, /absolute HTTPS URL/);
+  } finally {
+    await workspace.cleanup();
+  }
+});

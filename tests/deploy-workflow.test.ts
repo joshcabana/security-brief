@@ -77,14 +77,35 @@ test('workflows use pnpm action-setup v5 instead of the deprecated v4 runtime', 
       `Expected ${workflowFileName} to avoid the deprecated pnpm action runtime.`,
     );
 
-    if (!workflowSource.includes('name: Setup pnpm')) {
-      continue;
+    assert.doesNotMatch(
+      workflowSource,
+      /pull_request_target:/,
+      `Expected ${workflowFileName} to avoid pull_request_target for external contributions.`,
+    );
+
+    for (const match of workflowSource.matchAll(/uses:\s+([^\s#]+)/g)) {
+      assert.match(
+        match[1],
+        /^[^@]+@[0-9a-f]{40}$/,
+        `Expected ${workflowFileName} to pin ${match[1]} to a full commit SHA.`,
+      );
     }
+  }
+});
+
+test('deploy workflow keeps read-only permissions by default and disables checkout credential persistence on non-push jobs', () => {
+  assert.match(deployWorkflowSource, /^permissions:\n  contents: read$/m);
+
+  for (const jobName of ['verify', 'deploy', 'verify_preview', 'verify_live', 'status']) {
+    const jobBlock = extractJobBlock(jobName);
 
     assert.match(
-      workflowSource,
-      /pnpm\/action-setup@v5/,
-      `Expected ${workflowFileName} to use pnpm action-setup v5.`,
+      jobBlock,
+      /persist-credentials:\s+false/,
+      `Expected ${jobName} to disable persisted checkout credentials.`,
     );
   }
+
+  const previewJob = extractJobBlock('verify_preview');
+  assert.match(previewJob, /permissions:\n\s+contents:\s+read\n\s+issues:\s+read/);
 });

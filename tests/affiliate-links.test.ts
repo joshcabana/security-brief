@@ -4,6 +4,7 @@ import os from 'node:os';
 import path from 'node:path';
 import test from 'node:test';
 import { getAffiliateUrl, getAffiliateUrlByPriority, replaceAffiliateTokens } from '../lib/affiliate-links';
+import { normalizeOutboundUrl } from '../lib/url-safety.mjs';
 import {
   getArticleCacheKey,
   getArticleCacheSignature,
@@ -74,6 +75,17 @@ test('getAffiliateUrl returns null for malformed urls with unresolved placeholde
 
 test('getAffiliateUrl returns null for invalid urls', () => {
   assert.equal(getAffiliateUrl('NORDVPN', { AFFILIATE_NORDVPN: 'not-a-url' }), null);
+});
+
+test('getAffiliateUrl rejects insecure http affiliate urls', () => {
+  assert.equal(getAffiliateUrl('NORDVPN', { AFFILIATE_NORDVPN: 'http://example.com/nordvpn' }), null);
+});
+
+test('normalizeOutboundUrl only allows absolute https targets without placeholders', () => {
+  assert.equal(normalizeOutboundUrl(' https://example.com/vendor '), 'https://example.com/vendor');
+  assert.equal(normalizeOutboundUrl('http://example.com/vendor'), null);
+  assert.equal(normalizeOutboundUrl('javascript:alert(1)'), null);
+  assert.equal(normalizeOutboundUrl('https://example.com/{placeholder}'), null);
 });
 
 test('getAffiliateUrlByPriority returns the first configured affiliate url', () => {

@@ -150,7 +150,7 @@ export default function PrivacyPage() {
                 <span style={{ color: '#00b4ff' }} aria-hidden="true">&bull;</span>
                 <strong className="text-white">Vercel</strong> &mdash; site hosting and deployment
               </li>
-              {analyticsState.analyticsEnabled ? (
+              {analyticsState.plausibleEnabled ? (
                 <li className="flex items-start gap-2">
                   <span style={{ color: '#00b4ff' }} aria-hidden="true">&bull;</span>
                   <strong className="text-white">Plausible Analytics</strong> &mdash; privacy-focused website analytics

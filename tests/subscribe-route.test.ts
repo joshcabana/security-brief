@@ -238,7 +238,7 @@ test('subscribe route returns 400 when the honeypot field is filled', async () =
   assert.equal((await response.json()).message, 'This signup request could not be verified. Refresh the page and try again.');
 });
 
-test('subscribe route surfaces upstream Beehiiv errors', async () => {
+test('subscribe route does not expose upstream Beehiiv errors to clients', async () => {
   setBeehiivEnv();
   setUpstashEnv();
   allowRateLimit();
@@ -255,7 +255,10 @@ test('subscribe route surfaces upstream Beehiiv errors', async () => {
   const response = await POST(createSameSiteRequest(JSON.stringify({ email: 'reader@example.com' })));
 
   assert.equal(response.status, 422);
-  assert.equal((await response.json()).message, 'Mock Beehiiv rejected the signup request.');
+  assert.equal(
+    (await response.json()).message,
+    'The signup request was rejected. Double-check the submitted details and try again.',
+  );
 });
 
 test('subscribe route returns 502 when Beehiiv cannot be reached', async () => {
@@ -314,7 +317,7 @@ test('subscribe route retries once when Beehiiv responds with 429 before succeed
   });
 });
 
-test('subscribe route uses the first forwarded IP for distributed rate limiting', async () => {
+test('subscribe route prefers the Vercel forwarded IP header for distributed rate limiting', async () => {
   setBeehiivEnv();
   setUpstashEnv();
 
@@ -334,12 +337,15 @@ test('subscribe route uses the first forwarded IP for distributed rate limiting'
   const response = await POST(
     createSameSiteRequest(
       JSON.stringify({ email: 'reader@example.com' }),
-      { 'x-forwarded-for': '198.51.100.10, 10.0.0.1' },
+      {
+        'x-vercel-forwarded-for': '203.0.113.7',
+        'x-forwarded-for': '198.51.100.10, 10.0.0.1',
+      },
     ),
   );
 
   assert.equal(response.status, 200);
-  assert.equal(capturedIdentifier, '198.51.100.10');
+  assert.equal(capturedIdentifier, '203.0.113.7');
 });
 
 test('subscribe route returns 429 after five rapid requests from the same IP', async () => {
