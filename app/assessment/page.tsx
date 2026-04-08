@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import React from 'react';
 import LeadCaptureForm from '@/components/LeadCaptureForm';
 import { createPageMetadata } from '@/lib/page-metadata.mjs';
 import { siteConfig } from '@/lib/site';
@@ -25,6 +26,12 @@ const deliverables = [
   '60-minute readout with implementation priorities and next actions',
 ];
 
+const fitSignals = [
+  'Shipping agents, copilots, or LLM workflows into production.',
+  'Need a fixed-scope threat map before launch, rollout, or expansion.',
+  'Want concrete remediation priorities within 7 business days.',
+];
+
 const offerLadder = [
   {
     title: 'AI Agent Security Readiness Review',
@@ -48,8 +55,11 @@ const offerLadder = [
 
 export default function AssessmentPage() {
   const assessment = siteConfig.offers.assessment;
+  const contactEmail = 'hello@aisecuritybrief.com';
+  const hasBookingUrl = Boolean(assessment.bookingUrl);
   const bookingUrl = assessment.bookingUrl ?? siteConfig.founder.linkedInUrl;
-  const bookingLabel = assessment.bookingUrl ? 'Book the 15-minute fit call' : 'Message Josh on LinkedIn';
+  const bookingLabel = hasBookingUrl ? 'Book the 15-minute fit call' : 'Message Josh on LinkedIn';
+  const contactHref = `mailto:${contactEmail}?subject=${encodeURIComponent('AI Agent Security Readiness Review')}`;
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-200">
@@ -101,11 +111,31 @@ export default function AssessmentPage() {
                   className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-slate-200 font-bold hover:border-cyan-400 transition-colors"
                 >
                   <FileSearch size={18} />
-                  Preview the report
+                  Start with the report preview
                 </Link>
               </div>
               <p className="text-sm text-slate-500 dark:text-slate-500">
-                No unpaid custom audits. Payment is collected before delivery via invoice or payment link.
+                No unpaid custom audits.{' '}
+                {hasBookingUrl ? (
+                  <>Fit call first. Payment is collected before delivery via invoice or payment link.</>
+                ) : (
+                  <>
+                    Live scheduling is not configured yet. Use{' '}
+                    <a
+                      href={siteConfig.founder.linkedInUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="font-semibold text-cyan-600 dark:text-cyan-400 hover:underline"
+                    >
+                      LinkedIn
+                    </a>{' '}
+                    or{' '}
+                    <a href={contactHref} className="font-semibold text-cyan-600 dark:text-cyan-400 hover:underline">
+                      {contactEmail}
+                    </a>{' '}
+                    and mention the readiness review.
+                  </>
+                )}
               </p>
             </div>
 
@@ -128,6 +158,20 @@ export default function AssessmentPage() {
                   </li>
                 ))}
               </ul>
+
+              <div className="mt-6 pt-6 border-t border-slate-200 dark:border-slate-800">
+                <p className="text-xs font-bold uppercase tracking-wider text-cyan-700 dark:text-cyan-400">
+                  Best fit
+                </p>
+                <ul className="mt-3 space-y-3">
+                  {fitSignals.map((item) => (
+                    <li key={item} className="flex items-start gap-3 text-sm text-slate-700 dark:text-slate-300">
+                      <Check size={16} className="mt-0.5 flex-shrink-0 text-cyan-500" />
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </div>
           </div>
         </div>
@@ -191,15 +235,15 @@ export default function AssessmentPage() {
 
             <div className="mt-8 rounded-2xl border border-amber-200 dark:border-amber-500/20 bg-amber-50 dark:bg-amber-900/10 p-5">
               <p className="text-sm text-slate-700 dark:text-slate-300">
-                If you only want the free material first, start with the report preview and newsletter. The assessment is for teams ready to act.
+                If you only want the free material first, start with the report preview and newsletter. If you already know the fixed-scope review is the right next step, use the direct contact block.
               </p>
             </div>
           </div>
 
           <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/50 p-6 shadow-xl dark:shadow-none">
-            <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">Get the preview first</h3>
+            <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">Free path for teams still qualifying the review</h3>
             <p className="text-sm text-slate-600 dark:text-slate-400 mb-6">
-              Use the preview report as the lead-in. It shows the kinds of AI risk patterns the readiness review expands into a paid engagement.
+              Use the preview report and newsletter if you want the research first. The paid review remains the direct path for teams that already know they need an operator-led risk picture.
             </p>
 
             <LeadCaptureForm
@@ -217,17 +261,45 @@ export default function AssessmentPage() {
               <Link href="/subscribe" className="text-sm font-semibold text-cyan-600 dark:text-cyan-400 hover:underline">
                 Stay on the free weekly briefing
               </Link>
+            </div>
+
+            <div className="mt-6 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/50 p-5">
+              <p className="text-sm font-bold text-slate-900 dark:text-white">Ready to move now?</p>
+              <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">
+                {hasBookingUrl
+                  ? 'Book the fit call to confirm scope. If scope is already confirmed, the fixed-fee payment CTA appears below when it is live.'
+                  : 'If you already know the fixed-scope review is the right move, use LinkedIn or email directly while live scheduling is unavailable.'}
+              </p>
+
+              <div className="mt-4 flex flex-col gap-3">
+                <a
+                  href={bookingUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-cyan-500 border border-cyan-400 text-slate-950 font-extrabold hover:bg-cyan-400 transition-all"
+                >
+                  <Zap size={18} />
+                  {bookingLabel}
+                </a>
+                <a
+                  href={contactHref}
+                  className="inline-flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-slate-200 font-bold hover:border-cyan-400 transition-colors"
+                >
+                  Email {contactEmail}
+                </a>
+              </div>
+
               {assessment.paymentUrl ? (
                 <a
                   href={assessment.paymentUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-slate-900 dark:bg-slate-800 text-white font-bold hover:bg-slate-800 dark:hover:bg-slate-700 transition-colors"
+                  className="mt-4 inline-flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-slate-900 dark:bg-slate-800 text-white font-bold hover:bg-slate-800 dark:hover:bg-slate-700 transition-colors w-full"
                 >
                   Secure the review
                 </a>
               ) : (
-                <p className="text-xs text-slate-500 dark:text-slate-500">
+                <p className="mt-4 text-xs text-slate-500 dark:text-slate-500">
                   Payment links are issued after the fit call and expire after 7 days.
                 </p>
               )}

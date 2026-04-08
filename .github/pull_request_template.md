@@ -1,4 +1,4 @@
-## PR Review Checklist
+# PR Review Checklist
 
 Before merging this draft or change, please ensure the following:
 

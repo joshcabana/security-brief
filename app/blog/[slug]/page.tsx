@@ -29,11 +29,6 @@ function formatDate(date: string): string {
   });
 }
 
-const categoryColors: Record<string, { bg: string; text: string; border: string }> = {
-  'AI Threats': { bg: 'rgba(248,81,73,0.08)', text: '#f85149', border: 'rgba(248,81,73,0.2)' },
-  Privacy: { bg: 'rgba(0,180,255,0.08)', text: '#00b4ff', border: 'rgba(0,180,255,0.2)' },
-};
-
 export async function generateMetadata({ params }: ArticlePageProps): Promise<Metadata> {
   const { slug } = await params;
   const article = await getArticleBySlug(slug);
@@ -87,7 +82,6 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
       return new Date(right.date).getTime() - new Date(left.date).getTime();
     })
     .slice(0, 3);
-  const colors = categoryColors[article.category] || categoryColors.Privacy;
   const tags = [article.category, ...article.keywords.slice(0, 2)];
 
   const articleUrl = `${siteUrl}/blog/${article.slug}`;
@@ -123,7 +117,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
             <span className="text-slate-400 truncate max-w-48">{article.title}</span>
           </nav>
           <div className="mb-5">
-            <span className="text-xs font-mono font-semibold px-2.5 py-1 rounded border" style={{ background: colors.bg, color: colors.text, borderColor: colors.border }}>{article.category}</span>
+            <span className="text-xs font-mono font-semibold px-2.5 py-1 rounded border bg-red-500/10 text-red-500 border-red-500/20">{article.category}</span>
           </div>
           <h1 className="text-white font-black leading-tight mb-6 tracking-tight">{article.title}</h1>
           <div className="flex flex-wrap items-center gap-4 text-sm text-slate-500">
