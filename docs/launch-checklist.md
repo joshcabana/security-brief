@@ -69,8 +69,9 @@
    - `NEXT_PUBLIC_LINKEDIN_PROFILE_URL` → optional explicit founder profile URL override
    - Optional: `BEEHIIV_WELCOME_AUTOMATION_ID` → your Beehiiv welcome automation ID if you want the subscribe route to enroll an automation instead of sending the default welcome email
 5. Deploy → Note your `.vercel.app` preview URL
-6. Add custom domain in Vercel → Project Settings → Domains → Add your purchased domain
-7. Set up GitHub Actions secrets:
+6. If you change `NEXT_PUBLIC_ASSESSMENT_BOOKING_URL`, `NEXT_PUBLIC_ASSESSMENT_PAYMENT_URL`, or `NEXT_PUBLIC_LINKEDIN_PROFILE_URL` later, redeploy again before trusting the live `/assessment` page. Those values are rendered into a prerendered route.
+7. Add custom domain in Vercel → Project Settings → Domains → Add your purchased domain
+8. Set up GitHub Actions secrets:
    - `VERCEL_TOKEN` → Generate at vercel.com/account/tokens
    - `VERCEL_ORG_ID` → Found in `.vercel/project.json` after first deploy
    - `VERCEL_PROJECT_ID` → Found in `.vercel/project.json` after first deploy
@@ -118,6 +119,7 @@ NEXT_PUBLIC_LINKEDIN_PROFILE_URL=https://www.linkedin.com/in/josh-cabana-3516313
 **Run the local release checks before you publish anything:**
 ```bash
 pnpm verify:release
+npx pnpm@10.23.0 verify:ops
 ```
 
 **Push env vars to Vercel:**
@@ -133,6 +135,16 @@ vercel env add NEXT_PUBLIC_LINKEDIN_PROFILE_URL
 # Optional
 # vercel env add BEEHIIV_WELCOME_AUTOMATION_ID
 ```
+
+**After updating those envs in Vercel, trigger a fresh deployment and verify the live funnel:**
+```bash
+npx pnpm@10.23.0 verify:production -- --base-url https://aithreatbrief.com
+```
+
+Then open `https://aithreatbrief.com/assessment` and confirm:
+- the fit-call CTA lands on the intended booking flow
+- the payment CTA appears only when the payment URL is configured
+- the LinkedIn/email fallback copy is gone when booking is live
 
 ---
 

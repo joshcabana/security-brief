@@ -26,6 +26,8 @@ test('launch checklist includes live assessment booking and payment env setup', 
   assert.match(launchChecklistSource, /NEXT_PUBLIC_ASSESSMENT_BOOKING_URL/);
   assert.match(launchChecklistSource, /NEXT_PUBLIC_ASSESSMENT_PAYMENT_URL/);
   assert.match(launchChecklistSource, /NEXT_PUBLIC_LINKEDIN_PROFILE_URL/);
+  assert.match(launchChecklistSource, /redeploy again before trusting the live `?\/assessment`? page/i);
+  assert.match(launchChecklistSource, /verify:production -- --base-url https:\/\/aithreatbrief\.com/);
   assert.match(launchChecklistSource, /docs\/revenue-ops-runbook\.md/);
   assert.match(launchChecklistSource, /docs\/founder-sales-asset-pack\.md/);
 });
@@ -38,6 +40,8 @@ test('revenue ops runbook covers follow-up rules, payment rules, testimonial cap
   assert.match(runbookSource, /## Invoice and payment rules/);
   assert.match(runbookSource, /## Delivery, testimonial, and upsell timing/);
   assert.match(runbookSource, /## Weekly reporting/);
+  assert.match(runbookSource, /trigger a fresh production deployment before you trust `?\/assessment`?/i);
+  assert.match(runbookSource, /verify:production -- --base-url https:\/\/aithreatbrief\.com/);
   assert.match(runbookSource, /`new lead`/);
   assert.match(runbookSource, /`retainer pitch`/);
   assert.match(runbookSource, /`closed won`/);
