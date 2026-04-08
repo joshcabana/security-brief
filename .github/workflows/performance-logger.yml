@@ -1,0 +1,104 @@
+name: Performance Logger
+
+on:
+  schedule:
+    - cron: '0 9 * * 0'
+    - cron: '0 10 * * 0'
+  workflow_dispatch:
+    inputs:
+      run_date:
+        description: Australia/Sydney date override in YYYY-MM-DD format
+        required: false
+        type: string
+      dry_run:
+        description: Generate output without pushing a branch or opening a PR
+        required: false
+        default: false
+        type: boolean
+      force:
+        description: Overwrite an existing dated output for the selected run date
+        required: false
+        default: false
+        type: boolean
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  performance_logger:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Evaluate Australia/Sydney schedule gate
+        id: gate
+        shell: bash
+        env:
+          TARGET_WEEKDAY: sunday
+          TARGET_HOUR: '20'
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "should_run=true" >> "$GITHUB_OUTPUT"
+            echo "Manual dispatch detected."
+            exit 0
+          fi
+
+          observed_weekday=$(TZ=Australia/Sydney date +%A | tr '[:upper:]' '[:lower:]')
+          observed_hour=$(TZ=Australia/Sydney date +%H)
+
+          if [ "$observed_weekday" = "$TARGET_WEEKDAY" ] && [ "$observed_hour" = "$TARGET_HOUR" ]; then
+            echo "should_run=true" >> "$GITHUB_OUTPUT"
+            echo "Matched ${TARGET_WEEKDAY} ${TARGET_HOUR}:00 Australia/Sydney."
+          else
+            echo "should_run=false" >> "$GITHUB_OUTPUT"
+            echo "Current Australia/Sydney time is ${observed_weekday} ${observed_hour}:00."
+          fi
+
+      - name: Checkout repository
+        if: steps.gate.outputs.should_run == 'true'
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+        with:
+          persist-credentials: false
+
+      - name: Setup pnpm
+        if: steps.gate.outputs.should_run == 'true'
+        uses: pnpm/action-setup@fc06bc1257f339d1d5d8b3a19a8cae5388b55320 # v5
+        with:
+          version: 10.23.0
+
+      - name: Setup Node.js
+        if: steps.gate.outputs.should_run == 'true'
+        uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        if: steps.gate.outputs.should_run == 'true'
+        run: pnpm install --frozen-lockfile
+
+      - name: Run performance logger automation
+        if: steps.gate.outputs.should_run == 'true'
+        shell: bash
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          BEEHIIV_API_KEY: ${{ secrets.BEEHIIV_API_KEY }}
+          BEEHIIV_PUBLICATION_ID: ${{ secrets.BEEHIIV_PUBLICATION_ID }}
+          INPUT_RUN_DATE: ${{ github.event.inputs.run_date || '' }}
+          INPUT_DRY_RUN: ${{ github.event.inputs.dry_run || 'false' }}
+          INPUT_FORCE: ${{ github.event.inputs.force || 'false' }}
+        run: |
+          run_args=()
+
+          if [ -n "$INPUT_RUN_DATE" ]; then
+            run_args+=(--date "$INPUT_RUN_DATE")
+          fi
+
+          if [ "$INPUT_DRY_RUN" = "true" ]; then
+            run_args+=(--dry-run)
+          fi
+
+          if [ "$INPUT_FORCE" = "true" ]; then
+            run_args+=(--force)
+          fi
+
+          node scripts/automation/run-performance-logger.mjs "${run_args[@]}"

@@ -62,12 +62,14 @@ export async function finishAutomationRun({
   commitMessage,
   model,
   outputs,
+  allowedPaths,
   notes = [],
 }) {
   const changed = await commitAndPushChanges({
     branchName: context.identity.branchName,
     commitMessage,
     dryRun: context.options.dryRun,
+    allowedPaths,
   });
 
   let pullRequest = null;

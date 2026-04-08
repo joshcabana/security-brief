@@ -30,6 +30,11 @@ primarySources:
     title: "Dashlane — What's New at Dashlane: February 2026"
   - url: "https://nordpass.com/plans/business/"
     title: "NordPass — Business Plans and Pricing"
+section: "review"
+monetization: "affiliate"
+reviewed_by: "PENDING_HUMAN_REVIEW"
+reviewed_at: "PENDING_HUMAN_REVIEW"
+last_substantive_update_at: "2026-03-26"
 ---
 # Best Password Managers for Security Teams 2026
 

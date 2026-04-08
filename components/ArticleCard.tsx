@@ -5,6 +5,7 @@ import type { ArticleAuthor } from '@/lib/articles';
 
 export interface Article {
   slug: string;
+  routePath?: string;
   title: string;
   excerpt: string;
   date: string;
@@ -41,10 +42,11 @@ function formatDate(dateStr: string): string {
 
 export default function ArticleCard({ article, variant = 'default', index = 0 }: ArticleCardProps) {
   const colors = categoryColors[article.category] || categoryColors['Privacy'];
+  const href = article.routePath ?? `/blog/${article.slug}`;
 
   if (variant === 'compact') {
     return (
-      <Link href={`/blog/${article.slug}`} className="block group" aria-label={article.title}>
+      <Link href={href} className="block group" aria-label={article.title}>
         <article className="flex gap-4 py-4 transition-all duration-200 border-b border-slate-800">
           <span className="flex-shrink-0 text-2xl font-mono font-bold text-slate-800" aria-hidden="true">
             {String(index + 1).padStart(2, '0')}
@@ -65,7 +67,7 @@ export default function ArticleCard({ article, variant = 'default', index = 0 }:
 
   if (variant === 'featured') {
     return (
-      <Link href={`/blog/${article.slug}`} className="block group h-full" aria-label={article.title}>
+      <Link href={href} className="block group h-full" aria-label={article.title}>
         <article
           className="relative h-full p-8 rounded-xl transition-all duration-300 overflow-hidden bg-gradient-to-br from-slate-900 to-slate-950 border border-slate-800 hover:border-cyan-500/40 hover:shadow-[0_8px_32px_rgba(0,0,0,0.5),0_0_0_1px_rgba(34,211,238,0.15)] hover:-translate-y-1"
         >
@@ -105,7 +107,7 @@ export default function ArticleCard({ article, variant = 'default', index = 0 }:
   }
 
   return (
-    <Link href={`/blog/${article.slug}`} className="block group h-full" aria-label={article.title}>
+    <Link href={href} className="block group h-full" aria-label={article.title}>
       <article
         className="h-full p-6 flex flex-col rounded-xl transition-all duration-300 bg-slate-900 border border-slate-800 hover:border-cyan-500/35 hover:shadow-[0_4px_20px_rgba(0,0,0,0.4),0_0_0_1px_rgba(34,211,238,0.1)] hover:-translate-y-0.5"
       >

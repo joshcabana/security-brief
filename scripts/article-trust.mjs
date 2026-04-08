@@ -1,4 +1,9 @@
+import fs from 'node:fs/promises';
+import path from 'node:path';
+
 const BRAND_AUTHOR_NAME = 'AI Security Brief';
+export const MINIMUM_EDITORIAL_TRUST_SCORE = 85;
+export const PENDING_HUMAN_REVIEW = 'PENDING_HUMAN_REVIEW';
 
 export const CANONICAL_AUTHOR = Object.freeze({
   name: 'Josh Cabana',
@@ -263,4 +268,127 @@ export function renderYamlFrontmatter(frontmatter) {
 
   lines.push('---', '');
   return lines.join('\n');
+}
+
+function stripQuotes(value) {
+  if ((value.startsWith('"') && value.endsWith('"')) || (value.startsWith('\'') && value.endsWith('\''))) {
+    return value.slice(1, -1);
+  }
+
+  return value;
+}
+
+function parseYamlScalar(rawValue) {
+  const value = stripQuotes(rawValue.trim());
+
+  if (value === 'true') {
+    return true;
+  }
+
+  if (value === 'false') {
+    return false;
+  }
+
+  return value;
+}
+
+export function parseSimpleYamlDocument(source) {
+  const result = {};
+
+  for (const rawLine of source.split('\n')) {
+    const line = rawLine.trim();
+
+    if (!line || line.startsWith('#')) {
+      continue;
+    }
+
+    const separatorIndex = line.indexOf(':');
+    if (separatorIndex === -1) {
+      continue;
+    }
+
+    const key = line.slice(0, separatorIndex).trim();
+    const rawValue = line.slice(separatorIndex + 1).trim();
+    result[key] = parseYamlScalar(rawValue);
+  }
+
+  return result;
+}
+
+export function validateEditorialAttestation(value, fileName) {
+  assert(isPlainObject(value), `Expected ${fileName} to contain a flat YAML object.`);
+
+  return {
+    slug: assertNonEmptyString(value.slug, 'slug', fileName),
+    reviewer_name: assertNonEmptyString(value.reviewer_name, 'reviewer_name', fileName),
+    reviewer_github: assertNonEmptyString(value.reviewer_github, 'reviewer_github', fileName),
+    reviewed_at: assertNonEmptyString(value.reviewed_at, 'reviewed_at', fileName),
+    commit_sha: assertNonEmptyString(value.commit_sha, 'commit_sha', fileName),
+    primary_sources_verified: Boolean(value.primary_sources_verified),
+    cves_verified: Boolean(value.cves_verified),
+    iocs_verified: Boolean(value.iocs_verified),
+    mitigations_verified: Boolean(value.mitigations_verified),
+    no_editorial_monetization: Boolean(value.no_editorial_monetization),
+  };
+}
+
+export async function loadEditorialAttestationMap(reviewDir) {
+  let fileNames = [];
+
+  try {
+    fileNames = (await fs.readdir(reviewDir))
+      .filter((entry) => entry.endsWith('.yaml'))
+      .sort();
+  } catch (error) {
+    if (error && typeof error === 'object' && 'code' in error && error.code === 'ENOENT') {
+      return new Map();
+    }
+
+    throw error;
+  }
+
+  const attestations = await Promise.all(fileNames.map(async (fileName) => {
+    const source = await fs.readFile(path.join(reviewDir, fileName), 'utf8');
+    const parsed = parseSimpleYamlDocument(source);
+    return validateEditorialAttestation(parsed, fileName);
+  }));
+
+  return new Map(attestations.map((attestation) => [attestation.slug, attestation]));
+}
+
+export function calculateTrustScore({
+  verifiedPrimarySources,
+  primarySources,
+  iocsVerified,
+  humanAttestationPresent,
+  correctionsCount,
+}) {
+  const sourceRatio = primarySources > 0 ? (verifiedPrimarySources / primarySources) : 0;
+
+  return Math.round(
+    (sourceRatio * 50)
+    + (iocsVerified ? 30 : 0)
+    + (humanAttestationPresent ? 20 : 0)
+    - Math.min(correctionsCount * 5, 15),
+  );
+}
+
+export function deriveTrustLevel(score, blockingFailures) {
+  if (blockingFailures.length > 0) {
+    return 'blocked';
+  }
+
+  if (score >= 90) {
+    return 'high';
+  }
+
+  if (score >= MINIMUM_EDITORIAL_TRUST_SCORE) {
+    return 'medium';
+  }
+
+  if (score > 0) {
+    return 'low';
+  }
+
+  return 'pending';
 }

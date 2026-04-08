@@ -13,6 +13,9 @@ import {
 } from '../lib/articles';
 
 function buildArticleSource(body: string, category = 'AI Threats'): string {
+  const section = category === 'Privacy Tools' ? 'review' : 'editorial';
+  const monetization = section === 'review' ? 'affiliate' : 'none';
+
   return [
     '---',
     'title: "Alpha"',
@@ -33,6 +36,11 @@ function buildArticleSource(body: string, category = 'AI Threats'): string {
     '  - four',
     '  - five',
     'read_time: "5 min"',
+    `section: "${section}"`,
+    `monetization: "${monetization}"`,
+    'reviewed_by: "PENDING_HUMAN_REVIEW"',
+    'reviewed_at: "PENDING_HUMAN_REVIEW"',
+    'last_substantive_update_at: "2026-03-17"',
     'primarySources:',
     '  - url: "https://example.com/source-one"',
     '    title: "Primary source one"',
@@ -55,8 +63,8 @@ test('getAffiliateUrl returns null for missing and blank environment values', ()
 
 test('getAffiliateUrl trims configured environment values', () => {
   assert.equal(
-    getAffiliateUrl('NORDVPN', { AFFILIATE_NORDVPN: ' https://example.com/nordvpn ' }),
-    'https://example.com/nordvpn',
+    getAffiliateUrl('NORDVPN', { AFFILIATE_NORDVPN: ' https://go.nordvpn.net/aff_c?aff_id=143381 ' }),
+    'https://go.nordvpn.net/aff_c?aff_id=143381',
   );
 });
 
@@ -78,11 +86,17 @@ test('getAffiliateUrl returns null for invalid urls', () => {
 });
 
 test('getAffiliateUrl rejects insecure http affiliate urls', () => {
-  assert.equal(getAffiliateUrl('NORDVPN', { AFFILIATE_NORDVPN: 'http://example.com/nordvpn' }), null);
+  assert.equal(getAffiliateUrl('NORDVPN', { AFFILIATE_NORDVPN: 'http://go.nordvpn.net/aff_c?aff_id=143381' }), null);
+});
+
+test('getAffiliateUrl rejects hostname mismatches and credentialed urls', () => {
+  assert.equal(getAffiliateUrl('NORDVPN', { AFFILIATE_NORDVPN: 'https://attacker.example/nordvpn' }), null);
+  assert.equal(getAffiliateUrl('PUREVPN', { AFFILIATE_PUREVPN: 'https://user:pass@www.purevpn.com/order' }), null);
 });
 
 test('normalizeOutboundUrl only allows absolute https targets without placeholders', () => {
   assert.equal(normalizeOutboundUrl(' https://example.com/vendor '), 'https://example.com/vendor');
+  assert.equal(normalizeOutboundUrl('https://example.com/vendor\\n'), 'https://example.com/vendor');
   assert.equal(normalizeOutboundUrl('http://example.com/vendor'), null);
   assert.equal(normalizeOutboundUrl('javascript:alert(1)'), null);
   assert.equal(normalizeOutboundUrl('https://example.com/{placeholder}'), null);
@@ -91,25 +105,25 @@ test('normalizeOutboundUrl only allows absolute https targets without placeholde
 test('getAffiliateUrlByPriority returns the first configured affiliate url', () => {
   assert.equal(
     getAffiliateUrlByPriority(
-      ['PROTON_VPN', 'PROTON'],
+        ['PROTON_VPN', 'PROTON'],
       {
-        AFFILIATE_PROTON: 'https://example.com/proton',
-        AFFILIATE_PROTON_VPN: 'https://example.com/proton-vpn',
+        AFFILIATE_PROTON: 'https://go.getproton.me/aff_c?url_id=471',
+        AFFILIATE_PROTON_VPN: 'https://go.getproton.me/aff_c?url_id=471',
       },
     ),
-    'https://example.com/proton-vpn',
+    'https://go.getproton.me/aff_c?url_id=471',
   );
 });
 
 test('getAffiliateUrlByPriority falls back to later configured affiliate urls', () => {
   assert.equal(
     getAffiliateUrlByPriority(
-      ['PROTON_VPN', 'PROTON'],
+        ['PROTON_VPN', 'PROTON'],
       {
-        AFFILIATE_PROTON: 'https://example.com/proton',
+        AFFILIATE_PROTON: 'https://go.getproton.me/aff_c?url_id=471',
       },
     ),
-    'https://example.com/proton',
+    'https://go.getproton.me/aff_c?url_id=471',
   );
   assert.equal(getAffiliateUrlByPriority(['PROTON_VPN', 'PROTON'], {}), null);
 });
@@ -152,14 +166,15 @@ test('getArticleCacheSignature keeps source and affiliate invalidation explicit'
     );
 
     const signature = await getArticleCacheSignature(tempDir, {
-      AFFILIATE_PUREVPN: ' https://example.com/purevpn ',
-      AFFILIATE_NORDVPN: 'https://example.com/nordvpn',
+      AFFILIATE_PUREVPN: ' https://www.purevpn.com/order-now.php?affiliate_id=49384204 ',
+      AFFILIATE_NORDVPN: 'https://go.nordvpn.net/aff_c?aff_id=143381',
       NEXT_PUBLIC_SITE_URL: 'https://ignored.example.com',
     });
 
     assert.deepEqual(signature, {
       sourceKey: await getArticleSourceCacheKey(tempDir),
-      affiliateKey: 'AFFILIATE_NORDVPN=https://example.com/nordvpn\x00AFFILIATE_PUREVPN=https://example.com/purevpn',
+      affiliateKey:
+        'AFFILIATE_NORDVPN=https://go.nordvpn.net/aff_c?aff_id=143381\x00AFFILIATE_PUREVPN=https://www.purevpn.com/order-now.php?affiliate_id=49384204',
     });
     assert.equal(getArticleCacheKey(signature), `${signature.sourceKey}\u0000${signature.affiliateKey}`);
   } finally {
@@ -177,10 +192,10 @@ test('getArticleCacheSignature changes when affiliate env values change', async 
     );
 
     const baseSignature = await getArticleCacheSignature(tempDir, {
-      AFFILIATE_NORDVPN: 'https://example.com/nordvpn',
+      AFFILIATE_NORDVPN: 'https://go.nordvpn.net/aff_c?aff_id=143381',
     });
     const changedSignature = await getArticleCacheSignature(tempDir, {
-      AFFILIATE_NORDVPN: 'https://example.com/nordvpn-updated',
+      AFFILIATE_NORDVPN: 'https://nordvpn.com/special-offer',
     });
 
     assert.notEqual(baseSignature.affiliateKey, changedSignature.affiliateKey);
@@ -194,14 +209,14 @@ test('replaceAffiliateTokens resolves configured markdown affiliate links', () =
   const result = replaceAffiliateTokens(
     'Use [NordVPN]([AFFILIATE:NORDVPN]) and [PureVPN]([AFFILIATE:PUREVPN]).',
     {
-      AFFILIATE_NORDVPN: 'https://example.com/nordvpn',
-      AFFILIATE_PUREVPN: 'https://example.com/purevpn',
+      AFFILIATE_NORDVPN: 'https://go.nordvpn.net/aff_c?aff_id=143381',
+      AFFILIATE_PUREVPN: 'https://www.purevpn.com/order-now.php?affiliate_id=49384204',
     },
   );
 
   assert.equal(
     result,
-    'Use [NordVPN](https://example.com/nordvpn) and [PureVPN](https://example.com/purevpn).',
+    'Use [NordVPN](https://go.nordvpn.net/aff_c?aff_id=143381) and [PureVPN](https://www.purevpn.com/order-now.php?affiliate_id=49384204).',
   );
 });
 
@@ -218,19 +233,19 @@ test('replaceAffiliateTokens only resolves bare placeholders with configured url
   const result = replaceAffiliateTokens(
     'Primary [AFFILIATE:NORDVPN] secondary [AFFILIATE:PUREVPN].',
     {
-      AFFILIATE_NORDVPN: 'https://example.com/nordvpn',
+      AFFILIATE_NORDVPN: 'https://go.nordvpn.net/aff_c?aff_id=143381',
     },
   );
 
   assert.equal(
     result,
-    'Primary https://example.com/nordvpn secondary [AFFILIATE:PUREVPN].',
+    'Primary https://go.nordvpn.net/aff_c?aff_id=143381 secondary [AFFILIATE:PUREVPN].',
   );
 });
 
 test('parseArticleSource renders resolved affiliate links into article html for allowed categories', async () => {
   const previousNordVpnValue = process.env.AFFILIATE_NORDVPN;
-  process.env.AFFILIATE_NORDVPN = 'https://example.com/nordvpn';
+  process.env.AFFILIATE_NORDVPN = 'https://go.nordvpn.net/aff_c?aff_id=143381';
 
   try {
     const article = await parseArticleSource(
@@ -244,8 +259,8 @@ test('parseArticleSource renders resolved affiliate links into article html for 
         .replace('meta_description: "Alpha meta description."', 'meta_description: "Example meta description."'),
     );
 
-    assert.match(article.body, /\[NordVPN\]\(https:\/\/example\.com\/nordvpn\)/);
-    assert.match(article.contentHtml, /href="https:\/\/example\.com\/nordvpn"/);
+    assert.match(article.body, /\[NordVPN\]\(https:\/\/go\.nordvpn\.net\/aff_c\?aff_id=143381\)/);
+    assert.match(article.contentHtml, /href="https:\/\/go\.nordvpn\.net\/aff_c\?aff_id=143381"/);
   } finally {
     if (typeof previousNordVpnValue === 'string') {
       process.env.AFFILIATE_NORDVPN = previousNordVpnValue;
@@ -257,7 +272,7 @@ test('parseArticleSource renders resolved affiliate links into article html for 
 
 test('parseArticleSource strips affiliate links for AI Threats category', async () => {
   const previousNordVpnValue = process.env.AFFILIATE_NORDVPN;
-  process.env.AFFILIATE_NORDVPN = 'https://example.com/nordvpn';
+  process.env.AFFILIATE_NORDVPN = 'https://go.nordvpn.net/aff_c?aff_id=143381';
 
   try {
     const article = await parseArticleSource(

@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import NewsletterForm from '@/components/NewsletterForm';
 import { createPageMetadata } from '@/lib/page-metadata.mjs';
+import { siteConfig } from '@/lib/site';
 import { Target, ServerCrash, ShieldCheck, Award } from 'lucide-react';
 import React from 'react';
 
@@ -9,10 +10,41 @@ export const metadata: Metadata = createPageMetadata({
   canonicalPath: '/about',
   title: 'About Josh Cabana — AI Security Brief',
   description:
-    'Independent briefings on AI application security, privacy tooling, and defensive engineering for technical teams.',
+    'Operator-led AI security briefings and fixed-scope readiness reviews for teams shipping agents, copilots, and LLM workflows.',
 });
 
 export default function AboutPage() {
+  const assessment = siteConfig.offers.assessment;
+  const waysToWork = [
+    {
+      title: assessment.name,
+      price: assessment.priceLabel,
+      detail:
+        'A fixed-scope review for teams that need a threat map, top risks, remediation memo, and a 60-minute readout within 7 business days.',
+      href: assessment.path,
+      label: 'View the readiness review',
+      featured: true,
+    },
+    {
+      title: 'Prompt Injection / Agent Risk Workshop',
+      price: assessment.workshopPriceLabel,
+      detail:
+        'A shorter working session for teams that need operator-led alignment on the most likely agentic failure paths before they scale usage.',
+      href: assessment.previewReportPath,
+      label: 'Preview the research angle',
+      featured: false,
+    },
+    {
+      title: 'Fractional AI Security Advisor',
+      price: assessment.retainerPriceLabel,
+      detail:
+        'Ongoing advisory support for technical founders and security leaders who want continuity after the initial review.',
+      href: assessment.path,
+      label: 'Start with the initial review',
+      featured: false,
+    },
+  ];
+
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-200">
       {/* 
@@ -35,7 +67,7 @@ export default function AboutPage() {
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-500 to-blue-600">We unpack the actual risk.</span>
           </h1>
           <p className="text-lg md:text-xl text-slate-600 dark:text-slate-400 max-w-3xl mx-auto leading-relaxed">
-            AI Security Brief is an independent briefing publication serving CISOs, AppSec Leads, and Red Teamers navigating the explosive reality of agentic vulnerabilities.
+            AI Security Brief is an independent briefing publication and founder-led advisory practice for CISOs, AppSec leads, and technical teams shipping agentic systems.
           </p>
         </div>
       </div>
@@ -62,10 +94,10 @@ export default function AboutPage() {
                   <div className="text-xs text-slate-500 dark:text-slate-400">Founder & Lead Security Analyst</div>
                 </div>
                 <div className="flex gap-2 pt-2 border-t border-slate-100 dark:border-slate-800">
-                  <a href="https://linkedin.com/in/joshcabana" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn Profile" className="p-1.5 rounded-md bg-slate-50 dark:bg-slate-800 text-slate-400 hover:text-cyan-600 dark:hover:text-cyan-400 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors">
+                  <a href={siteConfig.founder.linkedInUrl} target="_blank" rel="noopener noreferrer" aria-label="LinkedIn Profile" className="p-1.5 rounded-md bg-slate-50 dark:bg-slate-800 text-slate-400 hover:text-cyan-600 dark:hover:text-cyan-400 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" /></svg>
                   </a>
-                  <a href="https://twitter.com/joshcabana" target="_blank" rel="noopener noreferrer" aria-label="X Profile" className="p-1.5 rounded-md bg-slate-50 dark:bg-slate-800 text-slate-400 hover:text-cyan-600 dark:hover:text-cyan-400 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors">
+                  <a href={siteConfig.founder.xUrl} target="_blank" rel="noopener noreferrer" aria-label="X Profile" className="p-1.5 rounded-md bg-slate-50 dark:bg-slate-800 text-slate-400 hover:text-cyan-600 dark:hover:text-cyan-400 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" /></svg>
                   </a>
                 </div>
@@ -76,13 +108,13 @@ export default function AboutPage() {
           <div className="space-y-6">
             <h2 className="text-3xl font-bold text-slate-900 dark:text-white">Why trust this brief?</h2>
             <p className="text-slate-600 dark:text-slate-400 leading-relaxed text-lg">
-              AI Security Brief focuses on AI application security, privacy tooling, and defensive engineering for teams evaluating real-world AI risk.
+              AI Security Brief focuses on AI application security, privacy tooling, and defensive engineering for teams evaluating real-world AI risk before an incident forces the conversation.
             </p>
             <p className="text-slate-600 dark:text-slate-400 leading-relaxed">
-              The goal is straightforward: publish concise briefings that connect AI system behavior, attack surface, and practical mitigation guidance.
+              The goal is straightforward: publish concise briefings, turn those findings into operator-ready recommendations, and help teams prioritize the highest-risk failure modes in agents, copilots, and LLM-enabled workflows.
             </p>
             <p className="text-slate-600 dark:text-slate-400 leading-relaxed">
-              When articles include tool recommendations or affiliate links, those disclosures are called out in the article and in the privacy policy.
+              When articles include tool recommendations or affiliate links, those disclosures are called out in the article and in the privacy policy. When teams need direct help, the flagship offer is a fixed-scope readiness review rather than an open-ended unpaid audit.
             </p>
             
             <div className="flex flex-wrap gap-3 pt-4">
@@ -90,11 +122,60 @@ export default function AboutPage() {
               <span className="px-3 py-1 rounded bg-slate-100 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-800 text-sm text-cyan-600 dark:text-cyan-400 font-mono">Red Teaming</span>
               <span className="px-3 py-1 rounded bg-slate-100 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-800 text-sm text-cyan-600 dark:text-cyan-400 font-mono">Vulnerability Research</span>
             </div>
+
+            <div className="flex flex-col sm:flex-row gap-4 pt-2">
+              <Link
+                href={assessment.path}
+                className="inline-flex items-center justify-center rounded-xl px-5 py-3 text-sm font-bold text-slate-950 bg-cyan-400 hover:bg-cyan-300 transition-colors"
+              >
+                Book the readiness review
+              </Link>
+              <Link
+                href={assessment.previewReportPath}
+                className="inline-flex items-center justify-center rounded-xl px-5 py-3 text-sm font-semibold text-slate-700 dark:text-slate-200 border border-slate-300 dark:border-slate-700 hover:border-cyan-500 dark:hover:border-cyan-500 transition-colors"
+              >
+                Preview the report
+              </Link>
+            </div>
           </div>
         </div>
       </div>
 
       <div className="h-px bg-gradient-to-r from-transparent via-slate-200 dark:via-slate-800 to-transparent" aria-hidden="true" />
+
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <div className="text-center mb-12">
+          <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-3">How to work with Josh</h2>
+          <p className="text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
+            The publication builds trust. The assessment is the main offer for the next 90 days. Pro remains the self-serve layer for readers who want deeper content without hands-on advisory.
+          </p>
+        </div>
+
+        <div className="grid gap-6 md:grid-cols-3">
+          {waysToWork.map((item) => (
+            <div
+              key={item.title}
+              className={`rounded-2xl border p-6 shadow-sm ${item.featured ? 'bg-slate-900 text-white border-cyan-500/40 shadow-[0_0_40px_rgba(34,211,238,0.08)]' : 'bg-white dark:bg-slate-900/50 border-slate-200 dark:border-slate-800 text-slate-900 dark:text-slate-100'}`}
+            >
+              <div className="flex items-center justify-between gap-3 mb-4">
+                <h3 className="text-lg font-bold">{item.title}</h3>
+                <span className={`text-xs font-mono px-2.5 py-1 rounded-full border ${item.featured ? 'border-cyan-400/40 text-cyan-300 bg-cyan-500/10' : 'border-slate-200 dark:border-slate-700 text-cyan-600 dark:text-cyan-400 bg-slate-50 dark:bg-slate-800/70'}`}>
+                  {item.price}
+                </span>
+              </div>
+              <p className={`text-sm leading-relaxed mb-5 ${item.featured ? 'text-slate-300' : 'text-slate-600 dark:text-slate-400'}`}>
+                {item.detail}
+              </p>
+              <Link
+                href={item.href}
+                className={`inline-flex items-center text-sm font-semibold ${item.featured ? 'text-cyan-300 hover:text-cyan-200' : 'text-cyan-600 dark:text-cyan-400 hover:text-cyan-500 dark:hover:text-cyan-300'}`}
+              >
+                {item.label} →
+              </Link>
+            </div>
+          ))}
+        </div>
+      </div>
 
       {/* 
         Methodology & Coverage Matrix
@@ -156,10 +237,24 @@ export default function AboutPage() {
           </div>
           
           <div className="relative z-10">
-            <h2 className="text-3xl font-extrabold text-slate-900 dark:text-white mb-4">Don&apos;t leave your perimeter to chance.</h2>
+            <h2 className="text-3xl font-extrabold text-slate-900 dark:text-white mb-4">Get the weekly brief or start with a fixed-scope review.</h2>
             <p className="text-slate-600 dark:text-slate-400 text-lg mb-8 max-w-2xl mx-auto">
-              Subscribe for weekly briefings on AI security risks, defensive controls, and tooling coverage.
+              Subscribe for weekly briefings on AI security risks, defensive controls, and tooling coverage, or move straight to the readiness review if you need operator-led guidance now.
             </p>
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-8">
+              <Link
+                href={assessment.path}
+                className="inline-flex items-center justify-center rounded-xl px-5 py-3 text-sm font-bold text-slate-950 bg-cyan-400 hover:bg-cyan-300 transition-colors"
+              >
+                View the readiness review
+              </Link>
+              <Link
+                href="/subscribe"
+                className="inline-flex items-center justify-center rounded-xl px-5 py-3 text-sm font-semibold text-slate-700 dark:text-slate-200 border border-slate-300 dark:border-slate-700 hover:border-cyan-500 dark:hover:border-cyan-500 transition-colors"
+              >
+                Subscribe free
+              </Link>
+            </div>
             <div className="max-w-md mx-auto">
               <NewsletterForm variant="page" buttonText="Subscribe to the Briefing" source="about-page" />
             </div>

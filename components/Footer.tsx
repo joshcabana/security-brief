@@ -16,7 +16,9 @@ const footerSections = [
     title: 'Resources',
     links: [
       { label: 'Security tools', href: '/tools' },
-      { label: 'VPN reviews', href: '/tools#vpns' },
+      { label: 'Tool reviews', href: '/reviews' },
+      { label: 'Readiness review', href: '/assessment' },
+      { label: 'VPN reviews', href: '/reviews?category=Privacy' },
       { label: 'Password managers', href: '/tools#password-managers' },
       { label: 'Email security', href: '/tools#email-security' },
     ],
@@ -27,6 +29,7 @@ const footerSections = [
       { label: 'Home', href: '/' },
       { label: 'Methodology', href: '/methodology' },
       { label: 'About', href: '/about' },
+      { label: 'Assessment', href: '/assessment' },
       { label: 'Subscribe Free', href: '/subscribe' },
       { label: 'Pro access', href: '/pro' },
       { label: 'RSS feed', href: '/feed.xml', external: true },
@@ -47,7 +50,7 @@ export default function Footer() {
             <div className="flex-1 min-w-0">
               <p className="text-xs uppercase tracking-widest font-mono mb-2 text-cyan-400">Stay briefed</p>
               <h3 className="text-xl font-bold text-white mb-1">Weekly briefings and tooling notes</h3>
-              <p className="text-sm text-slate-400">One useful issue each week covering AI threats, privacy changes, and practical security tools.</p>
+              <p className="text-sm text-slate-400">Use the briefing for signal, then move into the readiness review when your team needs hands-on support.</p>
             </div>
             <div className="w-full md:w-auto md:min-w-80">
               <NewsletterForm variant="footer" source="footer" />

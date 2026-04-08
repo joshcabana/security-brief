@@ -42,6 +42,11 @@ primarySources:
     title: "GreyCoder VPN audit list 2026"
   - url: "https://www.independent.co.uk/tech/security/proton-open-source-vpn-b2828930.html"
     title: "The Independent — ProtonVPN open-source and Swiss jurisdiction"
+section: "review"
+monetization: "affiliate"
+reviewed_by: "PENDING_HUMAN_REVIEW"
+reviewed_at: "PENDING_HUMAN_REVIEW"
+last_substantive_update_at: "2026-03-24"
 ---
 ## Introduction
 

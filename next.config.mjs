@@ -1,4 +1,4 @@
-import { getSecurityHeaders } from './lib/security-headers.mjs';
+import { getStaticSecurityHeaders } from './lib/security-headers.mjs';
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -7,7 +7,7 @@ const nextConfig = {
     return [
       {
         source: '/:path*',
-        headers: getSecurityHeaders(),
+        headers: getStaticSecurityHeaders(),
       },
     ];
   },

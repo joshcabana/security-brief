@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>verify:trust dashboard</title>
+    <style>
+      body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: #0d1117; color: #e6edf3; margin: 0; padding: 32px; }
+      main { max-width: 1100px; margin: 0 auto; }
+      h1, h2 { margin: 0 0 16px; }
+      .meta, .card, table { background: #161b22; border: 1px solid #30363d; border-radius: 12px; }
+      .meta, .grid { margin-bottom: 24px; }
+      .meta { padding: 20px; }
+      .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
+      .card { padding: 20px; }
+      .label { color: #8b949e; font-size: 12px; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px; }
+      .value { font-size: 28px; font-weight: 700; }
+      .ok { color: #3fb950; }
+      .fail { color: #f85149; }
+      table { width: 100%; border-collapse: collapse; overflow: hidden; }
+      th, td { padding: 12px 14px; border-bottom: 1px solid #21262d; text-align: left; vertical-align: top; }
+      th { color: #8b949e; font-size: 12px; text-transform: uppercase; letter-spacing: 0.08em; }
+      tr:last-child td { border-bottom: none; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>verify:trust dashboard</h1>
+      <div class="meta">
+        <div><strong>Checked at:</strong> 2026-04-08T15:30:40.199Z</div>
+        <div><strong>Article count:</strong> 16</div>
+        <div><strong>Correction rate:</strong> N/A until structured corrections dataset exists</div>
+      </div>
+      <div class="grid">
+        <div class="card">
+          <div class="label">Author Accountability</div>
+          <div class="value ok">16 pass / 0 fail</div>
+        </div>
+        <div class="card">
+          <div class="label">Source Quality</div>
+          <div class="value ok">16 pass / 0 fail</div>
+        </div>
+        <div class="card">
+          <div class="label">Overall</div>
+          <div class="value ok">PASS</div>
+        </div>
+      </div>
+      <h2>Failures</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>File</th>
+            <th>Slug</th>
+            <th>Gate</th>
+            <th>Message</th>
+          </tr>
+        </thead>
+        <tbody><tr><td colspan="4">No trust failures detected.</td></tr></tbody>
+      </table>
+    </main>
+  </body>
+</html>

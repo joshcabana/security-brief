@@ -14,7 +14,7 @@ import {
   writeText,
 } from './common.mjs';
 import { guardedText, requestJsonFromGitHubModels } from './github-models.mjs';
-import { buildArticleFactoryPrompts } from './prompt-builders.mjs';
+import { buildArticleFactoryContext, buildArticleFactoryPrompts } from './prompt-builders.mjs';
 import {
   buildExpectedArticlePlan,
   findRedundantCurrentWeekArticleFiles,
@@ -153,6 +153,7 @@ async function main() {
         context,
         commitMessage: `automation: refresh articles ${context.effectiveDate}`,
         model,
+        allowedPaths: ['blog', 'drafts', 'content-manifest.json'],
         outputs: staleDuplicateFiles.map((stalePath) => `Removed stale duplicate: \`${path.relative(REPO_ROOT, stalePath)}\``),
         notes: ['Removed redundant same-week article drafts without regenerating content.'],
       });
@@ -163,6 +164,7 @@ async function main() {
       context,
       commitMessage: `automation: refresh articles ${context.effectiveDate}`,
       model,
+      allowedPaths: ['blog', 'drafts', 'content-manifest.json'],
       outputs: articlePlan.map((item) => `Article already exists: \`${path.relative(REPO_ROOT, item.filePath)}\``),
       notes: ['No-op run. Weekly article files are already present.'],
     });
@@ -183,6 +185,10 @@ async function main() {
       ].join('\n'),
     )
     .join('\n\n');
+  const articleFactoryContext = buildArticleFactoryContext({
+    articlePlan,
+    harvestSourcePack,
+  });
   const prompts = buildArticleFactoryPrompts({
     effectiveDate: context.effectiveDate,
     articlePlan,
@@ -194,7 +200,7 @@ async function main() {
     maxTokens: 7000,
     systemPrompt: prompts.systemPrompt,
     userPrompt: prompts.userPrompt,
-    guardedText: guardedText(harvestSourcePack),
+    guardedText: guardedText(articleFactoryContext),
     validate: (value) => validateArticlePayload(value, expectedSlugs, allowedReferences),
   });
 
@@ -234,6 +240,7 @@ async function main() {
     context,
     commitMessage: `automation: add weekly articles ${context.effectiveDate}`,
     model,
+    allowedPaths: ['blog', 'drafts', 'content-manifest.json'],
     outputs,
     notes: context.options.force ? ['Forced regeneration requested. Existing article drafts were overwritten.'] : [],
   });

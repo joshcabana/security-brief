@@ -15,7 +15,7 @@ function escapeRegExp(value: string): string {
 function extractJobBlock(jobName: string): string {
   const escapedJobName = escapeRegExp(jobName);
   const match = deployWorkflowSource.match(
-    new RegExp(`^  ${escapedJobName}:\\n([\\s\\S]*?)(?=^  [a-z][a-z0-9_]*:|\\Z)`, 'm'),
+    new RegExp(`^  ${escapedJobName}:\\n([\\s\\S]*?)(?=^  [a-z][a-z0-9_]*:\\n|(?![\\s\\S]))`, 'm'),
   );
 
   assert.ok(match, `Expected deploy workflow to define the ${jobName} job.`);

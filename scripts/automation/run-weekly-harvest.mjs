@@ -78,6 +78,7 @@ async function main() {
         context,
         commitMessage: `automation: refresh harvest ${context.effectiveDate}`,
         model,
+        allowedPaths: ['harvests'],
         outputs: [`Harvest already exists: \`harvests/harvest-${context.effectiveDate}.md\``],
         notes: ['No-op run. Existing harvest file is valid.'],
       });
@@ -130,6 +131,7 @@ async function main() {
     context,
     commitMessage: `automation: add harvest ${context.effectiveDate}`,
     model,
+    allowedPaths: ['harvests'],
     outputs: [
       `Harvest generated: \`harvests/harvest-${context.effectiveDate}.md\``,
       `Finding count: ${payload.findings.length}`,

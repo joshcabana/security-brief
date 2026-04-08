@@ -5,7 +5,7 @@ import './globals.css';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import AffiliateBanner from '@/components/AffiliateBanner';
-import { getSiteUrl, siteDescription, siteName, siteUrl } from '@/lib/site';
+import { buildSiteUrl, getSiteUrl, siteDescription, siteName, siteUrl } from '@/lib/site';
 import { resolveAnalyticsState } from '@/lib/analytics-config.mjs';
 import { serializeJsonForHtml } from '@/lib/json-escape.mjs';
 
@@ -47,7 +47,7 @@ export const metadata: Metadata = {
   metadataBase: getSiteUrl(),
   alternates: {
     types: {
-      'application/rss+xml': `${siteUrl}/feed.xml`,
+      'application/rss+xml': buildSiteUrl('/feed.xml'),
     },
   },
   openGraph: {
@@ -84,6 +84,7 @@ export default function RootLayout({
     process.env.NEXT_PUBLIC_PLAUSIBLE_DOMAIN,
     process.env.NEXT_PUBLIC_LINKEDIN_PARTNER_ID,
   );
+  const linkedInPartnerIdLiteral = JSON.stringify(analyticsState.linkedInPartnerId);
 
   return (
     <html
@@ -92,7 +93,7 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <head>
-        <link rel="alternate" type="application/rss+xml" title={siteName} href={`${siteUrl}/feed.xml`} />
+        <link rel="alternate" type="application/rss+xml" title={siteName} href={buildSiteUrl('/feed.xml')} />
         {/* JSON-LD Structured Data */}
         <script
           type="application/ld+json"
@@ -133,7 +134,7 @@ export default function RootLayout({
             strategy="afterInteractive"
             dangerouslySetInnerHTML={{
               __html: `
-                _linkedin_partner_id = "${analyticsState.linkedInPartnerId}";
+                _linkedin_partner_id = ${linkedInPartnerIdLiteral};
                 window._linkedin_data_partner_ids = window._linkedin_data_partner_ids || [];
                 window._linkedin_data_partner_ids.push(_linkedin_partner_id);
                 (function(l) {
@@ -147,7 +148,7 @@ export default function RootLayout({
               `,
             }}
           />
-        )}
+        ) : null}
       </body>
     </html>
   );

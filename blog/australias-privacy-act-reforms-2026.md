@@ -26,6 +26,11 @@ primarySources:
     title: "Secure Privacy — What the Australia Privacy Act Reforms Mean for Your Business 2025: Full breakdown of POLA Act provisions, statutory tort timeline, GDPR comparison, small business exemption status"
   - url: "https://www.minterellison.com/articles/oaic-ramps-up-privacy-enforcement-are-you-ready"
     title: "MinterEllison — OAIC Ramps Up Privacy Enforcement: Are You Ready? (February 2026): ADM disclosure compliance sweep, Bunnings APP 1.3 case, December 2026 enforcement context"
+section: "editorial"
+monetization: "none"
+reviewed_by: "PENDING_HUMAN_REVIEW"
+reviewed_at: "PENDING_HUMAN_REVIEW"
+last_substantive_update_at: "2026-03-14"
 ---
 # Australia's Privacy Act Reforms 2026: What You Need to Know
 

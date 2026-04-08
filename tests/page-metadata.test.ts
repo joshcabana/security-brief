@@ -55,12 +55,24 @@ test('verified metadata and privacy analytics declarations match the live contra
       canonicalPath: '/blog',
     },
     {
+      path: '/reviews',
+      canonicalPath: '/reviews',
+      ogDescription:
+        'Commercial reviews and comparisons for privacy and AI security tooling, with explicit affiliate disclosure.',
+    },
+    {
       path: '/privacy',
       canonicalPath: '/privacy',
     },
     {
       path: '/about',
       canonicalPath: '/about',
+    },
+    {
+      path: '/assessment',
+      canonicalPath: '/assessment',
+      ogDescription:
+        'Fixed-scope AI application security review for teams shipping agents, copilots, and LLM workflows.',
     },
     {
       path: '/archive',
@@ -74,7 +86,7 @@ test('verified metadata and privacy analytics declarations match the live contra
       path: '/pro',
       canonicalPath: '/pro',
       ogDescription:
-        'Overview of AI Security Brief Pro, including the current access state and member content.',
+        'Overview of AI Security Brief Pro and how the member-content path complements the flagship readiness review.',
     },
     {
       path: '/upgrade',

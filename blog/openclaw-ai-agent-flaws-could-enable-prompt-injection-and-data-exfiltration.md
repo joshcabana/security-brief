@@ -48,6 +48,11 @@ primarySources:
     title: "Microsoft Security Blog — 80% of Fortune 500 Use Active AI Agents (February 10, 2026)"
   - url: "https://www.runzero.com/blog/openclaw/"
     title: "RunZero — CVE-2026-25253 OpenClaw Overview (February 3, 2026)"
+section: "editorial"
+monetization: "none"
+reviewed_by: "PENDING_HUMAN_REVIEW"
+reviewed_at: "PENDING_HUMAN_REVIEW"
+last_substantive_update_at: "2026-03-16"
 ---
 # OpenClaw AI Agent Flaws: CVEs, Prompt Injection, and a Government Warning
 

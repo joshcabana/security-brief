@@ -6,6 +6,8 @@ interface LeadCaptureFormProps {
   buttonText?: string;
   source?: string;
   asset?: string;
+  successTitle?: string;
+  successMessageOverride?: string;
 }
 
 type FormStatus = 'idle' | 'loading' | 'success' | 'error';
@@ -59,6 +61,8 @@ export default function LeadCaptureForm({
   buttonText = 'Send me the report',
   source = 'lead-capture',
   asset = 'ai-security-tools-matrix',
+  successTitle = 'Report queued',
+  successMessageOverride,
 }: LeadCaptureFormProps) {
   const [email, setEmail] = useState('');
   const [jobTitle, setJobTitle] = useState('');
@@ -112,7 +116,7 @@ export default function LeadCaptureForm({
       }
 
       setStatus('success');
-      setMessage(payload.message || 'Check your inbox — the report is on its way.');
+      setMessage(successMessageOverride || payload.message || 'Check your inbox — the report is on its way.');
       setEmail('');
       setJobTitle('');
       setWebsite('');
@@ -148,7 +152,7 @@ export default function LeadCaptureForm({
         </svg>
         <div>
           <p className="text-sm font-semibold" style={{ color: '#3fb950' }}>
-            Report queued
+            {successTitle}
           </p>
           <p className="text-sm mt-1" style={{ color: '#8b949e' }}>
             {message}

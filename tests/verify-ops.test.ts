@@ -221,3 +221,40 @@ test('verify:ops warns on banned runtime vars but stays ready when required vars
     await workspace.cleanup();
   }
 });
+
+test('verify:ops flags missing assessment booking and payment urls as revenue-readiness warnings', async () => {
+  const workspace = await createWorkspace({
+    '.env.example': [
+      'BEEHIIV_API_KEY=your-beehiiv-api-key-here',
+      'BEEHIIV_PUBLICATION_ID=your-publication-id-here',
+      'NEXT_PUBLIC_SITE_URL=https://your-domain.com',
+      'NEXT_PUBLIC_SITE_NAME=AI Security Brief',
+      'NEXT_PUBLIC_ASSESSMENT_BOOKING_URL=',
+      'NEXT_PUBLIC_ASSESSMENT_PAYMENT_URL=',
+      'UPSTASH_REDIS_REST_URL=https://example.upstash.io',
+      'UPSTASH_REDIS_REST_TOKEN=test-upstash-token',
+      '',
+    ].join('\n'),
+    '.env.local': [
+      'BEEHIIV_API_KEY=test-beehiiv-key',
+      'BEEHIIV_PUBLICATION_ID=pub_123456',
+      'NEXT_PUBLIC_SITE_URL=https://ai-security-brief.vercel.app',
+      'NEXT_PUBLIC_SITE_NAME=The AI Security Brief',
+      'UPSTASH_REDIS_REST_URL=https://example.upstash.io',
+      'UPSTASH_REDIS_REST_TOKEN=test-upstash-token',
+      '',
+    ].join('\n'),
+  });
+
+  try {
+    const result = runVerifyOps(workspace.workspaceDir);
+
+    assert.equal(result.status, 0);
+    assert.match(result.stdout, /Revenue readiness/);
+    assert.match(result.stdout, /MISSING\s+NEXT_PUBLIC_ASSESSMENT_BOOKING_URL/);
+    assert.match(result.stdout, /MISSING\s+NEXT_PUBLIC_ASSESSMENT_PAYMENT_URL/);
+    assert.match(result.stdout, /warning\(s\) — review before deploying/);
+  } finally {
+    await workspace.cleanup();
+  }
+});

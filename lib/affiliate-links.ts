@@ -1,4 +1,4 @@
-import { normalizeOutboundUrl } from './url-safety.mjs';
+import { normalizeApprovedAffiliateUrl } from './affiliate-url-policy.mjs';
 
 const AFFILIATE_LINK_PATTERN = /\[([^\]]+)\]\(\[AFFILIATE:([A-Z0-9]+)\]\)/g;
 const AFFILIATE_TOKEN_PATTERN = /\[AFFILIATE:([A-Z0-9]+)\]/g;
@@ -15,7 +15,7 @@ export function getAffiliateUrl(code: string, env: AffiliateEnvironment): string
     return null;
   }
 
-  return normalizeOutboundUrl(rawValue);
+  return normalizeApprovedAffiliateUrl(code, rawValue);
 }
 
 export function getAffiliateUrlByPriority(codes: readonly string[], env: AffiliateEnvironment): string | null {

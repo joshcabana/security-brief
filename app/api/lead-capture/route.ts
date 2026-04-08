@@ -6,6 +6,7 @@ import {
   getRequestIp,
   getSubmittedOrigin,
   isVerifiedSameSiteRequest,
+  parseJsonRequestBody,
   sanitizeMarketingField,
 } from '@/lib/request-security.mjs';
 
@@ -36,6 +37,8 @@ const MAX_RETRY_ATTEMPTS = 2;
 const RETRY_BASE_DELAY_MS = 250;
 const RETRY_JITTER_MS = 100;
 const RETRYABLE_STATUS_CODES = new Set<number>([429, 503]);
+const JSON_BODY_LIMIT_BYTES = 4 * 1024;
+const AUTOMATION_ID_PATTERN = /^[a-z0-9_-]+$/i;
 
 /** Domains rejected server-side.  Must match or exceed the client-side list. */
 const FREE_EMAIL_DOMAINS = new Set([
@@ -173,16 +176,26 @@ function getBeehiivConfig() {
 function getLeadAutomationIds(): string[] {
   // Prefer dedicated lead-capture automation; fall back to general welcome.
   const leadAutomationId = process.env.BEEHIIV_LEAD_AUTOMATION_ID?.trim();
-  if (leadAutomationId) return [leadAutomationId];
+  if (leadAutomationId && AUTOMATION_ID_PATTERN.test(leadAutomationId)) return [leadAutomationId];
 
   const welcomeAutomationId = process.env.BEEHIIV_WELCOME_AUTOMATION_ID?.trim();
-  if (welcomeAutomationId) return [welcomeAutomationId];
+  if (welcomeAutomationId && AUTOMATION_ID_PATTERN.test(welcomeAutomationId)) return [welcomeAutomationId];
 
   return [];
 }
 
 function getRetryAfterSeconds(resetAt: number): string {
   return String(Math.max(Math.ceil((resetAt - Date.now()) / 1000), 1));
+}
+
+function jsonResponse(body: Record<string, unknown>, init: ResponseInit): Response {
+  const headers = new Headers(init.headers);
+  headers.set('Cache-Control', 'no-store');
+
+  return NextResponse.json(body, {
+    ...init,
+    headers,
+  });
 }
 
 function isWorkEmail(email: string): boolean {
@@ -322,17 +335,22 @@ function logError(failure: string, message: string): void {
 // ── POST handler ──────────────────────────────────────────────────────────
 
 export async function POST(request: Request): Promise<Response> {
-  // 1. Parse body
-  let payload: LeadCapturePayload | null = null;
+  const parsedBody = await parseJsonRequestBody(request, {
+    maxBytes: JSON_BODY_LIMIT_BYTES,
+    invalidJsonMessage: 'Invalid request body.',
+    invalidShapeMessage: 'Request body must be a JSON object.',
+    unsupportedMediaTypeMessage: 'This endpoint only accepts application/json payloads.',
+    tooLargeMessage: 'The request body is too large.',
+  });
 
-  try {
-    payload = (await request.json()) as LeadCapturePayload;
-  } catch {
-    return NextResponse.json(
-      { ok: false, message: 'Invalid request body.' },
-      { status: 400 },
+  if (!parsedBody.ok) {
+    return jsonResponse(
+      { ok: false, message: parsedBody.message },
+      { status: parsedBody.status },
     );
   }
+
+  const payload = parsedBody.value as LeadCapturePayload;
 
   const email = payload?.email?.trim().toLowerCase() ?? '';
   const jobTitle = payload?.jobTitle?.trim() ?? '';
@@ -343,7 +361,7 @@ export async function POST(request: Request): Promise<Response> {
   // 2. Origin check
   if (!isVerifiedSameSiteRequest(request)) {
     logRejection('origin_mismatch', request, source);
-    return NextResponse.json(
+    return jsonResponse(
       { ok: false, message: 'This request could not be verified. Refresh the page and try again.' },
       { status: 403 },
     );
@@ -352,7 +370,7 @@ export async function POST(request: Request): Promise<Response> {
   // 3. Honeypot
   if (honeypot.length > 0) {
     logRejection('honeypot_filled', request, source);
-    return NextResponse.json(
+    return jsonResponse(
       { ok: false, message: 'This request could not be verified. Refresh the page and try again.' },
       { status: 400 },
     );
@@ -360,7 +378,7 @@ export async function POST(request: Request): Promise<Response> {
 
   // 4. Email format
   if (!email || !EMAIL_REGEX.test(email)) {
-    return NextResponse.json(
+    return jsonResponse(
       { ok: false, message: 'Enter a valid email address.' },
       { status: 400 },
     );
@@ -368,7 +386,7 @@ export async function POST(request: Request): Promise<Response> {
 
   // 5. Work-email enforcement (server-side — never trust the client)
   if (!isWorkEmail(email)) {
-    return NextResponse.json(
+    return jsonResponse(
       { ok: false, message: 'Please use your corporate email address to receive the enterprise report.' },
       { status: 400 },
     );
@@ -376,7 +394,7 @@ export async function POST(request: Request): Promise<Response> {
 
   // 6. Job title validation
   if (!jobTitle || !VALID_JOB_TITLES.has(jobTitle)) {
-    return NextResponse.json(
+    return jsonResponse(
       { ok: false, message: 'Please select your role.' },
       { status: 400 },
     );
@@ -390,14 +408,14 @@ export async function POST(request: Request): Promise<Response> {
     rateLimitResult = (await ratelimit.limit(`lead:${ip}`)) as RateLimitResponse;
   } catch (error) {
     logError('rate_limit', error instanceof Error ? error.message : String(error));
-    return NextResponse.json(
+    return jsonResponse(
       { ok: false, message: 'Service temporarily unavailable. Try again shortly.' },
       { status: 503 },
     );
   }
 
   if (!rateLimitResult.success) {
-    return NextResponse.json(
+    return jsonResponse(
       { ok: false, message: 'Too many requests. Please try again in a minute.' },
       {
         status: 429,
@@ -414,7 +432,7 @@ export async function POST(request: Request): Promise<Response> {
       logError('config', 'Invalid BEEHIIV_API_BASE_URL configuration.');
     }
 
-    return NextResponse.json(
+    return jsonResponse(
       { ok: false, message: 'Could not process your request right now. Try again in a moment.' },
       { status: 503 },
     );
@@ -451,7 +469,7 @@ export async function POST(request: Request): Promise<Response> {
     logError('beehiiv_request', errorMessage);
 
     const status = errorMessage.includes('timed out') ? 504 : 502;
-    return NextResponse.json(
+    return jsonResponse(
       { ok: false, message: 'Could not process your request right now. Try again in a moment.' },
       { status },
     );
@@ -469,7 +487,7 @@ export async function POST(request: Request): Promise<Response> {
     const upstreamMessage = getUpstreamErrorMessage(upstreamPayload);
     logError('beehiiv_upstream', upstreamMessage || `HTTP ${upstreamResponse.status}`);
 
-    return NextResponse.json(
+    return jsonResponse(
       { ok: false, message: getPublicUpstreamMessage(upstreamResponse.status) },
       { status: upstreamResponse.status },
     );
@@ -478,7 +496,7 @@ export async function POST(request: Request): Promise<Response> {
   // 12. Success — log and respond.  NO download link in the response.
   logLeadCapture(email, jobTitle, source, asset);
 
-  return NextResponse.json(
+  return jsonResponse(
     {
       ok: true,
       message: 'Check your inbox — the report is on its way. It may take a minute to arrive.',

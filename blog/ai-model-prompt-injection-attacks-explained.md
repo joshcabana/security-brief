@@ -26,9 +26,12 @@ primarySources:
     title: "Fortune — AI Reasoning Models More Vulnerable to Jailbreak Attacks (November 2025): Chain-of-Thought Hijacking study by Anthropic, Oxford, and Stanford; 80%+ success rates on frontier models"
   - url: "https://www.lasso.security/blog/prompt-injection-examples"
     title: "Lasso Security — Prompt Injection Examples That Expose Real AI Security Risks (January 2026): EchoLeak CVE-2025-32711, Gemini memory poisoning, MCP exploitation, AI Recommendation Poisoning"
+section: "editorial"
+monetization: "none"
+reviewed_by: "PENDING_HUMAN_REVIEW"
+reviewed_at: "PENDING_HUMAN_REVIEW"
+last_substantive_update_at: "2026-03-08"
 ---
-# AI Model Prompt Injection Attacks Explained
-
 Prompt injection has earned the top spot on the OWASP Top 10 for LLM Applications for two consecutive years. It is the most commonly exploited AI vulnerability in production environments, it has already been weaponised in real CVEs affecting enterprise products, and security researchers have conceded that it may never be fully solved. If you are building, deploying, or securing AI systems, prompt injection is the vulnerability that demands your deepest attention.
 
 This article breaks down how it works, what it looks like in the wild, and what defences have demonstrable impact — without the hand-waving that characterises most introductory coverage.

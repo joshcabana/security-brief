@@ -319,16 +319,81 @@ export async function runContentManifestCheck() {
   await runCommand(process.execPath, ['scripts/content-manifest.mjs', '--check']);
 }
 
-export async function hasGitChanges() {
-  const { stdout } = await runCommand('git', ['status', '--porcelain']);
-  return stdout.trim().length > 0;
+export function normaliseAutomationPath(pathValue) {
+  if (typeof pathValue !== 'string') {
+    throw new Error('Automation allowed paths must be strings.');
+  }
+
+  const trimmedValue = pathValue.trim().replace(/\\/g, '/').replace(/^\.\/+/, '').replace(/\/+$/, '');
+
+  if (
+    trimmedValue.length === 0 ||
+    trimmedValue.startsWith('/') ||
+    trimmedValue === '.' ||
+    trimmedValue.split('/').includes('..')
+  ) {
+    throw new Error(`Invalid automation path allowlist entry: ${String(pathValue)}`);
+  }
+
+  return trimmedValue;
 }
 
-export async function commitAndPushChanges({ branchName, commitMessage, dryRun }) {
-  const dirty = await hasGitChanges();
+export function assertAllowedAutomationPaths(allowedPaths) {
+  if (!Array.isArray(allowedPaths) || allowedPaths.length === 0) {
+    throw new Error('Automation commits require at least one allowed path.');
+  }
 
-  if (!dirty) {
+  return [...new Set(allowedPaths.map((entry) => normaliseAutomationPath(entry)))].sort((left, right) =>
+    left.localeCompare(right),
+  );
+}
+
+function pathMatchesAllowedRoot(filePath, allowedRoot) {
+  return filePath === allowedRoot || filePath.startsWith(`${allowedRoot}/`);
+}
+
+export function getDisallowedChangedPaths(changedPaths, allowedPaths) {
+  const normalisedAllowedPaths = assertAllowedAutomationPaths(allowedPaths);
+
+  return changedPaths
+    .map((entry) => normaliseAutomationPath(entry))
+    .filter((entry) => !normalisedAllowedPaths.some((allowedRoot) => pathMatchesAllowedRoot(entry, allowedRoot)))
+    .sort((left, right) => left.localeCompare(right));
+}
+
+export async function listChangedPaths() {
+  const trackedResult = await runCommand('git', ['diff', '--name-only', '--relative', 'HEAD', '--']);
+  const untrackedResult = await runCommand('git', ['ls-files', '--others', '--exclude-standard']);
+  const trackedPaths = trackedResult.stdout
+    .split('\n')
+    .map((entry) => entry.trim())
+    .filter(Boolean);
+  const untrackedPaths = untrackedResult.stdout
+    .split('\n')
+    .map((entry) => entry.trim())
+    .filter(Boolean);
+
+  return [...new Set([...trackedPaths, ...untrackedPaths])].sort((left, right) => left.localeCompare(right));
+}
+
+export async function hasGitChanges() {
+  return (await listChangedPaths()).length > 0;
+}
+
+export async function commitAndPushChanges({ branchName, commitMessage, dryRun, allowedPaths }) {
+  const changedPaths = await listChangedPaths();
+
+  if (changedPaths.length === 0) {
     return false;
+  }
+
+  const stagedRoots = assertAllowedAutomationPaths(allowedPaths);
+  const disallowedPaths = getDisallowedChangedPaths(changedPaths, stagedRoots);
+
+  if (disallowedPaths.length > 0) {
+    throw new Error(
+      `Automation produced changes outside the approved paths: ${disallowedPaths.join(', ')}`,
+    );
   }
 
   if (dryRun) {
@@ -337,7 +402,7 @@ export async function commitAndPushChanges({ branchName, commitMessage, dryRun }
 
   await runCommand('git', ['config', 'user.name', 'github-actions[bot]']);
   await runCommand('git', ['config', 'user.email', '41898282+github-actions[bot]@users.noreply.github.com']);
-  await runCommand('git', ['add', '-A']);
+  await runCommand('git', ['add', '--', ...stagedRoots]);
   await runCommand('git', ['commit', '-m', commitMessage]);
   await runCommand('git', ['push', '--set-upstream', 'origin', branchName]);
   return true;

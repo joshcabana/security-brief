@@ -7,9 +7,8 @@ import net from 'node:net';
 import {
   evaluatePrivacyAnalyticsContract,
   PLAUSIBLE_SCRIPT_URL,
-  PRIVACY_ANALYTICS_COPY,
 } from '../lib/analytics-config.mjs';
-import { SECURITY_HEADERS } from '../lib/security-headers.mjs';
+import { SECURITY_HEADERS, getExpectedSecurityHeaderValue } from '../lib/security-headers.mjs';
 
 const repoDir = process.cwd();
 const packageJson = JSON.parse(await readFile(path.join(repoDir, 'package.json'), 'utf8'));
@@ -307,7 +306,33 @@ async function requestJson(url, init) {
 
 function assertSecurityHeaders(headers) {
   for (const header of SECURITY_HEADERS) {
-    assert.equal(headers.get(header.key), header.value, `Expected ${header.key} to match the configured value.`);
+    const actualValue = headers.get(header.key);
+
+    if (header.key === 'Content-Security-Policy') {
+      assert.equal(
+        typeof actualValue,
+        'string',
+        `Expected ${header.key} to match the configured value.`,
+      );
+
+      const escapedExpectedValue = header.value
+        .replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+        .replace(/__CSP_NONCE__/g, "[^']+");
+      const expectedPattern = new RegExp(`^${escapedExpectedValue}$`);
+
+      assert.match(
+        actualValue,
+        expectedPattern,
+        `Expected ${header.key} to match ${getExpectedSecurityHeaderValue(header.key)}.`,
+      );
+      continue;
+    }
+
+    assert.equal(
+      actualValue,
+      header.value,
+      `Expected ${header.key} to match ${getExpectedSecurityHeaderValue(header.key)}.`,
+    );
   }
 }
 
@@ -315,9 +340,11 @@ async function main() {
   const manifest = JSON.parse(
     await readFile(path.join(repoDir, 'content-manifest.json'), 'utf8'),
   );
-  const articleSlugs = manifest.articles.map((article) => article.slug);
-  const homepageSlugs = articleSlugs.slice(0, 4);
-  const privacyArticles = manifest.articles.filter((article) => article.category === 'Privacy');
+  const editorialArticles = manifest.articles.filter((article) => article.section === 'editorial');
+  const reviewArticles = manifest.articles.filter((article) => article.section === 'review');
+  const articleSlugs = editorialArticles.map((article) => article.slug);
+  const homepageSlugs = editorialArticles.slice(0, 4).map((article) => article.slug);
+  const privacyArticles = editorialArticles.filter((article) => article.category === 'Privacy');
   assert.ok(privacyArticles.length > 0, 'Expected at least one Privacy article in content-manifest.json.');
 
   const coldStartPort = await findFreePort();
@@ -364,7 +391,7 @@ async function main() {
     assert.deepEqual(extractArticleLinks(privacyHtml, articleSlugs), privacyArticles.map((a) => a.slug));
 
     for (const [path, expectedMarker] of [
-      ['/about', 'About the Analyst'],
+      ['/about', 'Why trust this brief?'],
       ['/archive', 'Intelligence Archive'],
       ['/methodology', 'Research Methodology'],
       ['/pro', 'AI Security Brief Pro'],
@@ -385,12 +412,24 @@ async function main() {
     });
     assert.equal(coldStartPrivacyContract.ok, true, coldStartPrivacyContract.message);
 
-    for (const article of manifest.articles) {
-      const articleHtml = await fetch(`http://127.0.0.1:${coldStartPort}/blog/${article.slug}`).then((response) => response.text());
+    for (const article of editorialArticles) {
+      const articleResponse = await fetch(`http://127.0.0.1:${coldStartPort}${article.routePath}`);
+      const articleHtml = await articleResponse.text();
+      assert.equal(articleResponse.status, 200, `Expected ${article.routePath} to return 200.`);
       assert.match(articleHtml, new RegExp(article.title.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')));
       assert.match(articleHtml, new RegExp(article.category.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')));
       assert.match(articleHtml, /Back to all articles/);
       assert.match(articleHtml, /Browse tools/);
+    }
+
+    for (const article of reviewArticles) {
+      const reviewResponse = await fetch(`http://127.0.0.1:${coldStartPort}${article.routePath}`);
+      const reviewHtml = await reviewResponse.text();
+      assert.equal(reviewResponse.status, 200, `Expected ${article.routePath} to return 200.`);
+      assert.match(reviewHtml, new RegExp(article.title.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')));
+      assert.match(reviewHtml, new RegExp(article.category.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')));
+      assert.match(reviewHtml, /Back to all reviews/);
+      assert.match(reviewHtml, /Affiliate disclosure/);
     }
 
     const toolsHtml = await fetch(`http://127.0.0.1:${coldStartPort}/tools`).then((response) => response.text());
@@ -414,6 +453,7 @@ async function main() {
     assert.equal(missingConfigResult.response.status, 503);
     assert.ok(
       [
+        'Newsletter signup is temporarily unavailable. Try again shortly.',
         'Newsletter signup is temporarily unavailable. Check rate limiting service connectivity and try again.',
         'Newsletter signup is not configured yet. Add BEEHIIV_API_KEY and BEEHIIV_PUBLICATION_ID first.',
       ].includes(missingConfigResult.payload.message),
@@ -431,6 +471,8 @@ async function main() {
     BEEHIIV_PUBLICATION_ID: 'test-publication',
     BEEHIIV_API_BASE_URL: mockBeehiiv.baseUrl,
     NEXT_PUBLIC_PLAUSIBLE_DOMAIN: 'aithreatbrief.com',
+    NEXT_PUBLIC_LINKEDIN_PARTNER_ID: '',
+    NEXT_PUBLIC_LINKEDIN_CONVERSION_PRO_SIGNUP: '',
     UPSTASH_REDIS_REST_URL: mockUpstash.baseUrl,
     UPSTASH_REDIS_REST_TOKEN: 'smoke-test-token',
   });
@@ -446,8 +488,12 @@ async function main() {
     assert.match(configuredHomeHtml, new RegExp(PLAUSIBLE_SCRIPT_URL.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')));
 
     const configuredPrivacyHtml = await fetch(`http://127.0.0.1:${configuredPort}/privacy`).then((response) => response.text());
-    assert.match(configuredPrivacyHtml, new RegExp(PRIVACY_ANALYTICS_COPY.plausible.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')));
-    assert.match(configuredPrivacyHtml, new RegExp(PLAUSIBLE_SCRIPT_URL.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')));
+    const configuredPrivacyContract = evaluatePrivacyAnalyticsContract({
+      plausibleEnabled: configuredHomeHtml.includes(PLAUSIBLE_SCRIPT_URL),
+      linkedInInsightEnabled: false,
+      html: configuredPrivacyHtml,
+    });
+    assert.equal(configuredPrivacyContract.ok, true, configuredPrivacyContract.message);
 
     const invalidJsonResult = await requestJson(`http://127.0.0.1:${configuredPort}/api/subscribe`, {
       method: 'POST',

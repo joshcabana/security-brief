@@ -7,6 +7,7 @@ import {
   getRequestIp,
   getSubmittedOrigin,
   isVerifiedSameSiteRequest,
+  parseJsonRequestBody,
 } from '@/lib/request-security.mjs';
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -18,6 +19,8 @@ const RETRY_JITTER_MS = 100;
 const MAX_RETRY_DELAY_MS = 3000;
 const INVALID_REQUEST_MESSAGE = 'This signup request could not be verified. Refresh the page and try again.';
 const RETRYABLE_STATUS_CODES = new Set<number>([429, 503]);
+const JSON_BODY_LIMIT_BYTES = 4 * 1024;
+const AUTOMATION_ID_PATTERN = /^[a-z0-9_-]+$/i;
 
 type BeehiivConfig = {
   apiKey: string | undefined;
@@ -95,6 +98,16 @@ function getRetryAfterSeconds(resetAt: number): string {
   return String(Math.max(secondsUntilReset, 1));
 }
 
+function jsonResponse(body: Record<string, unknown>, init: ResponseInit): Response {
+  const headers = new Headers(init.headers);
+  headers.set('Cache-Control', 'no-store');
+
+  return NextResponse.json(body, {
+    ...init,
+    headers,
+  });
+}
+
 function normalizeSource(source: unknown): string {
   return sanitizeNewsletterSource(source) ?? DEFAULT_SOURCE;
 }
@@ -106,7 +119,7 @@ function getReferringSite(request: Request): string {
 function getBeehiivWelcomeAutomationIds(): string[] {
   const automationId = process.env.BEEHIIV_WELCOME_AUTOMATION_ID?.trim();
 
-  if (!automationId) {
+  if (!automationId || !AUTOMATION_ID_PATTERN.test(automationId)) {
     return [];
   }
 
@@ -290,16 +303,22 @@ function getPublicUpstreamMessage(status: number): string {
 }
 
 export async function POST(request: Request): Promise<Response> {
-  let payload: SubscribeRequestPayload | null = null;
+  const parsedBody = await parseJsonRequestBody(request, {
+    maxBytes: JSON_BODY_LIMIT_BYTES,
+    invalidJsonMessage: 'The signup request body was invalid JSON.',
+    invalidShapeMessage: 'The signup request body must be a JSON object.',
+    unsupportedMediaTypeMessage: 'This signup endpoint only accepts application/json payloads.',
+    tooLargeMessage: 'The signup request body is too large.',
+  });
 
-  try {
-    payload = (await request.json()) as SubscribeRequestPayload;
-  } catch {
-    return NextResponse.json(
-      { ok: false, message: 'The signup request body was invalid JSON.' },
-      { status: 400 },
+  if (!parsedBody.ok) {
+    return jsonResponse(
+      { ok: false, message: parsedBody.message },
+      { status: parsedBody.status },
     );
   }
+
+  const payload = parsedBody.value as SubscribeRequestPayload;
 
   const email = payload?.email?.trim().toLowerCase();
   const source = normalizeSource(payload?.source);
@@ -307,7 +326,7 @@ export async function POST(request: Request): Promise<Response> {
 
   if (!isVerifiedSameSiteRequest(request)) {
     logRequestRejection('origin_mismatch', request, source);
-    return NextResponse.json(
+    return jsonResponse(
       { ok: false, message: INVALID_REQUEST_MESSAGE },
       { status: 403 },
     );
@@ -315,14 +334,14 @@ export async function POST(request: Request): Promise<Response> {
 
   if (honeypotFilled) {
     logRequestRejection('honeypot_filled', request, source);
-    return NextResponse.json(
+    return jsonResponse(
       { ok: false, message: INVALID_REQUEST_MESSAGE },
       { status: 400 },
     );
   }
 
   if (!email || !EMAIL_REGEX.test(email)) {
-    return NextResponse.json(
+    return jsonResponse(
       { ok: false, message: 'Enter a valid email address to subscribe.' },
       { status: 400 },
     );
@@ -335,7 +354,7 @@ export async function POST(request: Request): Promise<Response> {
     rateLimitResult = (await ratelimit.limit(requestIp)) as RateLimitResponse;
   } catch (error) {
     logFailure('rate_limit', error instanceof Error ? error.message : String(error));
-    return NextResponse.json(
+    return jsonResponse(
       {
         ok: false,
         message:
@@ -346,7 +365,7 @@ export async function POST(request: Request): Promise<Response> {
   }
 
   if (!rateLimitResult.success) {
-    return NextResponse.json(
+    return jsonResponse(
       { ok: false, message: 'Too many signup attempts. Please try again in a minute.' },
       {
         status: 429,
@@ -364,7 +383,7 @@ export async function POST(request: Request): Promise<Response> {
       logFailure('config', 'Invalid BEEHIIV_API_BASE_URL configuration.');
     }
 
-    return NextResponse.json(
+    return jsonResponse(
       {
         ok: false,
         message: 'Newsletter signup is temporarily unavailable. Try again shortly.',
@@ -394,7 +413,7 @@ export async function POST(request: Request): Promise<Response> {
   } catch (error) {
     if (error instanceof BeehiivRequestTimeoutError) {
       logFailure('timeout', error.message);
-      return NextResponse.json(
+      return jsonResponse(
         {
           ok: false,
           message: 'Newsletter signup is temporarily unavailable. Try again shortly.',
@@ -405,7 +424,7 @@ export async function POST(request: Request): Promise<Response> {
 
     if (error instanceof BeehiivRequestNetworkError) {
       logFailure('network', error.message);
-      return NextResponse.json(
+      return jsonResponse(
         {
           ok: false,
           message: 'Newsletter signup is temporarily unavailable. Try again shortly.',
@@ -414,7 +433,7 @@ export async function POST(request: Request): Promise<Response> {
       );
     }
 
-    return NextResponse.json(
+    return jsonResponse(
       {
         ok: false,
         message: 'Newsletter signup is temporarily unavailable. Try again shortly.',
@@ -435,7 +454,7 @@ export async function POST(request: Request): Promise<Response> {
     const upstreamMessage = getUpstreamMessage(upstreamPayload);
     logFailure('beehiiv_upstream', upstreamMessage || `HTTP ${upstreamResponse.status}`);
 
-    return NextResponse.json(
+    return jsonResponse(
       {
         ok: false,
         message: getPublicUpstreamMessage(upstreamResponse.status),
@@ -444,7 +463,7 @@ export async function POST(request: Request): Promise<Response> {
     );
   }
 
-  return NextResponse.json(
+  return jsonResponse(
     {
       ok: true,
       message: "You're in. Check your inbox for Beehiiv's confirmation email.",

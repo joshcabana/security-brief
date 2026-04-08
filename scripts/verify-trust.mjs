@@ -6,7 +6,7 @@ import matter from 'gray-matter';
 import { validateAuthorObject, validatePrimarySources } from './article-trust.mjs';
 
 const ROOT = process.cwd();
-const DEFAULT_BLOG_DIR = path.join(ROOT, 'blog');
+const DEFAULT_CONTENT_DIRS = [path.join(ROOT, 'blog'), path.join(ROOT, 'reviews')];
 const DEFAULT_OUTPUT_PATH = path.join(ROOT, 'artifacts', 'verify-trust.html');
 
 function getArgValue(name) {
@@ -113,16 +113,32 @@ export function renderTrustDashboardHtml(report) {
 `;
 }
 
-export async function buildTrustReport(blogDir) {
-  const fileNames = (await fs.readdir(blogDir))
-    .filter((entry) => entry.endsWith('.md'))
-    .sort((left, right) => left.localeCompare(right));
+async function readMarkdownEntries(directory) {
+  try {
+    return (await fs.readdir(directory))
+      .filter((entry) => entry.endsWith('.md'))
+      .sort((left, right) => left.localeCompare(right))
+      .map((fileName) => ({
+        fileName,
+        filePath: path.join(directory, fileName),
+      }));
+  } catch (error) {
+    if (error && typeof error === 'object' && 'code' in error && error.code === 'ENOENT') {
+      return [];
+    }
+
+    throw error;
+  }
+}
+
+export async function buildTrustReport(contentDirs = DEFAULT_CONTENT_DIRS) {
+  const entries = (await Promise.all(contentDirs.map((directory) => readMarkdownEntries(directory)))).flat();
   const authorAccountability = createGateResult('author accountability');
   const sourceQuality = createGateResult('source quality');
   const failures = [];
 
-  for (const fileName of fileNames) {
-    const source = await fs.readFile(path.join(blogDir, fileName), 'utf8');
+  for (const { fileName, filePath } of entries) {
+    const source = await fs.readFile(filePath, 'utf8');
     const { data } = matter(source);
     const slug = typeof data.slug === 'string' ? data.slug.trim() : fileName.replace(/\.md$/, '');
 
@@ -155,7 +171,7 @@ export async function buildTrustReport(blogDir) {
 
   return {
     checkedAt: new Date().toISOString(),
-    articleCount: fileNames.length,
+    articleCount: entries.length,
     authorAccountability,
     sourceQuality,
     correctionRate: 'N/A until structured corrections dataset exists',
@@ -190,9 +206,9 @@ function printTerminalSummary(report, outputPath) {
 }
 
 export async function main() {
-  const blogDir = getArgValue('blog-dir') || DEFAULT_BLOG_DIR;
+  const blogDir = getArgValue('blog-dir');
   const outputPath = getArgValue('output') || DEFAULT_OUTPUT_PATH;
-  const report = await buildTrustReport(blogDir);
+  const report = await buildTrustReport(blogDir ? [blogDir] : DEFAULT_CONTENT_DIRS);
   const html = renderTrustDashboardHtml(report);
 
   await writeDashboard(outputPath, html);

@@ -147,7 +147,11 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
               className="prose-dark text-slate-200"
               dangerouslySetInnerHTML={{ __html: article.contentHtml }}
             />
-            <AccountabilityBox reviewerName={typeof article.author === 'string' ? article.author : article.author?.name} />
+            <AccountabilityBox
+              reviewedBy={article.reviewedBy}
+              reviewedAt={article.reviewedAt}
+              trustLevel={article.trustLevel}
+            />
             {article.isPaywalled && <PaywallCTA />}
             <div className="flex flex-wrap gap-2 mt-12 pt-8 border-t border-slate-800">
               <span className="text-xs text-slate-500 self-center">Filed under:</span>
@@ -160,7 +164,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
                 <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path fillRule="evenodd" d="M15 8a.5.5 0 00-.5-.5H2.707l3.147-3.146a.5.5 0 10-.708-.708l-4 4a.5.5 0 000 .708l4 4a.5.5 0 00.708-.708L2.707 8.5H14.5A.5.5 0 0015 8z" /></svg>
                 Back to all articles
               </Link>
-              <ShareButtons title={article.title} slug={article.slug} />
+              <ShareButtons title={article.title} slug={article.slug} path={article.routePath} />
             </div>
             <RepurposeCTA title={article.title} url={articleUrl} />
           </article>

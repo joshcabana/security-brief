@@ -28,6 +28,11 @@ primarySources:
     title: "Protect AI Rebuff — LLM Prompt Injection Detector"
   - url: "https://developers.cloudflare.com/ai-gateway/features/dlp/"
     title: "Cloudflare AI Gateway — Data Loss Prevention (DLP)"
+section: "review"
+monetization: "affiliate"
+reviewed_by: "PENDING_HUMAN_REVIEW"
+reviewed_at: "PENDING_HUMAN_REVIEW"
+last_substantive_update_at: "2026-04-03"
 ---
 As enterprise deployments of autonomous agents and LLMs shift into production, the attack surface has fundamentally altered. We are no longer just securing static APIs; we operate in a landscape where an input string can manipulate logic, trigger unauthorized function calls, and exfiltrate sensitive context windows. 
 

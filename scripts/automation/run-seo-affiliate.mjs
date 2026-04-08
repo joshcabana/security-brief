@@ -11,8 +11,11 @@ import {
   runContentManifestWrite,
   writeText,
 } from './common.mjs';
-import { requestJsonFromGitHubModels } from './github-models.mjs';
-import { buildSeoOptimiserPrompts } from './prompt-builders.mjs';
+import { guardedText, requestJsonFromGitHubModels } from './github-models.mjs';
+import {
+  buildSeoOptimiserContext,
+  buildSeoOptimiserPrompts,
+} from './prompt-builders.mjs';
 import { injectAffiliatePlaceholders, parseAffiliatePlaceholderMap } from './renderers.mjs';
 import { finishAutomationRun, prepareAutomationRun, requireEnvVars } from './workflow.mjs';
 
@@ -64,6 +67,12 @@ async function main() {
       !Array.isArray(parsed.data.keywords) ||
       parsed.data.keywords.length !== 5
     ) {
+      const seoContext = buildSeoOptimiserContext({
+        title: String(parsed.data.title),
+        slug: String(parsed.data.slug),
+        excerpt: String(parsed.data.excerpt),
+        bodyExcerpt: parsed.content.slice(0, 4000),
+      });
       const prompts = buildSeoOptimiserPrompts({
         title: String(parsed.data.title),
         slug: String(parsed.data.slug),
@@ -75,6 +84,7 @@ async function main() {
         maxTokens: 1500,
         systemPrompt: prompts.systemPrompt,
         userPrompt: prompts.userPrompt,
+        guardedText: guardedText(seoContext),
         validate: validateSeoPayload,
       });
 
@@ -104,6 +114,7 @@ async function main() {
       context,
       commitMessage: `automation: refresh SEO metadata ${context.effectiveDate}`,
       model,
+      allowedPaths: ['blog', 'content-manifest.json'],
       outputs: ['SEO optimiser found no metadata or affiliate changes to apply.'],
       notes: ['No-op run. Changed weekly drafts were already complete.'],
     });
@@ -117,6 +128,7 @@ async function main() {
     context,
     commitMessage: `automation: optimise SEO metadata ${context.effectiveDate}`,
     model,
+    allowedPaths: ['blog', 'content-manifest.json'],
     outputs: updatedFiles.map((entry) => `Updated: \`${entry}\``),
   });
 }

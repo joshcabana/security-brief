@@ -30,6 +30,11 @@ primarySources:
     title: "NVD — CVE-2026-3060 (SGLang unauthenticated RCE via disaggregation module, CVSS 9.8)"
   - url: "https://nvd.nist.gov/vuln/detail/CVE-2026-3989"
     title: "NVD — CVE-2026-3989 (SGLang insecure pickle deserialization, CVSS 7.8)"
+section: "editorial"
+monetization: "none"
+reviewed_by: "PENDING_HUMAN_REVIEW"
+reviewed_at: "PENDING_HUMAN_REVIEW"
+last_substantive_update_at: "2026-03-19"
 ---
 # AI Flaws in Amazon Bedrock, LangSmith, and SGLang Enable Data Exfiltration and RCE
 

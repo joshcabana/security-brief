@@ -26,6 +26,11 @@ primarySources:
     title: "Help Net Security — CISA sounds alarm on Langflow RCE, Trivy supply chain compromise after rapid exploitation"
   - url: "https://thehackernews.com/2026/03/langchain-langgraph-flaws-expose-files.html"
     title: "The Hacker News — LangChain, LangGraph Flaws Expose Files, Secrets, Databases in Widely Used AI Frameworks"
+section: "editorial"
+monetization: "none"
+reviewed_by: "PENDING_HUMAN_REVIEW"
+reviewed_at: "PENDING_HUMAN_REVIEW"
+last_substantive_update_at: "2026-03-30"
 ---
 # Claude Extension Flaw Enabled Zero-Click XSS Prompt Injection via Any Website
 

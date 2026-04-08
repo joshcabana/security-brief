@@ -156,6 +156,7 @@ async function main() {
       context,
       commitMessage: `automation: refresh performance log ${context.effectiveDate}`,
       model: null,
+      allowedPaths: ['logs'],
       outputs: ['Performance log already reflects the current week metrics.'],
       notes: ['No-op run. Weekly metrics row is unchanged.'],
     });
@@ -168,6 +169,7 @@ async function main() {
     context,
     commitMessage: `automation: update performance log ${context.effectiveDate}`,
     model: null,
+    allowedPaths: ['logs'],
     outputs: [
       `Performance log updated: \`logs/performance-log.md\``,
       `Subscribers: ${subscribers}`,

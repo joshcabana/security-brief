@@ -8,7 +8,7 @@ export const metadata: Metadata = createPageMetadata({
   canonicalPath: '/blog',
   title: 'Blog — AI Threats, Privacy & Cybersecurity Analysis',
   description:
-    'In-depth analysis of AI-powered cyber threats, privacy defence strategies, vulnerability disclosures, and security tool reviews.',
+    'In-depth analysis of AI-powered cyber threats, privacy defence strategies, vulnerability disclosures, and defensive guidance.',
 });
 
 interface BlogPageProps {
@@ -48,7 +48,7 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
           <div className="section-label mb-3">Briefing Archive</div>
           <h1 className="text-white mb-4">AI Threats, Privacy &amp; Analysis</h1>
           <p className="text-lg max-w-2xl" style={{ color: '#8b949e' }}>
-            Long-form briefings on AI-powered threats, privacy defence, and security tooling, with citations and practical context for technical teams.
+            Long-form briefings on AI-powered threats, privacy defence, and defensive guidance, with citations and practical context for technical teams.
           </p>
         </div>
       </div>

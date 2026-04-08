@@ -26,6 +26,11 @@ primarySources:
     title: "CRN — How Autonomous AI Cyberattacks Will Transform Security: Anthropic's November 2025 AI-orchestrated espionage campaign disclosure"
   - url: "https://www.brside.com/blog/ai-generated-phishing-vs-human-attacks-2025-risk-analysis"
     title: "BrightSide Technologies — AI-Generated Phishing vs Human Attacks: 2025 Risk Analysis: 1,265% phishing surge, 82.6% of emails use AI-generated content, 95% cost reduction"
+section: "editorial"
+monetization: "none"
+reviewed_by: "PENDING_HUMAN_REVIEW"
+reviewed_at: "PENDING_HUMAN_REVIEW"
+last_substantive_update_at: "2026-03-10"
 ---
 # How AI Is Being Used to Launch Cyberattacks in 2026
 

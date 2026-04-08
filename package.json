@@ -30,6 +30,7 @@
     "verify:ops:contract": "node scripts/verify-ops.mjs --contract-only",
     "verify:production": "node scripts/verify-production.mjs",
     "verify:status-doc": "node scripts/verify-status-doc.mjs",
+    "verify:iocs": "node scripts/verify-iocs.mjs",
     "verify:trust": "node scripts/verify-trust.mjs",
     "verify:release": "pnpm check:content && pnpm typecheck && pnpm test:unit && pnpm build && pnpm test:smoke",
     "status:sync": "node scripts/sync-status-doc.mjs",
@@ -64,6 +65,11 @@
     "typescript": "^5.7.0"
   },
   "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuild",
+      "sharp",
+      "unrs-resolver"
+    ],
     "overrides": {
       "debug": "4.3.7",
       "esbuild": "0.25.12"

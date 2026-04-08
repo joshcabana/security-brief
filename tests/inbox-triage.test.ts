@@ -19,13 +19,14 @@ import {
   DEFAULT_CHROME_PROFILE_DIR,
 } from '../scripts/automation/gmail-browser.mjs';
 
-test('default inbox triage policy locks the mailbox, connector, and draft-only guardrails', () => {
+test('default inbox triage policy locks the mailbox, connector, and reply-policy guardrails', () => {
   const policy = buildDefaultPolicy();
 
   assert.equal(policy.mailbox_email, 'cabana.collections2025@gmail.com');
   assert.equal(policy.connector_id, 'connector_2128aebfecb84f64a069897515042a44');
-  assert.equal(policy.escalation_rules.draft_only, true);
-  assert.equal(policy.escalation_rules.never_auto_send, true);
+  assert.equal(policy.reply_policy.mode, 'auto_send');
+  assert.equal(policy.reply_policy.read_full_thread_context, true);
+  assert.equal(policy.reply_policy.avoid_duplicate_replies, true);
   assert.equal(policy.search_windows.recent_days, 30);
   assert.equal(policy.search_windows.context_days, 90);
   assert.equal(policy.browser_fallback.enabled, true);
@@ -56,7 +57,7 @@ test('triage prompt embeds memory and honors dry-run draft suppression', () => {
     dryRun: true,
   });
 
-  assert.match(prompt, /Dry run: do not create Gmail drafts\./);
+  assert.match(prompt, /Dry run: do not draft or send Gmail replies\./);
   assert.match(prompt, /Policy JSON:/);
   assert.match(prompt, /Memory JSON:/);
   assert.match(prompt, /Project context:/);
@@ -95,12 +96,21 @@ test('browser triage prompt uses supplied mailbox snapshot data and returns expl
   });
 
   assert.match(prompt, /Browser mailbox snapshot JSON:/);
-  assert.match(prompt, /Prepare draft_requests for reply-worthy threads/);
+  assert.match(prompt, /Prepare reply_requests for reply-worthy threads/);
   assert.match(prompt, /Every supplied thread already includes full-thread context/);
 });
 
 test('browser search queries include recent project, priority, ops, and memory follow-up scans', () => {
-  const queries = buildBrowserSearchQueries(buildDefaultPolicy(), {
+  const basePolicy = buildDefaultPolicy();
+  const policy = {
+    ...basePolicy,
+    matching: {
+      ...basePolicy.matching,
+      ops_senders: ['alerts@example.com'],
+    },
+  };
+
+  const queries = buildBrowserSearchQueries(policy, {
     ...buildDefaultMemory(),
     open_follow_ups: {
       'thread-1': {

@@ -3,6 +3,7 @@ import { ratelimit } from '@/lib/rate-limit';
 
 type HealthCheckResponse = {
   status: 'ok' | 'degraded';
+  message?: string;
   checks: {
     beehiiv_env: {
       configured: boolean;
@@ -18,6 +19,16 @@ type HealthCheckResponse = {
     };
   };
 };
+
+function jsonResponse(body: Record<string, unknown>, init: ResponseInit): Response {
+  const headers = new Headers(init.headers);
+  headers.set('Cache-Control', 'no-store');
+
+  return NextResponse.json(body, {
+    ...init,
+    headers,
+  });
+}
 
 function checkBeehiivEnv(): { configured: boolean; message: string } {
   const apiKey = process.env.BEEHIIV_API_KEY?.trim();
@@ -47,10 +58,18 @@ function checkUpstashEnv(): { configured: boolean; message: string } {
 
 function isAuthTokenValid(request: Request): boolean {
   const healthCheckToken = process.env.HEALTH_CHECK_TOKEN?.trim();
+  const requiresAuth =
+    process.env.NODE_ENV === 'production' ||
+    process.env.VERCEL_ENV === 'production' ||
+    process.env.VERCEL_TARGET_ENV === 'production' ||
+    Boolean(healthCheckToken);
 
-  // Skip auth check if HEALTH_CHECK_TOKEN is not set
-  if (!healthCheckToken) {
+  if (!requiresAuth) {
     return true;
+  }
+
+  if (!healthCheckToken) {
+    return false;
   }
 
   const submittedToken = request.headers.get('x-health-token');
@@ -75,36 +94,20 @@ async function checkUpstashConnectivity(): Promise<{ ok: boolean; message: strin
 }
 
 export async function GET(request: Request): Promise<Response> {
-  // Check authentication token if configured
   if (!isAuthTokenValid(request)) {
-    return NextResponse.json(
+    return jsonResponse(
       {
         status: 'degraded',
-        checks: {
-          beehiiv_env: {
-            configured: false,
-            message: 'Authentication failed',
-          },
-          upstash_env: {
-            configured: false,
-            message: 'Authentication failed',
-          },
-          upstash_connectivity: {
-            ok: false,
-            message: 'Authentication failed',
-          },
-        },
+        message: 'Authentication required.',
       },
       { status: 401 },
     );
   }
 
-  // Perform environment variable checks
   const beehiivEnvCheck = checkBeehiivEnv();
   const upstashEnvCheck = checkUpstashEnv();
   const upstashConnectivityCheck = await checkUpstashConnectivity();
 
-  // Determine overall status
   const allChecksPassed = beehiivEnvCheck.configured && upstashEnvCheck.configured && upstashConnectivityCheck.ok;
   const status = allChecksPassed ? 'ok' : 'degraded';
   const httpStatus = allChecksPassed ? 200 : 503;
@@ -118,5 +121,5 @@ export async function GET(request: Request): Promise<Response> {
     },
   };
 
-  return NextResponse.json(response, { status: httpStatus });
+  return jsonResponse(response, { status: httpStatus });
 }

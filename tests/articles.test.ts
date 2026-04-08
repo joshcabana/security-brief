@@ -226,7 +226,7 @@ test('parseArticleSource strips unsafe HTML from rendered article content and me
         '',
         '[insecure link](http://insecure.example/path)',
         '',
-        '<a href="/guides">internal link</a>',
+        '[internal link](/guides)',
         '',
         '![tracking pixel](https://tracker.example/pixel.png)',
       ].join('\n'),

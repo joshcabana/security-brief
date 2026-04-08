@@ -52,6 +52,9 @@ const OPTIONAL = [
   'BEEHIIV_LEAD_AUTOMATION_ID',
   'NEXT_PUBLIC_PRO_CHECKOUT_LIVE',
   'NEXT_PUBLIC_PLAUSIBLE_DOMAIN',
+  'NEXT_PUBLIC_LINKEDIN_PROFILE_URL',
+  'NEXT_PUBLIC_ASSESSMENT_BOOKING_URL',
+  'NEXT_PUBLIC_ASSESSMENT_PAYMENT_URL',
   'NEXT_PUBLIC_LINKEDIN_PARTNER_ID',
   'NEXT_PUBLIC_LINKEDIN_CONVERSION_PRO_SIGNUP',
   'AFFILIATE_NORDVPN',
@@ -61,6 +64,17 @@ const OPTIONAL = [
   'AFFILIATE_PROTON',
   'AFFILIATE_PROTON_VPN',
   'AFFILIATE_PROTON_MAIL',
+]
+
+const REVENUE_RECOMMENDED = [
+  {
+    key: 'NEXT_PUBLIC_ASSESSMENT_BOOKING_URL',
+    hint: 'Set the live fit-call booking URL so /assessment does not fall back to LinkedIn messages.',
+  },
+  {
+    key: 'NEXT_PUBLIC_ASSESSMENT_PAYMENT_URL',
+    hint: 'Set the live payment link so the fixed-fee assessment can be collected before delivery.',
+  },
 ]
 
 // ── 3. Known stale vars that must NOT be present (prevents misconfiguration) ──
@@ -166,6 +180,22 @@ if (!CONTRACT_ONLY) {
     } else {
       console.log(`  ${GREEN}✓ ABSENT${RESET}  ${BOLD}${key}${RESET}`)
       summaryLines.push(`- ABSENT \`${key}\``)
+    }
+  }
+
+  console.log(`\n${BOLD}── Revenue readiness (recommended) ────────────────${RESET}`)
+  summaryLines.push('', '### Revenue readiness')
+  for (const { key, hint } of REVENUE_RECOMMENDED) {
+    const val = process.env[key]
+    if (!val || val.trim() === '') {
+      console.log(`  ${YELLOW}⚠ MISSING${RESET}  ${BOLD}${key}${RESET}`)
+      console.log(`           ${YELLOW}→ ${hint}${RESET}`)
+      summaryLines.push(`- RECOMMENDED: missing \`${key}\` — ${hint}`)
+      warnings++
+    } else {
+      const preview = previewValue(val)
+      console.log(`  ${GREEN}✓ SET${RESET}     ${BOLD}${key}${RESET} ${YELLOW}(${preview})${RESET}`)
+      summaryLines.push(`- SET \`${key}\` (${preview})`)
     }
   }
 }

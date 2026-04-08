@@ -1,6 +1,5 @@
 import { MetadataRoute } from 'next';
-
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL?.trim() || 'https://aithreatbrief.com';
+import { buildSiteUrl } from '@/lib/site';
 
 export default function robots(): MetadataRoute.Robots {
   return {
@@ -11,6 +10,6 @@ export default function robots(): MetadataRoute.Robots {
         disallow: ['/api/', '/reports/'],
       },
     ],
-    sitemap: `${siteUrl}/sitemap.xml`,
+    sitemap: buildSiteUrl('/sitemap.xml'),
   };
 }

@@ -9,12 +9,26 @@ import remarkGfm from 'remark-gfm';
 import remarkHtml from 'remark-html';
 import sanitizeHtml from 'sanitize-html';
 import { replaceAffiliateTokens } from './affiliate-links';
+import { getArticleTrustEntryMap, type TrustLevel } from './article-trust';
 import { normalizeLinkTarget } from './url-safety.mjs';
 
 export const BLOG_DIR = path.join(process.cwd(), 'blog');
+export const REVIEWS_DIR = path.join(process.cwd(), 'reviews');
 export const READ_TIME_PATTERN = /^\d+\s+min$/;
 export const BRAND_AUTHOR_NAME = 'AI Security Brief';
 export const ARTICLE_SLUG_PATTERN = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
+export const CONTENT_SECTION_VALUES = ['editorial', 'review'] as const;
+export const MONETIZATION_VALUES = ['none', 'affiliate'] as const;
+export const PENDING_HUMAN_REVIEW = 'PENDING_HUMAN_REVIEW';
+
+type ContentSection = (typeof CONTENT_SECTION_VALUES)[number];
+type MonetizationMode = (typeof MONETIZATION_VALUES)[number];
+type ArticleEnvironment = Readonly<Record<string, string | undefined>>;
+
+export type ArticleCacheSignature = Readonly<{
+  sourceKey: string;
+  affiliateKey: string;
+}>;
 
 export interface ArticleAuthor {
   name: string;
@@ -44,6 +58,14 @@ export interface ArticleSummary {
   readTime: string;
   primarySources: PrimarySource[];
   fileName: string;
+  section: ContentSection;
+  monetization: MonetizationMode;
+  reviewedBy: string;
+  reviewedAt: string;
+  lastSubstantiveUpdateAt: string;
+  routePath: string;
+  trustScore?: number;
+  trustLevel?: TrustLevel;
 }
 
 export interface ArticleDocument extends ArticleSummary {
@@ -52,17 +74,25 @@ export interface ArticleDocument extends ArticleSummary {
   isPaywalled: boolean;
 }
 
-type ArticleEnvironment = Readonly<Record<string, string | undefined>>;
-export type ArticleCacheSignature = Readonly<{
-  sourceKey: string;
-  affiliateKey: string;
-}>;
-
 function assertDateString(value: unknown, field: string, fileName: string): string {
   const normalisedValue = assertString(value, field, fileName);
 
   if (Number.isNaN(Date.parse(normalisedValue))) {
     throw new Error(`Expected "${field}" to be a valid date in ${fileName}.`);
+  }
+
+  return normalisedValue;
+}
+
+function assertDateOrPending(value: unknown, field: string, fileName: string): string {
+  const normalisedValue = assertString(value, field, fileName);
+
+  if (normalisedValue === PENDING_HUMAN_REVIEW) {
+    return normalisedValue;
+  }
+
+  if (Number.isNaN(Date.parse(normalisedValue))) {
+    throw new Error(`Expected "${field}" to be an ISO timestamp or ${PENDING_HUMAN_REVIEW} in ${fileName}.`);
   }
 
   return normalisedValue;
@@ -147,6 +177,21 @@ function assertRecord(value: unknown, field: string, fileName: string): Record<s
   return value as Record<string, unknown>;
 }
 
+function assertEnum<T extends readonly string[]>(
+  value: unknown,
+  field: string,
+  fileName: string,
+  allowedValues: T,
+): T[number] {
+  const normalisedValue = assertString(value, field, fileName);
+
+  if (!allowedValues.includes(normalisedValue)) {
+    throw new Error(`Expected "${field}" to be one of ${allowedValues.join(', ')} in ${fileName}.`);
+  }
+
+  return normalisedValue as T[number];
+}
+
 function assertHttpUrl(value: unknown, field: string, fileName: string): string {
   const normalisedValue = assertString(value, field, fileName);
 
@@ -218,6 +263,10 @@ function assertPrimarySources(value: unknown, fileName: string): PrimarySource[]
   return value.map((entry, index) => assertPrimarySource(entry, index, fileName));
 }
 
+function getArticleRoutePath(section: ContentSection, slug: string): string {
+  return section === 'review' ? `/reviews/${slug}` : `/blog/${slug}`;
+}
+
 async function renderMarkdown(markdown: string, title: string): Promise<string> {
   const processed = await remark()
     .use(remarkGfm)
@@ -255,11 +304,11 @@ async function renderMarkdown(markdown: string, title: string): Promise<string> 
     allowedAttributes: {
       a: ['href', 'rel'],
     },
-    allowedSchemes: ['https'],
+    allowedSchemes: ['http', 'https'],
     allowedSchemesAppliedToAttributes: ['href'],
     allowProtocolRelative: false,
     transformTags: {
-      a: (_tagName, attribs) => {
+      a: (_tagName: string, attribs: Record<string, string>) => {
         const safeHref = normalizeLinkTarget(attribs.href, {
           allowRelative: true,
           requireHttps: true,
@@ -285,25 +334,50 @@ async function renderMarkdown(markdown: string, title: string): Promise<string> 
   return sanitizedHtml.replace(/^<h1[^>]*>[\s\S]*?<\/h1>\s*/i, '');
 }
 
+function attachTrustMetadata(article: ArticleDocument, trustEntry?: { trustScore: number; trustLevel: TrustLevel }): ArticleDocument {
+  if (!trustEntry) {
+    return article;
+  }
+
+  return {
+    ...article,
+    trustScore: trustEntry.trustScore,
+    trustLevel: trustEntry.trustLevel,
+  };
+}
+
 export async function parseArticleSource(fileName: string, source: string): Promise<ArticleDocument> {
   const { data, content } = matter(source);
   const title = assertPlainText(data.title, 'title', fileName);
   const keywords = assertStringArray(data.keywords, 'keywords', fileName);
   const category = assertPlainText(data.category, 'category', fileName);
-  const isAffiliateEnabled = category !== 'AI Threats';
-  
+  const section = assertEnum(data.section, 'section', fileName, CONTENT_SECTION_VALUES);
+  const monetization = assertEnum(data.monetization, 'monetization', fileName, MONETIZATION_VALUES);
+  const reviewedBy = assertPlainText(data.reviewed_by, 'reviewed_by', fileName);
+  const reviewedAt = assertDateOrPending(data.reviewed_at, 'reviewed_at', fileName);
+  const lastSubstantiveUpdateAt = assertDateString(
+    data.last_substantive_update_at,
+    'last_substantive_update_at',
+    fileName,
+  );
+
+  if (section === 'editorial' && monetization !== 'none') {
+    throw new Error(`Expected editorial content to use monetization "none" in ${fileName}.`);
+  }
+
   const rawBody = content.trim();
   const paywallToken = '[beehiiv:paywall]';
   const isPaywalled = rawBody.includes(paywallToken);
-  
+
   let freeContent = rawBody;
   if (isPaywalled) {
     freeContent = rawBody.split(paywallToken)[0].trim();
   }
 
-  const resolvedBody = replaceAffiliateTokens(freeContent, isAffiliateEnabled ? process.env : {});
+  const resolvedBody = replaceAffiliateTokens(freeContent, monetization === 'affiliate' ? process.env : {});
   const slug = assertSlug(data.slug, 'slug', fileName);
-  const article = {
+
+  return {
     title,
     slug,
     date: assertDateString(data.date, 'date', fileName),
@@ -317,31 +391,43 @@ export async function parseArticleSource(fileName: string, source: string): Prom
     readTime: assertReadTime(data.read_time, 'read_time', fileName),
     primarySources: assertPrimarySources(data.primarySources, fileName),
     fileName,
+    section,
+    monetization,
+    reviewedBy,
+    reviewedAt,
+    lastSubstantiveUpdateAt,
+    routePath: getArticleRoutePath(section, slug),
     body: resolvedBody,
     contentHtml: await renderMarkdown(resolvedBody, title),
     isPaywalled,
   } satisfies ArticleDocument;
-
-  return article;
 }
 
-async function parseArticleFile(blogDir: string, fileName: string): Promise<ArticleDocument> {
-  const filePath = path.join(blogDir, fileName);
+async function parseArticleFile(contentDir: string, fileName: string): Promise<ArticleDocument> {
+  const filePath = path.join(contentDir, fileName);
   const source = await fs.readFile(filePath, 'utf8');
   return parseArticleSource(fileName, source);
 }
 
-export async function getArticleSourceCacheKey(blogDir: string): Promise<string> {
-  const entries = await fs.readdir(blogDir);
-  const articleFiles = entries.filter((entry) => entry.endsWith('.md')).sort();
-  const fingerprints = await Promise.all(articleFiles.map(async (fileName) => {
-    const filePath = path.join(blogDir, fileName);
-    const source = await fs.readFile(filePath, 'utf8');
-    const digest = createHash('sha256').update(source).digest('hex');
-    return `${fileName}:${digest}`;
-  }));
+async function getDirectorySourceCacheKey(contentDir: string): Promise<string> {
+  try {
+    const entries = await fs.readdir(contentDir);
+    const articleFiles = entries.filter((entry) => entry.endsWith('.md')).sort();
+    const fingerprints = await Promise.all(articleFiles.map(async (fileName) => {
+      const filePath = path.join(contentDir, fileName);
+      const source = await fs.readFile(filePath, 'utf8');
+      const digest = createHash('sha256').update(source).digest('hex');
+      return `${path.basename(contentDir)}/${fileName}:${digest}`;
+    }));
 
-  return fingerprints.join('\u0000');
+    return fingerprints.join('\u0000');
+  } catch (error) {
+    if (error && typeof error === 'object' && 'code' in error && error.code === 'ENOENT') {
+      return '';
+    }
+
+    throw error;
+  }
 }
 
 function getAffiliateCacheKey(env: ArticleEnvironment = process.env): string {
@@ -364,12 +450,45 @@ function getAffiliateCacheKey(env: ArticleEnvironment = process.env): string {
     .join('\u0000');
 }
 
-export async function getArticleCacheSignature(
-  blogDir: string,
-  env: ArticleEnvironment = process.env,
-): Promise<ArticleCacheSignature> {
+export async function getArticleSourceCacheKey(contentDir: string): Promise<string> {
+  return getDirectorySourceCacheKey(contentDir);
+}
+
+function resolveArticleCacheInputs(
+  contentDirOrEnv?: string | readonly string[] | ArticleEnvironment,
+  maybeEnv?: ArticleEnvironment,
+): Readonly<{
+  contentDirs: readonly string[];
+  env: ArticleEnvironment;
+}> {
+  if (typeof contentDirOrEnv === 'string') {
+    return {
+      contentDirs: [contentDirOrEnv],
+      env: maybeEnv ?? process.env,
+    };
+  }
+
+  if (Array.isArray(contentDirOrEnv)) {
+    return {
+      contentDirs: contentDirOrEnv,
+      env: maybeEnv ?? process.env,
+    };
+  }
+
   return {
-    sourceKey: await getArticleSourceCacheKey(blogDir),
+    contentDirs: [BLOG_DIR, REVIEWS_DIR],
+    env: (contentDirOrEnv ?? process.env) as ArticleEnvironment,
+  };
+}
+
+export async function getArticleCacheSignature(
+  contentDirOrEnv?: string | readonly string[] | ArticleEnvironment,
+  maybeEnv?: ArticleEnvironment,
+): Promise<ArticleCacheSignature> {
+  const { contentDirs, env } = resolveArticleCacheInputs(contentDirOrEnv, maybeEnv);
+
+  return {
+    sourceKey: (await Promise.all(contentDirs.map((contentDir) => getDirectorySourceCacheKey(contentDir)))).join('\u0000'),
     affiliateKey: getAffiliateCacheKey(env),
   };
 }
@@ -378,15 +497,26 @@ export function getArticleCacheKey(signature: ArticleCacheSignature): string {
   return `${signature.sourceKey}\u0000${signature.affiliateKey}`;
 }
 
-export async function loadArticlesFromDirectory(blogDir: string): Promise<ArticleDocument[]> {
-  const entries = await fs.readdir(blogDir);
+export async function loadArticlesFromDirectory(contentDir: string): Promise<ArticleDocument[]> {
+  let entries: string[];
+
+  try {
+    entries = await fs.readdir(contentDir);
+  } catch (error) {
+    if (error && typeof error === 'object' && 'code' in error && error.code === 'ENOENT') {
+      return [];
+    }
+
+    throw error;
+  }
+
   const articleFiles = entries.filter((entry) => entry.endsWith('.md')).sort();
-  const articles = await Promise.all(articleFiles.map((fileName) => parseArticleFile(blogDir, fileName)));
+  const articles = await Promise.all(articleFiles.map((fileName) => parseArticleFile(contentDir, fileName)));
   const seenSlugs = new Set<string>();
 
   for (const article of articles) {
     if (seenSlugs.has(article.slug)) {
-      throw new Error(`Duplicate slug "${article.slug}" detected in ${blogDir}.`);
+      throw new Error(`Duplicate slug "${article.slug}" detected in ${contentDir}.`);
     }
 
     seenSlugs.add(article.slug);
@@ -398,30 +528,79 @@ export async function loadArticlesFromDirectory(blogDir: string): Promise<Articl
   });
 }
 
+async function loadAllContentDocuments(): Promise<ArticleDocument[]> {
+  const [editorialArticles, reviewArticles] = await Promise.all([
+    loadArticlesFromDirectory(BLOG_DIR),
+    loadArticlesFromDirectory(REVIEWS_DIR),
+  ]);
+  const seenSlugs = new Set<string>();
+
+  for (const article of [...editorialArticles, ...reviewArticles]) {
+    if (seenSlugs.has(article.slug)) {
+      throw new Error(`Duplicate slug "${article.slug}" detected across blog/ and reviews/.`);
+    }
+
+    seenSlugs.add(article.slug);
+  }
+
+  return [...editorialArticles, ...reviewArticles].sort((left, right) => {
+    const dateDiff = new Date(right.date).getTime() - new Date(left.date).getTime();
+    return dateDiff !== 0 ? dateDiff : left.slug.localeCompare(right.slug);
+  });
+}
+
 const getArticleDocuments = unstable_cache(
-  async (articleCacheSignature: ArticleCacheSignature): Promise<ArticleDocument[]> => {
-    void articleCacheSignature.sourceKey;
-    void articleCacheSignature.affiliateKey;
-    return loadArticlesFromDirectory(BLOG_DIR);
-  },
-  ['blog-articles'],
+  async (_articleCacheSignature: ArticleCacheSignature): Promise<ArticleDocument[]> => loadAllContentDocuments(),
+  ['content-documents'],
   { revalidate: false },
 );
 
+async function getDocumentsWithTrust(): Promise<ArticleDocument[]> {
+  const [articleCacheSignature, trustEntryMap] = await Promise.all([
+    getArticleCacheSignature(),
+    getArticleTrustEntryMap(),
+  ]);
+  const documents = await getArticleDocuments(articleCacheSignature);
+
+  return documents.map((article) => attachTrustMetadata(article, trustEntryMap.get(article.slug)));
+}
+
+function stripDocumentContent(article: ArticleDocument): ArticleSummary {
+  const { body: _body, contentHtml: _contentHtml, isPaywalled: _isPaywalled, ...summary } = article;
+  return summary;
+}
+
+export const getAllPublicArticles = cache(async (): Promise<ArticleSummary[]> => {
+  const articles = await getDocumentsWithTrust();
+  return articles.map(stripDocumentContent);
+});
+
 export const getAllArticles = cache(async (): Promise<ArticleSummary[]> => {
-  const articleCacheSignature = await getArticleCacheSignature(BLOG_DIR);
-  const articles = await getArticleDocuments(articleCacheSignature);
-  return articles.map(({ body: _body, contentHtml: _contentHtml, ...summary }) => summary);
+  const articles = await getDocumentsWithTrust();
+  return articles
+    .filter((article) => article.section === 'editorial')
+    .map(stripDocumentContent);
+});
+
+export const getAllReviewArticles = cache(async (): Promise<ArticleSummary[]> => {
+  const articles = await getDocumentsWithTrust();
+  return articles
+    .filter((article) => article.section === 'review')
+    .map(stripDocumentContent);
 });
 
 export const getArticleBySlug = cache(async (slug: string): Promise<ArticleDocument | null> => {
-  const articleCacheSignature = await getArticleCacheSignature(BLOG_DIR);
-  const articles = await getArticleDocuments(articleCacheSignature);
-  return articles.find((article) => article.slug === slug) ?? null;
+  const articles = await getDocumentsWithTrust();
+  return articles.find((article) => article.section === 'editorial' && article.slug === slug) ?? null;
 });
 
-export async function getArticleCategories(): Promise<string[]> {
-  const articles = await getAllArticles();
+export const getReviewBySlug = cache(async (slug: string): Promise<ArticleDocument | null> => {
+  const articles = await getDocumentsWithTrust();
+  return articles.find((article) => article.section === 'review' && article.slug === slug) ?? null;
+});
+
+export async function getArticleCategories(section: ContentSection = 'editorial'): Promise<string[]> {
+  const articles = section === 'review' ? await getAllReviewArticles() : await getAllArticles();
   return Array.from(new Set(articles.map((article) => article.category))).sort((left, right) =>
     left.localeCompare(right),
   );
