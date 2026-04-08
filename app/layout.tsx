@@ -84,6 +84,7 @@ export default function RootLayout({
     process.env.NEXT_PUBLIC_PLAUSIBLE_DOMAIN,
     process.env.NEXT_PUBLIC_LINKEDIN_PARTNER_ID,
   );
+  const linkedInPartnerIdLiteral = JSON.stringify(analyticsState.linkedInPartnerId);
 
   return (
     <html
@@ -133,7 +134,7 @@ export default function RootLayout({
             strategy="afterInteractive"
             dangerouslySetInnerHTML={{
               __html: `
-                _linkedin_partner_id = "${analyticsState.linkedInPartnerId}";
+                _linkedin_partner_id = ${linkedInPartnerIdLiteral};
                 window._linkedin_data_partner_ids = window._linkedin_data_partner_ids || [];
                 window._linkedin_data_partner_ids.push(_linkedin_partner_id);
                 (function(l) {
@@ -147,7 +148,7 @@ export default function RootLayout({
               `,
             }}
           />
-        )}
+        ) : null}
       </body>
     </html>
   );

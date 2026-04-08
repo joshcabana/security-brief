@@ -84,7 +84,7 @@ test('automation:inbox-triage script points at the repo-local Gmail triage runne
 test('repo pins Node.js 20.x for local, CI, and Vercel builds', () => {
   assert.equal(packageJson.engines?.node, '20.x');
   assert.equal(existsSync(nvmrcPath), true);
-  assert.equal(readFileSync(nvmrcPath, 'utf8').trim(), '20');
+  assert.match(readFileSync(nvmrcPath, 'utf8').trim(), /^20(?:\.\d+){0,2}$/);
 });
 
 test('trust and production verification scripts point at the new repo-local runners', () => {

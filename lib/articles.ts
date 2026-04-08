@@ -259,7 +259,7 @@ async function renderMarkdown(markdown: string, title: string): Promise<string> 
     allowedSchemesAppliedToAttributes: ['href'],
     allowProtocolRelative: false,
     transformTags: {
-      a: (_tagName, attribs) => {
+      a: (_tagName: string, attribs: Record<string, string>) => {
         const safeHref = normalizeLinkTarget(attribs.href, {
           allowRelative: true,
           requireHttps: true,

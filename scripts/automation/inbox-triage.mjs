@@ -525,6 +525,15 @@ export function classifyFailure(stderr, stage) {
   };
 }
 
+/**
+ * @param {{
+ *   runStamp: { display: string };
+ *   mailbox: string;
+ *   failure: { message: string; stage: string; retryable: boolean };
+ *   preflight?: { email?: string } | null;
+ *   notes?: string[];
+ * }} input
+ */
 export function buildFailureResult({ runStamp, mailbox, failure, preflight = null, notes = [] }) {
   return {
     success: false,
