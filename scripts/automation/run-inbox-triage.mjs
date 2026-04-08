@@ -3,6 +3,7 @@
 import { execFile as execFileCallback } from 'node:child_process';
 import { promisify } from 'node:util';
 import {
+  BROWSER_TRIAGE_OUTPUT_SCHEMA,
   POLICY_PATH,
   MEMORY_PATH,
   PROFILE_OUTPUT_SCHEMA,
@@ -123,6 +124,42 @@ function getDeliveryMode(policy) {
   return policy.reply_policy?.mode === 'auto_send' ? 'auto_send' : 'draft_only';
 }
 
+async function runBrowserCodexTriage({ policy, memory, context, browserSnapshot, dryRun }) {
+  const triage = await runCodexJson({
+    prompt: buildBrowserTriagePrompt({
+      policy,
+      memory,
+      context,
+      browserSnapshot,
+      dryRun,
+    }),
+    schema: BROWSER_TRIAGE_OUTPUT_SCHEMA,
+    timeoutMs: 300000,
+  });
+
+  if (!triage.json || triage.code !== 0) {
+    throw new Error(triage.stderr || 'Codex browser triage did not return valid structured output.');
+  }
+
+  validateBrowserTriageResult(triage.json);
+
+  return {
+    ...triage.json,
+    delivery_mode: getDeliveryMode(policy),
+    coverage: triage.json.coverage?.scope_note ? triage.json.coverage : {
+      recent_days: policy.search_windows?.recent_days ?? 30,
+      context_days: policy.search_windows?.context_days ?? 90,
+      scope_note: 'Browser triage used Codex structured-output fallback.',
+    },
+    summary: triage.json.summary?.trim()
+      || 'No reply-worthy AITHREATBRIEF or affiliate threads were identified in the scanned browser snapshot.',
+    notes: [
+      ...(triage.json.notes ?? []),
+      'Browser triage used Codex structured-output fallback after GitHub Models was unavailable.',
+    ],
+  };
+}
+
 function extractPreflightFailure(preflightResult) {
   if (!preflightResult.json || preflightResult.code !== 0) {
     return classifyFailure(preflightResult.stderr, 'preflight');
@@ -177,21 +214,34 @@ async function runBrowserFallback({
       dryRun: options.dryRun,
     });
   } catch (error) {
-    return buildFailureResult({
-      runStamp,
-      mailbox: browserSnapshot.mailbox_email,
-      deliveryMode: getDeliveryMode(policy),
-      failure: {
-        stage: 'browser-triage',
-        message: error instanceof Error ? error.message : String(error),
-        retryable: false,
-      },
-      preflight: preflight.json,
-      notes: [
-        `Gmail connector preflight failed: ${preflightFailure.message}`,
-        `Browser fallback reached ${browserSnapshot.mailbox_email} through Chrome CDP ${browserSnapshot.cdp_url}.`,
-      ],
-    });
+    try {
+      browserDecision = await runBrowserCodexTriage({
+        policy,
+        memory,
+        context,
+        browserSnapshot,
+        dryRun: options.dryRun,
+      });
+    } catch (fallbackError) {
+      return buildFailureResult({
+        runStamp,
+        mailbox: browserSnapshot.mailbox_email,
+        deliveryMode: getDeliveryMode(policy),
+        failure: {
+          stage: 'browser-triage',
+          message: [
+            error instanceof Error ? error.message : String(error),
+            fallbackError instanceof Error ? fallbackError.message : String(fallbackError),
+          ].join('\nFallback failure:\n'),
+          retryable: false,
+        },
+        preflight: preflight.json,
+        notes: [
+          `Gmail connector preflight failed: ${preflightFailure.message}`,
+          `Browser fallback reached ${browserSnapshot.mailbox_email} through Chrome CDP ${browserSnapshot.cdp_url}.`,
+        ],
+      });
+    }
   }
 
   let draftsCreated = [];
