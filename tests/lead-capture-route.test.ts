@@ -157,3 +157,32 @@ test('lead capture does not expose upstream Beehiiv errors to clients', async ()
     'The report request was rejected. Double-check the submitted details and try again.',
   );
 });
+
+test('lead capture rejects invalid Beehiiv API base URLs before making an upstream request', async () => {
+  setBeehiivEnv();
+  setUpstashEnv();
+  allowRateLimit();
+  process.env.BEEHIIV_API_BASE_URL = 'http://127.0.0.1:8080';
+
+  let fetchCalled = false;
+  globalThis.fetch = async () => {
+    fetchCalled = true;
+    return new Response(null, { status: 201 });
+  };
+
+  const response = await POST(
+    createSameSiteRequest(
+      JSON.stringify({
+        email: 'worker@example.com',
+        jobTitle: 'Security Engineer',
+      }),
+    ),
+  );
+
+  assert.equal(fetchCalled, false);
+  assert.equal(response.status, 503);
+  assert.equal(
+    (await response.json()).message,
+    'Could not process your request right now. Try again in a moment.',
+  );
+});

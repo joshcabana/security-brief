@@ -193,6 +193,19 @@ test('parseArticleSource rejects empty categories', async () => {
   );
 });
 
+test('parseArticleSource rejects unsafe slugs that could break routing and metadata contexts', async () => {
+  await assert.rejects(
+    () =>
+      parseArticleSource(
+        'bad-slug.md',
+        buildArticleMarkdown({
+          slug: 'bad/slug',
+        }),
+      ),
+    /slug/i,
+  );
+});
+
 test('parseArticleSource strips unsafe HTML from rendered article content and metadata fields', async () => {
   const article = await parseArticleSource(
     'sanitised-article.md',
@@ -211,7 +224,11 @@ test('parseArticleSource strips unsafe HTML from rendered article content and me
         '',
         '<a href="javascript:alert(1)" onclick="evil()">bad link</a>',
         '',
+        '[insecure link](http://insecure.example/path)',
+        '',
         '<a href="/guides">internal link</a>',
+        '',
+        '![tracking pixel](https://tracker.example/pixel.png)',
       ].join('\n'),
     }),
   );
@@ -221,8 +238,9 @@ test('parseArticleSource strips unsafe HTML from rendered article content and me
   assert.equal(article.metaTitle, 'Meta title');
   assert.equal(article.metaDescription, 'Meta description');
   assert.deepEqual(article.keywords, ['first', 'second', 'third', 'fourth', 'fifth']);
-  assert.doesNotMatch(article.contentHtml, /<script|onclick=|javascript:/i);
+  assert.doesNotMatch(article.contentHtml, /<script|onclick=|javascript:|<img/i);
   assert.doesNotMatch(article.contentHtml, /^<h1/i);
   assert.match(article.contentHtml, /<strong>bold<\/strong>/);
   assert.match(article.contentHtml, /href="\/guides"/);
+  assert.doesNotMatch(article.contentHtml, /http:\/\/insecure\.example/i);
 });

@@ -82,7 +82,7 @@ test('subscribe route returns 503 when Beehiiv is not configured', async () => {
   assert.equal(response.status, 503);
   assert.deepEqual(await response.json(), {
     ok: false,
-    message: 'Newsletter signup is not configured yet. Add BEEHIIV_API_KEY and BEEHIIV_PUBLICATION_ID first.',
+    message: 'Newsletter signup is temporarily unavailable. Try again shortly.',
   });
 });
 
@@ -275,7 +275,7 @@ test('subscribe route returns 502 when Beehiiv cannot be reached', async () => {
   assert.equal(response.status, 502);
   assert.equal(
     (await response.json()).message,
-    'Beehiiv could not be reached. Check network access and publication settings, then try again.',
+    'Newsletter signup is temporarily unavailable. Try again shortly.',
   );
 });
 
@@ -424,7 +424,7 @@ test('subscribe route returns 504 when Beehiiv times out', async () => {
   assert.equal(response.status, 504);
   assert.equal(
     (await response.json()).message,
-    'Beehiiv did not respond before the signup request timed out. Wait a moment and try again. If the delay continues, check Beehiiv API availability and publication settings.',
+    'Newsletter signup is temporarily unavailable. Try again shortly.',
   );
 });
 
@@ -519,6 +519,50 @@ test('subscribe route falls back to unknown when the placement source contains i
   );
 
   assert.equal(response.status, 200);
+});
+
+test('subscribe route falls back to unknown when the placement source exceeds the allowed length', async () => {
+  setBeehiivEnv();
+  setUpstashEnv();
+  allowRateLimit();
+
+  globalThis.fetch = async (_input, init) => {
+    assert.ok(init?.body);
+    assert.equal(JSON.parse(String(init.body)).utm_content, 'unknown');
+
+    return new Response(JSON.stringify({ data: { id: 'sub_long_source' } }), {
+      status: 201,
+      headers: { 'Content-Type': 'application/json' },
+    });
+  };
+
+  const response = await POST(
+    createSameSiteRequest(JSON.stringify({ email: 'reader@example.com', source: 'a'.repeat(65) })),
+  );
+
+  assert.equal(response.status, 200);
+});
+
+test('subscribe route rejects invalid Beehiiv API base URLs before making an upstream request', async () => {
+  setBeehiivEnv();
+  setUpstashEnv();
+  allowRateLimit();
+  process.env.BEEHIIV_API_BASE_URL = 'http://127.0.0.1:8080';
+
+  let fetchCalled = false;
+  globalThis.fetch = async () => {
+    fetchCalled = true;
+    return new Response(null, { status: 201 });
+  };
+
+  const response = await POST(createSameSiteRequest(JSON.stringify({ email: 'reader@example.com' })));
+
+  assert.equal(fetchCalled, false);
+  assert.equal(response.status, 503);
+  assert.deepEqual(await response.json(), {
+    ok: false,
+    message: 'Newsletter signup is temporarily unavailable. Try again shortly.',
+  });
 });
 
 test('subscribe route enrolls the Beehiiv welcome automation when configured', async () => {

@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import {
+  MAX_NEWSLETTER_SOURCE_LENGTH,
   buildNewsletterPath,
   coerceSingleSearchParamValue,
   resolveNewsletterSource,
@@ -13,6 +14,7 @@ test('newsletter source sanitization accepts only lowercase letters digits and h
   assert.equal(sanitizeNewsletterSource('Headline CTA'), null);
   assert.equal(sanitizeNewsletterSource('bad_source'), null);
   assert.equal(sanitizeNewsletterSource('UPPERCASE'), null);
+  assert.equal(sanitizeNewsletterSource('a'.repeat(MAX_NEWSLETTER_SOURCE_LENGTH + 1)), null);
 });
 
 test('newsletter source resolution falls back to the page default when query values are invalid', () => {

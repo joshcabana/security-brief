@@ -49,6 +49,9 @@ test('deploy workflow sanitises the Vercel deploy URL and keeps production live 
   const productionVerificationJob = extractJobBlock('verify_live');
   const verifyJob = extractJobBlock('verify');
 
+  assert.match(deployWorkflowSource, /^env:\n  VERCEL_CLI_VERSION: 34\.1\.9$/m);
+  assert.doesNotMatch(deployWorkflowSource, /vercel@latest/);
+  assert.match(deployJob, /pnpm dlx vercel@\$VERCEL_CLI_VERSION --version/);
   assert.match(deployJob, /needs\.deploy_gate\.outputs\.enabled == 'true' && github\.ref == 'refs\/heads\/main'/);
   assert.match(deployJob, /DEPLOYMENT_OUTPUT=.*2>&1/);
   assert.match(deployJob, /grep -v 'https:\/\/vercel\.com\//);
