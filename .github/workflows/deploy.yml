@@ -7,6 +7,9 @@ on:
     branches: [main]
   workflow_dispatch:
 
+env:
+  VERCEL_CLI_VERSION: 34.1.9
+
 permissions:
   contents: read
 
@@ -105,21 +108,21 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Install Vercel CLI
-        run: pnpm dlx vercel@latest --version
+        run: pnpm dlx vercel@$VERCEL_CLI_VERSION --version
 
       - name: Pull Vercel environment information
-        run: pnpm dlx vercel@latest pull --yes --environment=${{ github.ref == 'refs/heads/main' && 'production' || 'preview' }} --token=${{ secrets.VERCEL_TOKEN }}
+        run: pnpm dlx vercel@$VERCEL_CLI_VERSION pull --yes --environment=${{ github.ref == 'refs/heads/main' && 'production' || 'preview' }} --token=${{ secrets.VERCEL_TOKEN }}
 
       - name: Build project
-        run: pnpm dlx vercel@latest build ${{ github.ref == 'refs/heads/main' && '--prod' || '' }} --token=${{ secrets.VERCEL_TOKEN }}
+        run: pnpm dlx vercel@$VERCEL_CLI_VERSION build ${{ github.ref == 'refs/heads/main' && '--prod' || '' }} --token=${{ secrets.VERCEL_TOKEN }}
 
       - name: Deploy to Vercel
         id: deploy
         run: |
           if [ "${{ github.ref }}" == "refs/heads/main" ]; then
-            DEPLOYMENT_OUTPUT=$(pnpm dlx vercel@latest deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }} 2>&1)
+            DEPLOYMENT_OUTPUT=$(pnpm dlx vercel@$VERCEL_CLI_VERSION deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }} 2>&1)
           else
-            DEPLOYMENT_OUTPUT=$(pnpm dlx vercel@latest deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }} 2>&1)
+            DEPLOYMENT_OUTPUT=$(pnpm dlx vercel@$VERCEL_CLI_VERSION deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }} 2>&1)
           fi
           printf '%s\n' "$DEPLOYMENT_OUTPUT"
           DEPLOYMENT_URL=$(printf '%s\n' "$DEPLOYMENT_OUTPUT" | grep -Eo 'https://[^[:space:]]+' | grep -v 'https://vercel.com/' | tail -n 1)

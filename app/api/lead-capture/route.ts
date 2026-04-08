@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { DEFAULT_BEEHIIV_API_BASE_URL, resolveBeehiivApiBaseUrl } from '@/lib/beehiiv-api.mjs';
 import { ratelimit } from '@/lib/rate-limit';
 import {
   getAllowedOrigins,
@@ -30,7 +31,6 @@ import {
 // ── Config ────────────────────────────────────────────────────────────────
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const DEFAULT_API_BASE_URL = 'https://api.beehiiv.com';
 const REQUEST_TIMEOUT_MS = 10_000;
 const MAX_RETRY_ATTEMPTS = 2;
 const RETRY_BASE_DELAY_MS = 250;
@@ -158,9 +158,16 @@ type RateLimitResponse = {
 function getBeehiivConfig() {
   const apiKey = process.env.BEEHIIV_API_KEY?.trim();
   const publicationId = process.env.BEEHIIV_PUBLICATION_ID?.trim();
-  const apiBaseUrl = (process.env.BEEHIIV_API_BASE_URL?.trim() || DEFAULT_API_BASE_URL).replace(/\/$/, '');
+  const rawApiBaseUrl = process.env.BEEHIIV_API_BASE_URL?.trim();
+  const resolvedApiBaseUrl = resolveBeehiivApiBaseUrl(rawApiBaseUrl);
 
-  return { apiKey, publicationId, apiBaseUrl, configured: Boolean(apiKey && publicationId) };
+  return {
+    apiKey,
+    publicationId,
+    apiBaseUrl: resolvedApiBaseUrl ?? DEFAULT_BEEHIIV_API_BASE_URL,
+    configured: Boolean(apiKey && publicationId && resolvedApiBaseUrl),
+    invalidApiBaseUrl: Boolean(rawApiBaseUrl && !resolvedApiBaseUrl),
+  };
 }
 
 function getLeadAutomationIds(): string[] {
@@ -400,11 +407,15 @@ export async function POST(request: Request): Promise<Response> {
   }
 
   // 8. Beehiiv config
-  const { apiKey, publicationId, apiBaseUrl, configured } = getBeehiivConfig();
+  const { apiKey, publicationId, apiBaseUrl, configured, invalidApiBaseUrl } = getBeehiivConfig();
 
   if (!configured || !apiKey || !publicationId) {
+    if (invalidApiBaseUrl) {
+      logError('config', 'Invalid BEEHIIV_API_BASE_URL configuration.');
+    }
+
     return NextResponse.json(
-      { ok: false, message: 'Lead capture is not configured yet. Contact the site owner.' },
+      { ok: false, message: 'Could not process your request right now. Try again in a moment.' },
       { status: 503 },
     );
   }

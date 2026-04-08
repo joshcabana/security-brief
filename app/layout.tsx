@@ -7,6 +7,7 @@ import Footer from '@/components/Footer';
 import AffiliateBanner from '@/components/AffiliateBanner';
 import { getSiteUrl, siteDescription, siteName, siteUrl } from '@/lib/site';
 import { resolveAnalyticsState } from '@/lib/analytics-config.mjs';
+import { serializeJsonForHtml } from '@/lib/json-escape.mjs';
 
 
 
@@ -96,7 +97,7 @@ export default function RootLayout({
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
+            __html: serializeJsonForHtml({
               '@context': 'https://schema.org',
               '@type': 'WebSite',
               name: siteName,

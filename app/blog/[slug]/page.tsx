@@ -10,6 +10,7 @@ import PaywallCTA from '@/components/PaywallCTA';
 import AccountabilityBox from '@/components/AccountabilityBox';
 import { getAllArticles, getArticleBySlug } from '@/lib/articles';
 import { siteUrl, siteName } from '@/lib/site';
+import { serializeJsonForHtml } from '@/lib/json-escape.mjs';
 
 interface ArticlePageProps {
   params: Promise<{ slug: string }>;
@@ -109,7 +110,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
     <div className="bg-slate-900 dark:bg-slate-950 min-h-screen">
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonForHtml(articleJsonLd) }}
       />
       <header className="relative overflow-hidden bg-gradient-to-b from-slate-900 to-slate-950 border-b border-slate-800 py-14">
         <div className="absolute inset-0 bg-grid opacity-30 pointer-events-none" aria-hidden="true" />

@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { DEFAULT_BEEHIIV_API_BASE_URL, resolveBeehiivApiBaseUrl } from '@/lib/beehiiv-api.mjs';
 import { ratelimit } from '@/lib/rate-limit';
 import { sanitizeNewsletterSource } from '@/lib/newsletter-source.mjs';
 import {
@@ -10,7 +11,6 @@ import {
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const DEFAULT_SOURCE = 'unknown';
-const DEFAULT_API_BASE_URL = 'https://api.beehiiv.com';
 const REQUEST_TIMEOUT_MS = 10000;
 const MAX_RETRY_ATTEMPTS = 2;
 const RETRY_BASE_DELAY_MS = 250;
@@ -24,6 +24,7 @@ type BeehiivConfig = {
   publicationId: string | undefined;
   apiBaseUrl: string;
   configured: boolean;
+  invalidApiBaseUrl: boolean;
 };
 
 type SubscribeRequestPayload = {
@@ -76,13 +77,15 @@ class BeehiivRequestNetworkError extends Error {
 function getBeehiivConfig(): BeehiivConfig {
   const apiKey = process.env.BEEHIIV_API_KEY?.trim();
   const publicationId = process.env.BEEHIIV_PUBLICATION_ID?.trim();
-  const apiBaseUrl = (process.env.BEEHIIV_API_BASE_URL?.trim() || DEFAULT_API_BASE_URL).replace(/\/$/, '');
+  const rawApiBaseUrl = process.env.BEEHIIV_API_BASE_URL?.trim();
+  const resolvedApiBaseUrl = resolveBeehiivApiBaseUrl(rawApiBaseUrl);
 
   return {
     apiKey,
     publicationId,
-    apiBaseUrl,
-    configured: Boolean(apiKey && publicationId),
+    apiBaseUrl: resolvedApiBaseUrl ?? DEFAULT_BEEHIIV_API_BASE_URL,
+    configured: Boolean(apiKey && publicationId && resolvedApiBaseUrl),
+    invalidApiBaseUrl: Boolean(rawApiBaseUrl && !resolvedApiBaseUrl),
   };
 }
 
@@ -354,14 +357,17 @@ export async function POST(request: Request): Promise<Response> {
     );
   }
 
-  const { apiKey, publicationId, apiBaseUrl, configured } = getBeehiivConfig();
+  const { apiKey, publicationId, apiBaseUrl, configured, invalidApiBaseUrl } = getBeehiivConfig();
 
   if (!configured || !apiKey || !publicationId) {
+    if (invalidApiBaseUrl) {
+      logFailure('config', 'Invalid BEEHIIV_API_BASE_URL configuration.');
+    }
+
     return NextResponse.json(
       {
         ok: false,
-        message:
-          'Newsletter signup is not configured yet. Add BEEHIIV_API_KEY and BEEHIIV_PUBLICATION_ID first.',
+        message: 'Newsletter signup is temporarily unavailable. Try again shortly.',
       },
       { status: 503 },
     );
@@ -391,8 +397,7 @@ export async function POST(request: Request): Promise<Response> {
       return NextResponse.json(
         {
           ok: false,
-          message:
-            'Beehiiv did not respond before the signup request timed out. Wait a moment and try again. If the delay continues, check Beehiiv API availability and publication settings.',
+          message: 'Newsletter signup is temporarily unavailable. Try again shortly.',
         },
         { status: 504 },
       );
@@ -403,7 +408,7 @@ export async function POST(request: Request): Promise<Response> {
       return NextResponse.json(
         {
           ok: false,
-          message: 'Beehiiv could not be reached. Check network access and publication settings, then try again.',
+          message: 'Newsletter signup is temporarily unavailable. Try again shortly.',
         },
         { status: 502 },
       );
@@ -412,7 +417,7 @@ export async function POST(request: Request): Promise<Response> {
     return NextResponse.json(
       {
         ok: false,
-        message: 'Beehiiv could not be reached. Check network access and publication settings, then try again.',
+        message: 'Newsletter signup is temporarily unavailable. Try again shortly.',
       },
       { status: 502 },
     );

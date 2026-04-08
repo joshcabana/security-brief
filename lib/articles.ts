@@ -9,10 +9,12 @@ import remarkGfm from 'remark-gfm';
 import remarkHtml from 'remark-html';
 import sanitizeHtml from 'sanitize-html';
 import { replaceAffiliateTokens } from './affiliate-links';
+import { normalizeLinkTarget } from './url-safety.mjs';
 
 export const BLOG_DIR = path.join(process.cwd(), 'blog');
 export const READ_TIME_PATTERN = /^\d+\s+min$/;
 export const BRAND_AUTHOR_NAME = 'AI Security Brief';
+export const ARTICLE_SLUG_PATTERN = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 
 export interface ArticleAuthor {
   name: string;
@@ -72,6 +74,16 @@ function assertString(value: unknown, field: string, fileName: string): string {
   }
 
   return value.trim();
+}
+
+function assertSlug(value: unknown, field: string, fileName: string): string {
+  const normalizedValue = assertString(value, field, fileName);
+
+  if (!ARTICLE_SLUG_PATTERN.test(normalizedValue)) {
+    throw new Error(`Expected "${field}" to contain only lowercase letters, numbers, and hyphens in ${fileName}.`);
+  }
+
+  return normalizedValue;
 }
 
 function stripHtmlToPlainText(value: string): string {
@@ -226,11 +238,11 @@ async function renderMarkdown(markdown: string, title: string): Promise<string> 
       'h5',
       'h6',
       'hr',
-      'img',
       'li',
       'ol',
       'p',
       'pre',
+      'span',
       'strong',
       'table',
       'tbody',
@@ -241,20 +253,28 @@ async function renderMarkdown(markdown: string, title: string): Promise<string> 
       'ul',
     ],
     allowedAttributes: {
-      a: ['href'],
-      img: ['src', 'alt', 'title'],
+      a: ['href', 'rel'],
     },
-    allowedSchemes: ['http', 'https'],
-    allowedSchemesAppliedToAttributes: ['href', 'src'],
+    allowedSchemes: ['https'],
+    allowedSchemesAppliedToAttributes: ['href'],
     allowProtocolRelative: false,
     transformTags: {
       a: (_tagName, attribs) => {
-        const { href } = attribs;
-        const safeHref = href ? href : undefined;
+        const safeHref = normalizeLinkTarget(attribs.href, {
+          allowRelative: true,
+          requireHttps: true,
+        });
+
+        if (!safeHref) {
+          return {
+            tagName: 'span',
+            attribs: {},
+          };
+        }
 
         return {
           tagName: 'a',
-          attribs: safeHref ? { href: safeHref, rel: 'noopener noreferrer nofollow' } : {},
+          attribs: { href: safeHref, rel: 'noopener noreferrer nofollow' },
         };
       },
     },
@@ -282,7 +302,7 @@ export async function parseArticleSource(fileName: string, source: string): Prom
   }
 
   const resolvedBody = replaceAffiliateTokens(freeContent, isAffiliateEnabled ? process.env : {});
-  const slug = assertString(data.slug, 'slug', fileName);
+  const slug = assertSlug(data.slug, 'slug', fileName);
   const article = {
     title,
     slug,

@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { getAffiliateUrlByPriority } from '@/lib/affiliate-links';
 import { createPageMetadata } from '@/lib/page-metadata.mjs';
 import { normalizeOutboundUrl } from '@/lib/url-safety.mjs';
+import { serializeJsonForHtml } from '@/lib/json-escape.mjs';
 
 export const dynamic = 'force-dynamic';
 
@@ -272,7 +273,7 @@ export default function ToolsPage() {
     <div style={{ background: '#0d1117', minHeight: '100vh' }}>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonForHtml(jsonLd) }}
       />
       <div
         className="relative overflow-hidden"
