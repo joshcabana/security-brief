@@ -413,8 +413,8 @@ function getPolicySnapshot(policy) {
 
 function getProjectContextSnapshot(context) {
   return {
-    status_excerpt: trimContext(context?.status_excerpt ?? '', 1800),
-    readme_excerpt: trimContext(context?.readme_excerpt ?? '', 900),
+    status_excerpt: trimContext(context?.status_excerpt ?? '', 1400),
+    readme_excerpt: trimContext(context?.readme_excerpt ?? '', 600),
   };
 }
 
@@ -422,7 +422,6 @@ function getBrowserSnapshotForPrompt(browserSnapshot) {
   return {
     transport: browserSnapshot.transport,
     mailbox_email: browserSnapshot.mailbox_email,
-    search_runs: browserSnapshot.search_runs,
     threads: (browserSnapshot.threads ?? []).map((thread) => ({
       thread_id: thread.thread_id,
       subject: thread.subject,
