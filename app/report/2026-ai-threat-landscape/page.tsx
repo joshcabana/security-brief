@@ -13,10 +13,10 @@ export const metadata: Metadata = {
 
 export default function ReportPage() {
   const checkoutLive = siteConfig.beehiiv.checkoutLive;
-  const primaryCtaLabel = checkoutLive ? 'Continue to Pro Access' : 'Join the Pro Waitlist';
-  const supportCopy = checkoutLive
-    ? 'Full access is routed through the current Pro checkout flow.'
-    : 'Paid access is not live yet. Join the waitlist for report-access updates.';
+  const assessment = siteConfig.offers.assessment;
+  const proCtaLabel = checkoutLive ? 'Continue to Pro Access' : 'View Pro Details';
+  const supportCopy =
+    'Use this preview as the top-of-funnel research asset, then move into the readiness review if you need direct help prioritizing AI application risk.';
 
   return (
     <div className="max-w-3xl mx-auto px-6 py-20 font-sans">
@@ -36,10 +36,10 @@ export default function ReportPage() {
         <div className="bg-slate-900 border border-slate-800 rounded-lg p-6 mb-10">
           <h2 className="text-2xl font-bold text-slate-100 mt-0 mb-4">Executive Summary</h2>
           <p className="text-slate-300 m-0">
-            This preview page shows the structure of a longer-form AI Security Brief report. It is intended to introduce the topic area and route readers to the current Pro access flow for future full-report availability.
+            This preview page shows the structure of a longer-form AI Security Brief report. It is intended to introduce the topic area, collect high-intent interest, and route teams toward the readiness review when they need direct help.
           </p>
           <p className="text-slate-300 mt-4 mb-0">
-            The full report content is reserved for the Pro tier. Public briefings remain available elsewhere in the app while full report access routes through the current Pro flow.
+            The full report content remains a Pro asset, but the advisory path is now the primary next step for teams actively shipping AI features.
           </p>
         </div>
 
@@ -71,14 +71,17 @@ export default function ReportPage() {
               </div>
               <h3 className="text-2xl font-extrabold text-white mb-3 tracking-tight">Full report access is reserved for Pro</h3>
               <p className="text-slate-300 mb-8 leading-relaxed">
-                This page is a preview excerpt. Use the current Pro flow for full report access and member updates.
+                This page is a preview excerpt. Start with the readiness review if you need a fixed-scope threat assessment now, or continue to Pro for the member content path.
               </p>
 
               <div className="flex flex-col gap-4">
-                <Link href="/upgrade" className="w-full px-6 py-4 rounded-xl bg-cyan-500 border border-cyan-400 text-slate-950 font-extrabold shadow-[0_0_20px_rgba(34,211,238,0.2)] hover:shadow-[0_0_30px_rgba(34,211,238,0.4)] hover:bg-cyan-400 transition-all flex items-center justify-center gap-2">
-                  {primaryCtaLabel}
+                <Link href={assessment.path} className="w-full px-6 py-4 rounded-xl bg-cyan-500 border border-cyan-400 text-slate-950 font-extrabold shadow-[0_0_20px_rgba(34,211,238,0.2)] hover:shadow-[0_0_30px_rgba(34,211,238,0.4)] hover:bg-cyan-400 transition-all flex items-center justify-center gap-2">
+                  View the readiness review
                 </Link>
-                <Link href="/subscribe" className="w-full px-6 py-3.5 rounded-xl bg-slate-800 border border-slate-700 text-slate-300 font-semibold hover:bg-slate-700 transition-all flex items-center justify-center">
+                <Link href="/pro" className="w-full px-6 py-3.5 rounded-xl bg-slate-800 border border-slate-700 text-slate-300 font-semibold hover:bg-slate-700 transition-all flex items-center justify-center">
+                  {proCtaLabel}
+                </Link>
+                <Link href="/subscribe" className="w-full px-6 py-3.5 rounded-xl bg-transparent border border-slate-700 text-slate-300 font-semibold hover:bg-slate-800/60 transition-all flex items-center justify-center">
                   Subscribe Free
                 </Link>
               </div>

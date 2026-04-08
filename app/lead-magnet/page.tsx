@@ -1,16 +1,21 @@
 import type { Metadata } from 'next';
+import Link from 'next/link';
 import NewsletterForm from '@/components/NewsletterForm';
 import { createPageMetadata } from '@/lib/page-metadata.mjs';
+import { siteConfig } from '@/lib/site';
 import { Shield, Terminal, GlobeLock } from 'lucide-react';
 import React from 'react';
 
 export const metadata: Metadata = createPageMetadata({
   canonicalPath: '/lead-magnet',
   title: '2026 AI Threat Landscape Preview',
-  description: 'Preview the 2026 AI Threat Landscape report and join the weekly AI Security Brief mailing list.',
+  description:
+    'Preview the 2026 AI Threat Landscape report, join the mailing list, and continue into the readiness review if your team needs hands-on support.',
 });
 
 export default function LeadMagnetPage() {
+  const assessment = siteConfig.offers.assessment;
+
   return (
     <div className="min-h-screen bg-white dark:bg-slate-950 flex flex-col justify-center">
       <section className="relative overflow-hidden py-24 flex-grow flex items-center">
@@ -37,7 +42,7 @@ export default function LeadMagnetPage() {
               </h1>
               
               <p className="text-lg md:text-xl text-slate-600 dark:text-slate-400 mb-8 leading-relaxed">
-                Preview the 2026 AI Threat Landscape report and join the mailing list for future report and briefing updates.
+                Preview the 2026 AI Threat Landscape report and join the mailing list for future report and briefing updates. If your team is already shipping AI features, use the readiness review as the next step.
               </p>
               
               <div className="space-y-4 mb-10 text-left">
@@ -68,6 +73,21 @@ export default function LeadMagnetPage() {
                     <p className="text-slate-600 dark:text-slate-400 text-sm">Deploying ephemeral microVMs and LLM Firewalls.</p>
                   </div>
                 </div>
+              </div>
+
+              <div className="flex flex-col sm:flex-row gap-4">
+                <Link
+                  href={assessment.path}
+                  className="inline-flex items-center justify-center rounded-xl px-5 py-3 text-sm font-bold text-slate-950 bg-cyan-400 hover:bg-cyan-300 transition-colors"
+                >
+                  View the readiness review
+                </Link>
+                <Link
+                  href={assessment.previewReportPath}
+                  className="inline-flex items-center justify-center rounded-xl px-5 py-3 text-sm font-semibold text-slate-700 dark:text-slate-200 border border-slate-300 dark:border-slate-700 hover:border-cyan-500 dark:hover:border-cyan-500 transition-colors"
+                >
+                  Preview the report page
+                </Link>
               </div>
             </div>
 

@@ -8,20 +8,17 @@ import { siteConfig } from '@/lib/site';
 export const metadata: Metadata = createPageMetadata({
   canonicalPath: '/subscribe',
   title: 'Subscribe | AI Security Brief',
-  description: 'Subscribe for weekly AI security briefings and access the current Pro path for deeper analysis, archive access, and reports.',
+  description:
+    'Subscribe for weekly AI security briefings, then move into the readiness review if your team needs hands-on AI application security guidance.',
 });
 
 export default function SubscribePage() {
   const checkoutLive = siteConfig.beehiiv.checkoutLive;
+  const assessment = siteConfig.offers.assessment;
   const proBadge = checkoutLive ? 'Pro Access' : 'Pro Waitlist';
-  const proTitle = checkoutLive ? 'Pro Access' : 'Pro Waitlist';
-  const proDescription = checkoutLive
-    ? 'Paid access for teams that want deeper technical briefings, archive access, and research reports.'
-    : 'Join the waitlist for deeper briefings, archive access, and research updates when paid access opens.';
-  const proButtonLabel = checkoutLive ? 'View Pro Access' : 'View Pro Details';
-  const proFootnote = checkoutLive
-    ? 'Checkout continues from the Pro overview.'
-    : 'The Pro overview includes the current waitlist flow. No card required.';
+  const advisoryTitle = assessment.name;
+  const advisoryDescription =
+    'The flagship offer for the next 90 days: a fixed-scope review for teams shipping agents, copilots, and LLM workflows.';
 
   return (
     <div className="min-h-[calc(100vh-80px)] bg-slate-50 dark:bg-[#080d14] flex flex-col items-center justify-center pt-24 pb-24">
@@ -39,7 +36,7 @@ export default function SubscribePage() {
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">that actually matters</span>
           </h1>
           <p className="mt-6 text-lg text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
-            Start with the free weekly briefing, then continue to Pro if you want deeper analysis, archive access, and research reports.
+            Start with the free weekly briefing, then move into the readiness review if your team needs operator-led help now. Pro remains available for the self-serve member path.
           </p>
         </div>
 
@@ -80,12 +77,12 @@ export default function SubscribePage() {
             </div>
           </div>
 
-          {/* Pro Tier Card */}
+          {/* Advisory Card */}
           <div className="bg-slate-900 dark:bg-[#0a1018] border border-cyan-500/30 rounded-2xl p-8 lg:p-10 shadow-2xl relative overflow-hidden flex flex-col h-full transform md:-translate-y-4">
             <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-cyan-400 to-blue-600"></div>
             <div className="absolute top-0 right-0 p-4">
               <div className="px-3 py-1 bg-cyan-500/20 border border-cyan-500/30 text-cyan-400 text-xs font-bold uppercase tracking-wider rounded-full">
-                {proBadge}
+                Featured Offer
               </div>
             </div>
             
@@ -94,21 +91,21 @@ export default function SubscribePage() {
                 <Zap size={24} className="text-cyan-400 shadow-[0_0_15px_rgba(34,211,238,0.5)]" />
               </div>
               <div className="flex items-end gap-2 mb-2">
-                <h2 className="text-2xl font-bold text-white">{proTitle}</h2>
+                <h2 className="text-2xl font-bold text-white">{advisoryTitle}</h2>
               </div>
               <p className="text-slate-400 text-sm">
-                {proDescription}
+                {advisoryDescription}
               </p>
             </div>
             
             <ul className="space-y-4 mb-10 flex-grow">
               {[
-                'Everything in Free',
-                'Deeper technical briefings',
-                'Searchable archive access',
-                'Research report updates',
-                checkoutLive ? 'Live Pro checkout access' : 'Member-content launch notifications',
-                'Disclosure-first tooling coverage'
+                `${assessment.priceLabel} fixed fee`,
+                `${assessment.deliveryWindow} delivery target`,
+                'Threat map and top-risk prioritization',
+                'Remediation memo and 60-minute readout',
+                'Paid before delivery',
+                'Workshop and fractional advisory follow-ons available',
               ].map((feature, i) => (
                 <li key={i} className="flex items-start gap-3">
                   <Check size={18} className="text-cyan-400 mt-0.5 shrink-0" />
@@ -119,13 +116,17 @@ export default function SubscribePage() {
 
             <div className="mt-auto">
               <Link 
-                href="/pro" 
+                href={assessment.path}
                 className="flex items-center justify-center w-full px-6 py-4 rounded-xl font-bold text-slate-900 bg-cyan-400 hover:bg-cyan-300 hover:shadow-[0_0_20px_rgba(34,211,238,0.4)] transition-all duration-300"
               >
-                {proButtonLabel}
+                View the readiness review
               </Link>
               <p className="text-center text-xs text-slate-500 mt-4">
-                {proFootnote}
+                Need the self-serve member path instead?{' '}
+                <Link href="/pro" className="text-cyan-400 hover:underline">
+                  {proBadge}
+                </Link>
+                .
               </p>
             </div>
           </div>

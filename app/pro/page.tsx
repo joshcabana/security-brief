@@ -17,13 +17,13 @@ export const metadata: Metadata = createPageMetadata({
   canonicalPath: '/pro',
   title: 'AI Security Brief Pro',
   description:
-    'Overview of AI Security Brief Pro, including the current access state and member content.',
+    'Overview of AI Security Brief Pro and how the member-content path complements the flagship readiness review.',
   openGraphTitle: 'AI Security Brief Pro',
   openGraphDescription:
-    'Overview of AI Security Brief Pro, including the current access state and member content.',
+    'Overview of AI Security Brief Pro and how the member-content path complements the flagship readiness review.',
   twitterTitle: 'AI Security Brief Pro',
   twitterDescription:
-    'Overview of AI Security Brief Pro, including the current access state and member content.',
+    'Overview of AI Security Brief Pro and how the member-content path complements the flagship readiness review.',
 });
 
 const proFeatures = [
@@ -67,6 +67,7 @@ const proFeatures = [
 
 export default function ProPage() {
   const checkoutLive = siteConfig.beehiiv.checkoutLive;
+  const assessment = siteConfig.offers.assessment;
   const freeVsPro = [
     { feature: 'Weekly email briefings', free: true, pro: true },
     { feature: 'Public blog articles', free: true, pro: true },
@@ -77,16 +78,15 @@ export default function ProPage() {
   ];
   const operationalNotes = [
     {
-      title: 'Current checkout state',
-      description: checkoutLive
-        ? 'The repository is currently configured so `/upgrade` routes readers into the live Beehiiv checkout flow.'
-        : 'The repository uses an environment flag to decide whether `/upgrade` redirects to checkout or captures waitlist signups.',
+      title: 'Flagship offer right now',
+      description:
+        `${assessment.name} is the primary offer for the next 90 days: ${assessment.priceLabel}, ${assessment.deliveryWindow}, and paid before delivery.`,
     },
     {
-      title: 'Current public content',
+      title: 'Where Pro fits',
       description: checkoutLive
-        ? 'Public briefings remain available through the blog and archive pages while Pro access routes through the live Beehiiv checkout.'
-        : 'Public briefings remain available through the blog and archive pages while paid access is not live.',
+        ? 'Pro remains the self-serve member-content path for deeper briefings, archive access, and report access when readers do not need hands-on advisory.'
+        : 'Pro remains the self-serve member-content path, with the current waitlist and update flow still active while the advisory funnel is the priority.',
     },
     {
       title: 'Current disclosure model',
@@ -94,14 +94,13 @@ export default function ProPage() {
         'Affiliate language is disclosed in articles and supporting policy pages rather than hidden in marketing copy.',
     },
   ];
-  const primaryCtaLabel = checkoutLive ? 'Continue to Pro Access' : 'Join the Pro Waitlist';
-  const heroSupportCopy = checkoutLive
-    ? 'Paid access is live through the current Beehiiv checkout flow.'
-    : 'Paid access is not live yet. Join the waitlist for launch updates.';
+  const primaryCtaLabel = 'View the readiness review';
+  const heroSupportCopy =
+    'If you need direct help prioritizing AI agent risk, start with the fixed-scope readiness review. Pro is the self-serve member layer for deeper content.';
   const pricingSupportCopy = checkoutLive
-    ? 'Upgrade flow is active.'
-    : 'Waitlist signup is active. No card required.';
-  const statusBadge = checkoutLive ? 'Paid access live' : 'Waitlist open';
+    ? 'Pro checkout is still active for readers who want the member-content path.'
+    : 'The member-content waitlist is still active for readers who want the self-serve path.';
+  const statusBadge = 'Member layer';
   const summaryHeading = checkoutLive ? 'What Pro includes' : 'What Pro is intended to include';
 
   return (
@@ -138,20 +137,23 @@ export default function ProPage() {
             <span
               className="block bg-[linear-gradient(135deg,#00b4ff_0%,#0086bd_60%,#00e5ff_100%)] text-transparent bg-clip-text"
             >
-              Member Content Overview
+              The Self-Serve Deep-Dive Layer
             </span>
           </h1>
 
           <p className="text-xl text-slate-400 max-w-2xl mx-auto mb-10 leading-relaxed">
-            This page describes the current Pro access flow and the member-content structure reflected in the repository.
+            This page describes the current Pro access flow and the member-content structure reflected in the repository. Teams that need operator-led guidance now should start with the readiness review first.
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-6">
-            <ProCTAButton id="pro-cta-hero" variant="primary">
+            <Link
+              href={assessment.path}
+              className="pro-cta-btn inline-flex items-center gap-2 px-8 py-4 rounded-lg font-bold text-base transition-all duration-200 group text-slate-950 bg-cyan-400 hover:bg-cyan-300"
+            >
               {primaryCtaLabel}
-            </ProCTAButton>
-            <ProCTAButton id="pro-cta-sample" variant="ghost" href="/blog">
-              Read public briefings
+            </Link>
+            <ProCTAButton id="pro-cta-hero" variant="ghost">
+              {checkoutLive ? 'Continue to Pro Access' : 'Join the Pro Waitlist'}
             </ProCTAButton>
           </div>
 
@@ -192,7 +194,7 @@ export default function ProPage() {
               {summaryHeading}
             </h2>
             <p className="mt-4 text-lg text-[var(--text-muted)]">
-              These items are derived from the current site structure and Pro access flow.
+              These items are derived from the current site structure and show where Pro adds depth once readers already trust the publication or complete the advisory review.
             </p>
           </div>
 
@@ -294,7 +296,7 @@ export default function ProPage() {
               Member briefings summarize the issue, affected systems, and mitigation direction.
             </p>
             <p className="text-xs leading-relaxed mb-4 text-[var(--text-muted)]">
-              The current repository includes public briefings, report previews, and paywalled content placeholders. Pro pages are intended to expand on that structure with longer-form analysis and archive access.
+              The current repository includes public briefings, report previews, and paywalled content placeholders. Pro expands on that structure with longer-form analysis and archive access, while the readiness review handles immediate hands-on advisory.
             </p>
             <div className="grid grid-cols-3 gap-4 pt-4 border-t border-[var(--border-subtle)]">
               {[
@@ -336,7 +338,7 @@ export default function ProPage() {
           >
             <div className="mb-6">
               <span className="text-3xl font-extrabold text-[var(--text-primary)]">
-                {checkoutLive ? 'Pro access' : 'Waitlist'}
+                {assessment.name}
               </span>
             </div>
             <p className="text-sm mb-8 text-[var(--text-muted)]">
@@ -345,11 +347,11 @@ export default function ProPage() {
 
             <ul className="space-y-3 mb-10 text-left max-w-sm mx-auto">
               {[
-                'Public briefings remain available today',
-                'Upgrade flow lives at /upgrade',
-                'Waitlist signup uses the current subscribe endpoint',
-                'Research-report previews already exist in the app',
-                'Archive and member-content routes can expand from this base',
+                `${assessment.priceLabel} fixed fee`,
+                `${assessment.deliveryWindow} turnaround target`,
+                'Threat map, risk priorities, and remediation memo',
+                '60-minute readout for decision makers',
+                'Workshop and advisory follow-ons when needed',
               ].map((item) => (
                 <li key={item} className="flex items-start gap-3 text-sm text-[var(--text-body)]">
                   <Check size={16} className="mt-0.5 flex-shrink-0 text-[var(--accent)]" />
@@ -358,16 +360,24 @@ export default function ProPage() {
               ))}
             </ul>
 
-            <ProCTAButton
-              id="pro-cta-pricing"
-              variant="primary"
-              className="block w-full py-4 rounded-lg font-bold text-base text-center transition-all duration-200 justify-center"
+            <Link
+              href={assessment.path}
+              className="pro-cta-btn inline-flex items-center gap-2 px-8 py-4 rounded-lg font-bold text-base transition-all duration-200 group block w-full py-4 rounded-lg text-center justify-center text-slate-950 bg-cyan-400 hover:bg-cyan-300"
             >
               {primaryCtaLabel}
-            </ProCTAButton>
+            </Link>
             <p className="mt-4 text-xs text-[var(--text-faint)]">
               {pricingSupportCopy}
             </p>
+            <div className="mt-4">
+              <ProCTAButton
+                id="pro-cta-pricing"
+                variant="ghost"
+                className="justify-center w-full"
+              >
+                {checkoutLive ? 'Continue to Pro Access' : 'Join the Pro Waitlist'}
+              </ProCTAButton>
+            </div>
           </div>
 
           <div className="flex items-center justify-center gap-6">
