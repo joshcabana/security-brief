@@ -63,6 +63,12 @@ test('verified metadata and privacy analytics declarations match the live contra
       canonicalPath: '/about',
     },
     {
+      path: '/assessment',
+      canonicalPath: '/assessment',
+      ogDescription:
+        'Fixed-scope AI application security review for teams shipping agents, copilots, and LLM workflows.',
+    },
+    {
       path: '/archive',
       canonicalPath: '/archive',
     },

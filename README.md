@@ -21,10 +21,15 @@ The repository combines a markdown-backed editorial site, a server-side Beehiiv 
 | Route | Description |
 | --- | --- |
 | `/` | Homepage with latest briefings, tools highlights, and newsletter signup |
+| `/assessment` | Flagship advisory offer page for the fixed-scope AI Agent Security Readiness Review |
 | `/blog` | Article index sourced from `blog/*.md` |
 | `/blog/[slug]` | Individual article pages rendered from markdown |
 | `/tools` | Security tools directory with runtime affiliate resolution |
 | `/newsletter` | Newsletter landing page backed by the live subscribe API route |
+| `/subscribe` | Free newsletter signup page with the advisory offer ladder |
+| `/pro` | Self-serve member-content overview for deeper briefings and reports |
+| `/report/2026-ai-threat-landscape` | Preview report page that feeds the advisory and Pro funnels |
+| `/lead-magnet` | Report-teaser landing page for newsletter capture and advisory routing |
 | `/about` | Publication overview and editorial positioning |
 | `/privacy` | Privacy policy |
 | `/terms` | Terms of service |
@@ -108,8 +113,11 @@ The app will be available at `http://localhost:3000`.
 | `NEXT_PUBLIC_SITE_NAME` | Yes for `verify:ops` readiness | Public site name |
 | `NEXT_PUBLIC_PRO_CHECKOUT_LIVE` | Optional | Enables the live `/upgrade` redirect to Beehiiv paid checkout; default is the upgrade-intent waitlist flow |
 | `NEXT_PUBLIC_PLAUSIBLE_DOMAIN` | Optional | Enables Plausible analytics script injection for the configured public domain |
+| `NEXT_PUBLIC_LINKEDIN_PROFILE_URL` | Optional | Public LinkedIn profile URL used on founder/about surfaces; defaults to the current Josh Cabana profile |
 | `NEXT_PUBLIC_LINKEDIN_PARTNER_ID` | Optional | LinkedIn Insight Tag partner ID for site-wide tracking |
 | `NEXT_PUBLIC_LINKEDIN_CONVERSION_PRO_SIGNUP` | Optional | LinkedIn conversion ID used for Pro signup intent tracking |
+| `NEXT_PUBLIC_ASSESSMENT_BOOKING_URL` | Optional | Public booking URL for the readiness review CTA; when unset, the app falls back to on-site assessment routing |
+| `NEXT_PUBLIC_ASSESSMENT_PAYMENT_URL` | Optional | Public payment link for the readiness review; rendered only when explicitly configured |
 | `AFFILIATE_NORDVPN` | Optional | Runtime link for NordVPN |
 | `AFFILIATE_PUREVPN` | Optional | Runtime link for PureVPN |
 | `AFFILIATE_PROTON` | Optional | Legacy Proton fallback |

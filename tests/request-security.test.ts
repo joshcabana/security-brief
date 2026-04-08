@@ -43,6 +43,8 @@ test('getRequestIp returns the anonymous fallback when no valid proxy headers ar
 
 test('sanitizeMarketingField lowercases valid values and falls back for invalid tokens', () => {
   assert.equal(sanitizeMarketingField('Matrix-PDF', 'unknown'), 'matrix-pdf');
+  assert.equal(sanitizeMarketingField('LinkedIn-Document-Ad', 'unknown'), 'linkedin-document-ad');
+  assert.equal(sanitizeMarketingField('Assessment-Page', 'unknown'), 'assessment-page');
   assert.equal(sanitizeMarketingField('Bad Source', 'lead-capture'), 'lead-capture');
   assert.equal(sanitizeMarketingField('a'.repeat(MAX_MARKETING_FIELD_LENGTH + 1), 'unknown'), 'unknown');
 });

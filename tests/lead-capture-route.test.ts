@@ -128,6 +128,49 @@ test('lead capture sanitises source and asset fields before sending them upstrea
   assert.equal(response.status, 200);
 });
 
+test('lead capture preserves valid assessment campaign source fields', async () => {
+  setBeehiivEnv();
+  setUpstashEnv();
+  allowRateLimit();
+
+  globalThis.fetch = async (_input, init) => {
+    assert.ok(init?.body);
+    assert.deepEqual(JSON.parse(String(init.body)), {
+      email: 'worker@example.com',
+      reactivate_existing: false,
+      send_welcome_email: true,
+      utm_source: 'website',
+      utm_medium: 'lead-capture',
+      utm_campaign: 'report:report-teaser',
+      utm_content: 'linkedin-document-ad',
+      custom_fields: [
+        { name: 'job_title', value: 'Security Engineer' },
+        { name: 'lead_source', value: 'linkedin-document-ad' },
+        { name: 'asset_requested', value: 'report-teaser' },
+      ],
+      referring_site: 'http://localhost',
+    });
+
+    return new Response(JSON.stringify({ data: { id: 'lead_456' } }), {
+      status: 201,
+      headers: { 'Content-Type': 'application/json' },
+    });
+  };
+
+  const response = await POST(
+    createSameSiteRequest(
+      JSON.stringify({
+        email: 'worker@example.com',
+        jobTitle: 'Security Engineer',
+        source: 'linkedin-document-ad',
+        asset: 'report-teaser',
+      }),
+    ),
+  );
+
+  assert.equal(response.status, 200);
+});
+
 test('lead capture does not expose upstream Beehiiv errors to clients', async () => {
   setBeehiivEnv();
   setUpstashEnv();
