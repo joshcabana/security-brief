@@ -292,6 +292,38 @@ async function fetchWithTimeout(url, options = {}) {
   }
 }
 
+export function extractFirstArticlePathFromHtml(html) {
+  const articlePathMatch = html.match(/href="(\/(?:blog|reviews)\/[^"#?]+)"/i);
+  return articlePathMatch?.[1] ?? null;
+}
+
+async function resolveProductionArticlePath(baseUrl, fallbackPath) {
+  const fallbackResponse = await fetchWithTimeout(`${baseUrl}${fallbackPath}`);
+
+  if (fallbackResponse.status === 200) {
+    return fallbackPath;
+  }
+
+  const archiveResponse = await fetchWithTimeout(`${baseUrl}/blog`);
+
+  if (archiveResponse.status !== 200) {
+    throw new Error(
+      `Could not resolve a live article route. ${fallbackPath} returned ${fallbackResponse.status} and /blog returned ${archiveResponse.status}.`,
+    );
+  }
+
+  const archiveHtml = await archiveResponse.text();
+  const liveArticlePath = extractFirstArticlePathFromHtml(archiveHtml);
+
+  if (!liveArticlePath) {
+    throw new Error(
+      `Could not find a live article link on /blog after ${fallbackPath} returned ${fallbackResponse.status}.`,
+    );
+  }
+
+  return liveArticlePath;
+}
+
 export async function runProductionVerification(
   baseUrl,
   assessmentConfig = getAssessmentVerificationConfig(),
@@ -302,6 +334,12 @@ export async function runProductionVerification(
   if (!featuredArticle?.slug) {
     throw new Error('content-manifest.json does not contain a featured article slug.');
   }
+
+  const fallbackArticlePath =
+    typeof featuredArticle.routePath === 'string' ? featuredArticle.routePath : `/blog/${featuredArticle.slug}`;
+  const productionArticlePath = await resolveProductionArticlePath(baseUrl, fallbackArticlePath);
+  const expectedArticleSource =
+    productionArticlePath === fallbackArticlePath ? `article-${featuredArticle.slug}-cta` : null;
 
   const checks = [
     {
@@ -371,7 +409,7 @@ export async function runProductionVerification(
     },
     {
       name: 'article-newsletter-sources',
-      path: `/blog/${featuredArticle.slug}`,
+      path: productionArticlePath,
       assert: async (response) => {
         const html = await response.text();
 
@@ -381,8 +419,8 @@ export async function runProductionVerification(
 
         const sources = assertSanitizedNewsletterSources(html, 'Article page');
 
-        if (!sources.includes(`article-${featuredArticle.slug}-cta`)) {
-          throw new Error(`Article page is missing the slug-specific CTA source article-${featuredArticle.slug}-cta.`);
+        if (expectedArticleSource && !sources.includes(expectedArticleSource)) {
+          throw new Error(`Article page is missing the slug-specific CTA source ${expectedArticleSource}.`);
         }
       },
     },

@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 import {
   assertAssessmentRuntimeState,
+  extractFirstArticlePathFromHtml,
   getAssessmentVerificationConfig,
   resolveVerificationBaseUrl,
 } from '../scripts/verify-production.mjs';
@@ -18,7 +19,7 @@ test('getAssessmentVerificationConfig resolves public https URLs and the default
     NEXT_PUBLIC_ASSESSMENT_BOOKING_URL: 'https://cal.example.com/fit-call',
     NEXT_PUBLIC_ASSESSMENT_PAYMENT_URL: 'https://buy.stripe.com/test_assessment',
     NEXT_PUBLIC_LINKEDIN_PROFILE_URL: 'mailto:invalid@example.com',
-  });
+  } as unknown as NodeJS.ProcessEnv);
 
   assert.deepEqual(config, {
     bookingUrl: 'https://cal.example.com/fit-call',
@@ -47,7 +48,7 @@ test('assertAssessmentRuntimeState accepts the current fallback assessment funne
       fallbackHtml,
       getAssessmentVerificationConfig({
         NEXT_PUBLIC_LINKEDIN_PROFILE_URL: 'https://www.linkedin.com/in/josh-cabana-351631393/',
-      }),
+      } as unknown as NodeJS.ProcessEnv),
     );
   });
 });
@@ -70,7 +71,7 @@ test('assertAssessmentRuntimeState accepts the live booking and payment state', 
       getAssessmentVerificationConfig({
         NEXT_PUBLIC_ASSESSMENT_BOOKING_URL: 'https://cal.example.com/fit-call',
         NEXT_PUBLIC_ASSESSMENT_PAYMENT_URL: 'https://buy.stripe.com/test_assessment',
-      }),
+      } as unknown as NodeJS.ProcessEnv),
     );
   });
 });
@@ -93,9 +94,21 @@ test('assertAssessmentRuntimeState rejects fallback copy when a booking url is c
         mismatchedHtml,
         getAssessmentVerificationConfig({
           NEXT_PUBLIC_ASSESSMENT_BOOKING_URL: 'https://cal.example.com/fit-call',
-        }),
+        } as unknown as NodeJS.ProcessEnv),
       );
     },
     /live fit-call CTA label|LinkedIn fallback CTA|scheduling fallback copy/,
   );
+});
+
+test('extractFirstArticlePathFromHtml returns the first live article route from archive markup', () => {
+  const html = `
+    <div>
+      <a href="/blog">Blog</a>
+      <a href="/blog/first-live-article">First live article</a>
+      <a href="/reviews/backup-live-review">Backup review</a>
+    </div>
+  `;
+
+  assert.equal(extractFirstArticlePathFromHtml(html), '/blog/first-live-article');
 });
