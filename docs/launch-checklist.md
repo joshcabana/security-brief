@@ -64,6 +64,9 @@
    - `BEEHIIV_PUBLICATION_ID` → your Beehiiv publication ID
    - `NEXT_PUBLIC_SITE_URL` → your production site URL
    - `NEXT_PUBLIC_SITE_NAME` → `AI Security Brief`
+   - `NEXT_PUBLIC_ASSESSMENT_BOOKING_URL` → your live fit-call booking link
+   - `NEXT_PUBLIC_ASSESSMENT_PAYMENT_URL` → your live payment link for the fixed-fee review
+   - `NEXT_PUBLIC_LINKEDIN_PROFILE_URL` → optional explicit founder profile URL override
    - Optional: `BEEHIIV_WELCOME_AUTOMATION_ID` → your Beehiiv welcome automation ID if you want the subscribe route to enroll an automation instead of sending the default welcome email
 5. Deploy → Note your `.vercel.app` preview URL
 6. Add custom domain in Vercel → Project Settings → Domains → Add your purchased domain
@@ -104,6 +107,10 @@ BEEHIIV_API_KEY=your-beehiiv-api-key
 BEEHIIV_PUBLICATION_ID=your-publication-id
 NEXT_PUBLIC_SITE_URL=https://your-domain.com
 NEXT_PUBLIC_SITE_NAME=AI Security Brief
+NEXT_PUBLIC_ASSESSMENT_BOOKING_URL=https://your-booking-link.example.com
+NEXT_PUBLIC_ASSESSMENT_PAYMENT_URL=https://your-payment-link.example.com
+# Optional explicit override if the founder profile URL changes
+NEXT_PUBLIC_LINKEDIN_PROFILE_URL=https://www.linkedin.com/in/josh-cabana-351631393/
 # Optional: only if you want the subscribe route to enroll a Beehiiv automation
 # BEEHIIV_WELCOME_AUTOMATION_ID=aut_your-welcome-automation-id
 ```
@@ -119,6 +126,10 @@ vercel env add BEEHIIV_API_KEY
 vercel env add BEEHIIV_PUBLICATION_ID
 vercel env add NEXT_PUBLIC_SITE_URL
 vercel env add NEXT_PUBLIC_SITE_NAME
+vercel env add NEXT_PUBLIC_ASSESSMENT_BOOKING_URL
+vercel env add NEXT_PUBLIC_ASSESSMENT_PAYMENT_URL
+# Optional
+vercel env add NEXT_PUBLIC_LINKEDIN_PROFILE_URL
 # Optional
 # vercel env add BEEHIIV_WELCOME_AUTOMATION_ID
 ```
@@ -197,7 +208,8 @@ Thanks,
 3. Add optional repository variable:
    - `GITHUB_MODELS_MODEL=openai/gpt-4o-mini`
 4. Review `docs/zapier-setup.md` — it now documents the production GitHub Actions pipeline
-5. Confirm the following workflows exist:
+5. Review `docs/revenue-ops-runbook.md` and `docs/founder-sales-asset-pack.md`
+6. Confirm the following workflows exist:
    - `weekly-harvest.yml`
    - `article-factory.yml`
    - `newsletter-compiler.yml`

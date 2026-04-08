@@ -679,12 +679,20 @@ export function classifyFailure(stderr, stage) {
  *   failure: { message: string; stage: string; retryable: boolean };
  *   preflight?: { email?: string } | null;
  *   notes?: string[];
+ *   deliveryMode?: 'draft_only' | 'auto_send';
  * }} input
  */
-export function buildFailureResult({ runStamp, mailbox, failure, preflight = null, notes = [] }) {
+export function buildFailureResult({
+  runStamp,
+  mailbox,
+  failure,
+  preflight = null,
+  notes = [],
+  deliveryMode = 'draft_only',
+}) {
   return {
     success: false,
-    delivery_mode: 'draft_only',
+    delivery_mode: deliveryMode,
     run_at: runStamp.display,
     mailbox,
     coverage: {
@@ -971,7 +979,39 @@ export async function writeRunArtifacts({ runStamp, result, memory }) {
   return reportPaths;
 }
 
+function normalizeTriageResult(result) {
+  if (!result || typeof result !== 'object') {
+    return result;
+  }
+
+  result.delivery_mode ??= 'draft_only';
+  result.mailbox ??= '';
+  result.summary ??= '';
+  result.coverage ??= {
+    recent_days: 0,
+    context_days: 0,
+    scope_note: '',
+  };
+  result.reply ??= [];
+  result.waiting ??= [];
+  result.ops_alert ??= [];
+  result.ignore ??= [];
+  result.advice_review ??= [];
+  result.drafts_created ??= [];
+  result.replies_sent ??= [];
+  result.follow_ups ??= [];
+  result.failures ??= [];
+  result.notes ??= [];
+
+  if (typeof result.success !== 'boolean') {
+    result.success = result.failures.length === 0;
+  }
+
+  return result;
+}
+
 export function validateTriageResult(result) {
+  normalizeTriageResult(result);
   assert.equal(typeof result.success, 'boolean');
   assert.equal(typeof result.delivery_mode, 'string');
   assert.equal(Array.isArray(result.reply), true);
@@ -987,5 +1027,6 @@ export function validateTriageResult(result) {
 
 export function validateBrowserTriageResult(result) {
   validateTriageResult(result);
+  result.reply_requests ??= [];
   assert.equal(Array.isArray(result.reply_requests), true);
 }

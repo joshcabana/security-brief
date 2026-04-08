@@ -94,13 +94,14 @@ async function runBrowserModelTriage({ policy, memory, context, browserSnapshot,
 
   return {
     success: decisions.every((decision) => decision.success),
-    delivery_mode: decisions[0]?.delivery_mode ?? (policy.reply_policy?.mode === 'auto_send' ? 'auto_send' : 'draft_only'),
-    coverage: decisions[0]?.coverage ?? {
+    delivery_mode: getDeliveryMode(policy),
+    coverage: decisions[0]?.coverage?.scope_note ? decisions[0].coverage : {
       recent_days: policy.search_windows?.recent_days ?? 30,
       context_days: policy.search_windows?.context_days ?? 90,
       scope_note: `Chunked browser triage across ${chunks.length} batch(es).`,
     },
-    summary: decisions.map((decision) => decision.summary).filter(Boolean).join(' ').trim(),
+    summary: decisions.map((decision) => decision.summary).filter(Boolean).join(' ').trim()
+      || 'No reply-worthy AITHREATBRIEF or affiliate threads were identified in the scanned browser snapshot.',
     reply: mergeByThreadId(decisions.flatMap((decision) => decision.reply ?? [])),
     waiting: mergeByThreadId(decisions.flatMap((decision) => decision.waiting ?? [])),
     ops_alert: mergeByThreadId(decisions.flatMap((decision) => decision.ops_alert ?? [])),
@@ -116,6 +117,10 @@ async function runBrowserModelTriage({ policy, memory, context, browserSnapshot,
     ],
     reply_requests: mergeByThreadId(decisions.flatMap((decision) => decision.reply_requests ?? [])),
   };
+}
+
+function getDeliveryMode(policy) {
+  return policy.reply_policy?.mode === 'auto_send' ? 'auto_send' : 'draft_only';
 }
 
 function extractPreflightFailure(preflightResult) {
@@ -175,6 +180,7 @@ async function runBrowserFallback({
     return buildFailureResult({
       runStamp,
       mailbox: browserSnapshot.mailbox_email,
+      deliveryMode: getDeliveryMode(policy),
       failure: {
         stage: 'browser-triage',
         message: error instanceof Error ? error.message : String(error),
@@ -326,6 +332,7 @@ async function main() {
     result = buildFailureResult({
       runStamp,
       mailbox: policy.mailbox_email,
+      deliveryMode: getDeliveryMode(policy),
       failure: classifyFailure(triage.stderr, 'triage'),
       preflight: preflight.json,
       notes: [

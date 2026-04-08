@@ -44,6 +44,12 @@ The repository combines a markdown-backed editorial site, a server-side Beehiiv 
 | `/api/subscribe` | Same-site newsletter signup endpoint that validates requests before forwarding them to Beehiiv |
 | `/api/lead-capture` | B2B lead capture endpoint with work-email gating, job-title validation, and Beehiiv custom fields |
 
+## Revenue Ops
+
+- `docs/revenue-ops-runbook.md` is the operator playbook for weekly publishing, lead follow-up, invoicing, testimonial capture, retainer timing, and reporting.
+- `docs/founder-sales-asset-pack.md` contains the founder-facing LinkedIn copy, outreach templates, proposal, payment email, testimonial request, and retainer upsell copy.
+- `ops/manual-crm-template.csv` is the lightweight manual CRM starter for tracking `new lead` through `closed won` or `closed lost`.
+
 ## Content and Automation Model
 
 - Articles live in `blog/*.md`.
@@ -116,8 +122,8 @@ The app will be available at `http://localhost:3000`.
 | `NEXT_PUBLIC_LINKEDIN_PROFILE_URL` | Optional | Public LinkedIn profile URL used on founder/about surfaces; defaults to the current Josh Cabana profile |
 | `NEXT_PUBLIC_LINKEDIN_PARTNER_ID` | Optional | LinkedIn Insight Tag partner ID for site-wide tracking |
 | `NEXT_PUBLIC_LINKEDIN_CONVERSION_PRO_SIGNUP` | Optional | LinkedIn conversion ID used for Pro signup intent tracking |
-| `NEXT_PUBLIC_ASSESSMENT_BOOKING_URL` | Optional | Public booking URL for the readiness review CTA; when unset, the app falls back to on-site assessment routing |
-| `NEXT_PUBLIC_ASSESSMENT_PAYMENT_URL` | Optional | Public payment link for the readiness review; rendered only when explicitly configured |
+| `NEXT_PUBLIC_ASSESSMENT_BOOKING_URL` | Optional | Public booking URL for the readiness review CTA; for live advisory selling, set this in Vercel so `/assessment` does not fall back to LinkedIn messaging |
+| `NEXT_PUBLIC_ASSESSMENT_PAYMENT_URL` | Optional | Public payment link for the readiness review; rendered only when explicitly configured, and needed if you want pre-delivery payment without manual patching |
 | `AFFILIATE_NORDVPN` | Optional | Runtime link for NordVPN |
 | `AFFILIATE_PUREVPN` | Optional | Runtime link for PureVPN |
 | `AFFILIATE_PROTON` | Optional | Legacy Proton fallback |

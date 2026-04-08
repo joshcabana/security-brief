@@ -75,6 +75,18 @@ function buildUserPrompt(userPrompt, guardedTextBlock) {
   return [userPrompt, '', guardedTextBlock.userPrompt].join('\n');
 }
 
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+function isRetryableStatus(status) {
+  return status === 408 || status === 409 || status === 425 || status === 429 || status >= 500;
+}
+
+function getRetryDelayMs(attempt) {
+  return Math.min(4000, 500 * (2 ** (attempt - 1)));
+}
+
 /**
  * @param {{
  *   systemPrompt: string;
@@ -106,29 +118,49 @@ export async function requestJsonFromGitHubModels({
   let prompt = baseUserPrompt;
 
   for (let attempt = 1; attempt <= maxAttempts; attempt += 1) {
-    const response = await fetchImpl(GITHUB_MODELS_API_URL, {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${token}`,
-        Accept: 'application/vnd.github+json',
-        'Content-Type': 'application/json',
-        'X-GitHub-Api-Version': '2022-11-28',
-      },
-      body: JSON.stringify({
-        model,
-        temperature,
-        max_tokens: maxTokens,
-        response_format: { type: 'json_object' },
-        messages: [
-          { role: 'system', content: resolvedSystemPrompt },
-          { role: 'user', content: prompt },
-        ],
-      }),
-    });
+    let response;
+
+    try {
+      response = await fetchImpl(GITHUB_MODELS_API_URL, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          Accept: 'application/vnd.github+json',
+          'Content-Type': 'application/json',
+          'X-GitHub-Api-Version': '2022-11-28',
+        },
+        body: JSON.stringify({
+          model,
+          temperature,
+          max_tokens: maxTokens,
+          response_format: { type: 'json_object' },
+          messages: [
+            { role: 'system', content: resolvedSystemPrompt },
+            { role: 'user', content: prompt },
+          ],
+        }),
+      });
+    } catch (error) {
+      lastError = error instanceof Error ? error : new Error(String(error));
+
+      if (attempt < maxAttempts) {
+        await sleep(getRetryDelayMs(attempt));
+        continue;
+      }
+
+      throw lastError;
+    }
 
     if (!response.ok) {
       const body = await response.text();
-      throw new Error(`GitHub Models request failed with ${response.status}: ${body}`);
+      lastError = new Error(`GitHub Models request failed with ${response.status}: ${body}`);
+
+      if (attempt < maxAttempts && isRetryableStatus(response.status)) {
+        await sleep(getRetryDelayMs(attempt));
+        continue;
+      }
+
+      throw lastError;
     }
 
     const payload = await response.json();
@@ -144,11 +176,13 @@ export async function requestJsonFromGitHubModels({
       validate(parsed);
       return parsed;
     } catch (error) {
-      lastError = error instanceof Error ? error : new Error('Unknown JSON validation error.');
+      const baseError = error instanceof Error ? error : new Error('Unknown JSON validation error.');
+      const contentPreview = extractJsonCandidate(content).slice(0, 1200);
+      lastError = new Error(`${baseError.message}\nRaw model output preview:\n${contentPreview}`);
       prompt = [
         baseUserPrompt,
         '',
-        `Previous response failed validation: ${lastError.message}`,
+        `Previous response failed validation: ${baseError.message}`,
         'Return valid JSON only with no markdown fences, no commentary, and no omitted required fields.',
       ].join('\n');
     }
