@@ -6,8 +6,6 @@ import { siteConfig } from '@/lib/site';
 export default async function Hero() {
   const articles = await getAllArticles();
   const latestArticle = articles[0];
-  const checkoutLive = siteConfig.beehiiv.checkoutLive;
-  const proCtaLabel = checkoutLive ? 'View Pro Access' : 'View Pro Details';
 
   return (
     <section className="relative overflow-hidden bg-white dark:bg-slate-950 pt-20 pb-20">
@@ -40,23 +38,28 @@ export default async function Hero() {
         <p className="mt-4 text-lg md:text-xl text-slate-600 dark:text-slate-400 max-w-3xl mx-auto mb-10 leading-relaxed">
           Get the briefing that actually matters. Actionable threat intel, vulnerability research, and defense strategies for teams navigating AI risks in production.
         </p>
-        
+
         <div className="max-w-xl mx-auto flex flex-col sm:flex-row justify-center gap-4">
+          <Link 
+            href={siteConfig.offers.assessment.path}
+            className="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-cyan-500 border border-cyan-400 text-slate-950 font-extrabold shadow-[0_0_20px_rgba(34,211,238,0.3)] hover:shadow-[0_0_30px_rgba(34,211,238,0.5)] hover:bg-cyan-400 transition-all flex items-center justify-center gap-2"
+          >
+            Book the review
+          </Link>
           <Link 
             href="/subscribe" 
             className="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white font-bold hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
           >
             Subscribe Free
           </Link>
-          <Link 
-            href="/pro" 
-            className="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-cyan-500 border border-cyan-400 text-slate-950 font-extrabold shadow-[0_0_20px_rgba(34,211,238,0.3)] hover:shadow-[0_0_30px_rgba(34,211,238,0.5)] hover:bg-cyan-400 transition-all flex items-center justify-center gap-2"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-zap"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-            {proCtaLabel}
-          </Link>
         </div>
-        <p className="mt-6 text-sm font-medium text-slate-500 dark:text-slate-500">Independent analysis for security teams.</p>
+        <p className="mt-6 text-sm font-medium text-slate-500 dark:text-slate-500">
+          Independent analysis for security teams. Need a sharper starting point? Preview the{' '}
+          <Link href={siteConfig.offers.assessment.previewReportPath} className="text-cyan-600 dark:text-cyan-400 hover:underline">
+            threat baseline
+          </Link>
+          .
+        </p>
       </div>
     </section>
   );
