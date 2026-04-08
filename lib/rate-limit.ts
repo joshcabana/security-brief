@@ -7,13 +7,14 @@ import { Redis } from '@upstash/redis';
  * (e.g. local dev without Redis, or Vercel before env vars are set).
  */
 let _ratelimit: Ratelimit | null = null;
+export const RATE_LIMIT_ANALYTICS_ENABLED = false;
 
 function getRatelimit(): Ratelimit {
   if (!_ratelimit) {
     _ratelimit = new Ratelimit({
       redis: Redis.fromEnv(),
       limiter: Ratelimit.slidingWindow(5, '1 m'),
-      analytics: true,
+      analytics: RATE_LIMIT_ANALYTICS_ENABLED,
     });
   }
   return _ratelimit;

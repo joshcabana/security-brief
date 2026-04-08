@@ -1,36 +1,38 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import ArticleCard from '@/components/ArticleCard';
-import { getAllArticles, getArticleCategories } from '@/lib/articles';
+import { getAllReviewArticles, getArticleCategories } from '@/lib/articles';
 import { createPageMetadata } from '@/lib/page-metadata.mjs';
 
 export const metadata: Metadata = createPageMetadata({
-  canonicalPath: '/blog',
-  title: 'Blog — AI Threats, Privacy & Cybersecurity Analysis',
+  canonicalPath: '/reviews',
+  title: 'Reviews — Privacy & AI Security Tool Comparisons',
   description:
-    'In-depth analysis of AI-powered cyber threats, privacy defence strategies, vulnerability disclosures, and defensive guidance.',
+    'Commercial reviews and comparisons for privacy and AI security tooling, with explicit affiliate disclosure and source-backed analysis.',
+  openGraphDescription:
+    'Commercial reviews and comparisons for privacy and AI security tooling, with explicit affiliate disclosure.',
 });
 
-interface BlogPageProps {
+interface ReviewsPageProps {
   searchParams?: Promise<{ category?: string }>;
 }
 
-export default async function BlogPage({ searchParams }: BlogPageProps) {
+export default async function ReviewsPage({ searchParams }: ReviewsPageProps) {
   const params = await searchParams;
-  const articles = await getAllArticles();
-  const categories = ['All', ...(await getArticleCategories())];
+  const reviews = await getAllReviewArticles();
+  const categories = ['All', ...(await getArticleCategories('review'))];
   const activeCategory = categories.includes(params?.category || '') ? params?.category || 'All' : 'All';
-  const filteredArticles =
+  const filteredReviews =
     activeCategory === 'All'
-      ? articles
-      : articles.filter((article) => article.category === activeCategory);
+      ? reviews
+      : reviews.filter((article) => article.category === activeCategory);
 
-  const featuredArticle =
-    activeCategory === 'All' ? filteredArticles.find((article) => article.featured) ?? filteredArticles[0] : null;
-  const regularArticles =
-    activeCategory === 'All' && featuredArticle
-      ? filteredArticles.filter((article) => article.slug !== featuredArticle.slug)
-      : filteredArticles;
+  const featuredReview =
+    activeCategory === 'All' ? filteredReviews.find((article) => article.featured) ?? filteredReviews[0] : null;
+  const regularReviews =
+    activeCategory === 'All' && featuredReview
+      ? filteredReviews.filter((article) => article.slug !== featuredReview.slug)
+      : filteredReviews;
 
   return (
     <div style={{ background: '#0d1117', minHeight: '100vh' }}>
@@ -45,27 +47,36 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
       >
         <div className="absolute inset-0 bg-grid opacity-40 pointer-events-none" aria-hidden="true" />
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="section-label mb-3">Briefing Archive</div>
-          <h1 className="text-white mb-4">AI Threats, Privacy &amp; Analysis</h1>
+          <div className="section-label mb-3">Commercial Reviews</div>
+          <h1 className="text-white mb-4">Privacy &amp; AI Security Tool Reviews</h1>
           <p className="text-lg max-w-2xl" style={{ color: '#8b949e' }}>
-            Long-form briefings on AI-powered threats, privacy defence, and defensive guidance, with citations and practical context for technical teams.
+            Source-backed comparisons for VPNs, password managers, LLM firewalls, and adjacent tooling. Commercial content stays isolated here with explicit affiliate disclosure.
           </p>
         </div>
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div
+          className="rounded-xl px-5 py-4 mb-8"
+          style={{ background: '#161b22', border: '1px solid #30363d' }}
+        >
+          <p className="text-sm text-slate-300">
+            Reviews may include affiliate links. The editorial archive and newsletter remain separate from this commercial section.
+          </p>
+        </div>
+
+        <div
           className="flex items-center gap-2 flex-wrap mb-10 pb-8"
           style={{ borderBottom: '1px solid #21262d' }}
           role="navigation"
-          aria-label="Filter articles by category"
+          aria-label="Filter reviews by category"
         >
           {categories.map((category) => {
             const isActive = category === activeCategory;
             return (
               <Link
                 key={category}
-                href={category === 'All' ? '/blog' : `/blog?category=${encodeURIComponent(category)}`}
+                href={category === 'All' ? '/reviews' : `/reviews?category=${encodeURIComponent(category)}`}
                 className="px-4 py-1.5 rounded-full text-xs font-mono font-semibold transition-all duration-200"
                 style={{
                   background: isActive ? 'rgba(0,180,255,0.12)' : 'rgba(22,27,34,0.8)',
@@ -80,25 +91,25 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
           })}
         </div>
 
-        {featuredArticle ? (
+        {featuredReview ? (
           <div className="mb-10">
             <div className="section-label mb-4">Featured</div>
             <div className="max-w-3xl">
-              <ArticleCard article={featuredArticle} variant="featured" index={0} />
+              <ArticleCard article={featuredReview} variant="featured" index={0} />
             </div>
           </div>
         ) : null}
 
-        {regularArticles.length > 0 ? (
+        {regularReviews.length > 0 ? (
           <>
             <div className="section-label mb-6">
-              {activeCategory === 'All' ? 'All Articles' : activeCategory}
+              {activeCategory === 'All' ? 'All Reviews' : activeCategory}
               <span className="ml-2 text-xs" style={{ color: '#484f58' }}>
-                ({filteredArticles.length})
+                ({filteredReviews.length})
               </span>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 stagger">
-              {regularArticles.map((article, index) => (
+              {regularReviews.map((article, index) => (
                 <ArticleCard
                   key={article.slug}
                   article={article}
@@ -113,9 +124,9 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
             className="text-center py-20 rounded-xl"
             style={{ background: '#161b22', border: '1px solid #30363d' }}
           >
-            <p className="text-lg font-medium text-white mb-2">No articles in this category yet</p>
+            <p className="text-lg font-medium text-white mb-2">No reviews in this category yet</p>
             <p className="text-sm" style={{ color: '#8b949e' }}>
-              Browse the full archive or check back for the next briefing.
+              Browse the complete review archive or check back for the next comparison.
             </p>
           </div>
         )}

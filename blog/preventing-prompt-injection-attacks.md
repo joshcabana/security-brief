@@ -26,6 +26,11 @@ primarySources:
     title: "Microsoft Security Response Centre — How Microsoft Defends Against Indirect Prompt Injection Attacks"
   - url: "https://docs.anthropic.com/en/docs/test-and-evaluate/strengthen-guardrails/mitigate-jailbreaks"
     title: "Anthropic — Mitigate jailbreaks and prompt injections"
+section: "editorial"
+monetization: "none"
+reviewed_by: "PENDING_HUMAN_REVIEW"
+reviewed_at: "PENDING_HUMAN_REVIEW"
+last_substantive_update_at: "2026-04-03"
 ---
 If your application takes untrusted user input and feeds it directly into a Large Language Model (LLM), you are vulnerable.
 

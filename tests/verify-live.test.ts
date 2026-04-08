@@ -3,7 +3,9 @@ import test from 'node:test';
 import {
   assertAffiliateAnchor,
   assertBodyIncludesAll,
+  assertToolsAffiliateAnchor,
   getDeploymentProtectionHeaders,
+  getAffiliateAnchorHref,
   getTokenizedAffiliateArticleChecks,
   mergeRequestHeaders,
   resolveCanonicalBaseUrl,
@@ -122,6 +124,38 @@ test('assertAffiliateAnchor matches the tools-page anchor text and aria-label', 
   });
 });
 
+test('getAffiliateAnchorHref returns the rendered href for a matching tools-page anchor', () => {
+  assert.equal(
+    getAffiliateAnchorHref(
+      '<a href="https://go.nordvpn.net/aff_c?offer_id=15&amp;aff_id=143381&amp;url_id=902" aria-label="Visit NordVPN vendor site (opens in new tab)">Visit vendor site</a>',
+      'NordVPN',
+      '/tools NordVPN affiliate link',
+      {
+        anchorText: 'Visit vendor site',
+        ariaLabel: 'Visit NordVPN vendor site (opens in new tab)',
+      },
+    ),
+    'https://go.nordvpn.net/aff_c?offer_id=15&amp;aff_id=143381&amp;url_id=902',
+  );
+});
+
+test('assertToolsAffiliateAnchor accepts an approved rendered affiliate url when no local affiliate env is configured', () => {
+  assert.doesNotThrow(() => {
+    assertToolsAffiliateAnchor(
+      '<a href="https://go.nordvpn.net/aff_c?offer_id=15&amp;aff_id=143381&amp;url_id=902" aria-label="Visit NordVPN vendor site (opens in new tab)">Visit vendor site</a>',
+      {
+        name: 'NordVPN',
+        affiliateCode: 'NORDVPN',
+        fallbackUrl: 'https://nordvpn.com',
+        anchorText: 'Visit vendor site',
+        ariaLabel: 'Visit NordVPN vendor site (opens in new tab)',
+      },
+      null,
+      '/tools NordVPN affiliate link',
+    );
+  });
+});
+
 test('assertAffiliateAnchor rejects anchors with extra visible text', () => {
   assert.throws(
     () => {
@@ -175,8 +209,8 @@ test('assertAffiliateAnchor rejects tools anchors with the wrong aria-label', ()
 test('getTokenizedAffiliateArticleChecks derives checks from supplied tokenized source markdown', async () => {
   const articles = [
     { slug: 'gamma-no-token', fileName: 'gamma-no-token.md' },
-    { slug: 'alpha-token', fileName: 'alpha-token.md' },
-    { slug: 'beta-token', fileName: 'beta-token.md' },
+    { slug: 'alpha-token', fileName: 'alpha-token.md', routePath: '/blog/alpha-token' },
+    { slug: 'beta-token', fileName: 'beta-token.md', routePath: '/reviews/beta-token' },
   ];
   const markdownByFile = new Map([
     ['gamma-no-token.md', 'No affiliate tokens here.'],
@@ -195,7 +229,7 @@ test('getTokenizedAffiliateArticleChecks derives checks from supplied tokenized 
   assert.equal(checks.length, 2);
   assert.deepEqual(
     new Set(checks.map((check) => check.path)),
-    new Set(['/blog/alpha-token', '/blog/beta-token']),
+    new Set(['/blog/alpha-token', '/reviews/beta-token']),
   );
   assert.deepEqual(
     new Set(checks.map((check) => check.name)),
@@ -227,5 +261,49 @@ test('getTokenizedAffiliateArticleChecks throws when no published articles inclu
       );
     },
     /No published articles in content-manifest\.json reference \[AFFILIATE:NORDVPN\]\./,
+  );
+});
+
+test('getTokenizedAffiliateArticleChecks accepts plain-text degradation when source links still mention the brand', async () => {
+  const checks = getTokenizedAffiliateArticleChecks(
+    [{ slug: 'alpha-token', fileName: 'alpha-token.md', routePath: '/reviews/alpha-token' }],
+    'NORDVPN',
+    'NordVPN',
+    [],
+    () => 'Use [NordVPN]([AFFILIATE:NORDVPN]) now.',
+  );
+
+  await assert.doesNotReject(async () => {
+    await checks[0].assert({
+      status: 200,
+      async text() {
+        return [
+          '<p>NordVPN is the plain-text fallback in the review body.</p>',
+          '<a href="https://nordvpn.com/blog/nordvpn-no-logs-assurance-engagement-2025/">NordVPN sixth no-logs audit</a>',
+        ].join('');
+      },
+    });
+  });
+});
+
+test('getTokenizedAffiliateArticleChecks rejects responses that only contain linked brand mentions when no affiliate url is configured', async () => {
+  const checks = getTokenizedAffiliateArticleChecks(
+    [{ slug: 'alpha-token', fileName: 'alpha-token.md', routePath: '/reviews/alpha-token' }],
+    'NORDVPN',
+    'NordVPN',
+    [],
+    () => 'Use [NordVPN]([AFFILIATE:NORDVPN]) now.',
+  );
+
+  await assert.rejects(
+    async () => {
+      await checks[0].assert({
+        status: 200,
+        async text() {
+          return '<a href="https://nordvpn.com">NordVPN</a>';
+        },
+      });
+    },
+    /missing a non-linked plain-text label NordVPN/,
   );
 });

@@ -6,6 +6,10 @@
     "Security Engineering",
     "Tools"
   ],
+  "sections": [
+    "editorial",
+    "review"
+  ],
   "articles": [
     {
       "title": "The Best LLM Firewalls Evaluated (2026 Guide)",
@@ -50,7 +54,16 @@
           "title": "Cloudflare AI Gateway — Data Loss Prevention (DLP)"
         }
       ],
-      "fileName": "best-llm-firewall-2026.md"
+      "fileName": "best-llm-firewall-2026.md",
+      "section": "review",
+      "monetization": "affiliate",
+      "reviewedBy": "PENDING_HUMAN_REVIEW",
+      "reviewedAt": "PENDING_HUMAN_REVIEW",
+      "lastSubstantiveUpdateAt": "2026-04-03",
+      "reviewedAtPending": true,
+      "trustScore": 50,
+      "trustLevel": "low",
+      "routePath": "/reviews/best-llm-firewall-2026"
     },
     {
       "title": "The Zero-BS Guide to Preventing Prompt Injection Attacks",
@@ -91,7 +104,16 @@
           "title": "Anthropic — Mitigate jailbreaks and prompt injections"
         }
       ],
-      "fileName": "preventing-prompt-injection-attacks.md"
+      "fileName": "preventing-prompt-injection-attacks.md",
+      "section": "editorial",
+      "monetization": "none",
+      "reviewedBy": "PENDING_HUMAN_REVIEW",
+      "reviewedAt": "PENDING_HUMAN_REVIEW",
+      "lastSubstantiveUpdateAt": "2026-04-03",
+      "reviewedAtPending": true,
+      "trustScore": 50,
+      "trustLevel": "blocked",
+      "routePath": "/blog/preventing-prompt-injection-attacks"
     },
     {
       "title": "Claude Extension Flaw Enabled Zero-Click XSS Prompt Injection via Any Website",
@@ -132,7 +154,16 @@
           "title": "The Hacker News — LangChain, LangGraph Flaws Expose Files, Secrets, Databases in Widely Used AI Frameworks"
         }
       ],
-      "fileName": "claude-extension-flaw-enabled-zero-click-xss-prompt-injection-via-any-website.md"
+      "fileName": "claude-extension-flaw-enabled-zero-click-xss-prompt-injection-via-any-website.md",
+      "section": "editorial",
+      "monetization": "none",
+      "reviewedBy": "PENDING_HUMAN_REVIEW",
+      "reviewedAt": "PENDING_HUMAN_REVIEW",
+      "lastSubstantiveUpdateAt": "2026-03-30",
+      "reviewedAtPending": true,
+      "trustScore": 50,
+      "trustLevel": "blocked",
+      "routePath": "/blog/claude-extension-flaw-enabled-zero-click-xss-prompt-injection-via-any-website"
     },
     {
       "title": "Security Researchers Sound the Alarm on Vulnerabilities in AI-Generated Code",
@@ -177,7 +208,16 @@
           "title": "Infosecurity Magazine — OpenAI Expands Bug Bounty to Cover AI Abuse and 'Safety' Concerns"
         }
       ],
-      "fileName": "security-researchers-sound-the-alarm-on-vulnerabilities-in-ai-generated-code.md"
+      "fileName": "security-researchers-sound-the-alarm-on-vulnerabilities-in-ai-generated-code.md",
+      "section": "editorial",
+      "monetization": "none",
+      "reviewedBy": "PENDING_HUMAN_REVIEW",
+      "reviewedAt": "PENDING_HUMAN_REVIEW",
+      "lastSubstantiveUpdateAt": "2026-03-30",
+      "reviewedAtPending": true,
+      "trustScore": 50,
+      "trustLevel": "blocked",
+      "routePath": "/blog/security-researchers-sound-the-alarm-on-vulnerabilities-in-ai-generated-code"
     },
     {
       "title": "Best Password Managers for Security Teams 2026",
@@ -226,7 +266,16 @@
           "title": "NordPass — Business Plans and Pricing"
         }
       ],
-      "fileName": "best-password-managers-for-security-teams-2026.md"
+      "fileName": "best-password-managers-for-security-teams-2026.md",
+      "section": "review",
+      "monetization": "affiliate",
+      "reviewedBy": "PENDING_HUMAN_REVIEW",
+      "reviewedAt": "PENDING_HUMAN_REVIEW",
+      "lastSubstantiveUpdateAt": "2026-03-26",
+      "reviewedAtPending": true,
+      "trustScore": 50,
+      "trustLevel": "low",
+      "routePath": "/reviews/best-password-managers-for-security-teams-2026"
     },
     {
       "title": "Best VPNs for Cybersecurity Professionals 2026",
@@ -299,7 +348,16 @@
           "title": "GreyCoder VPN audit list 2026"
         }
       ],
-      "fileName": "best-vpns-for-cybersecurity-professionals-2026.md"
+      "fileName": "best-vpns-for-cybersecurity-professionals-2026.md",
+      "section": "review",
+      "monetization": "affiliate",
+      "reviewedBy": "PENDING_HUMAN_REVIEW",
+      "reviewedAt": "PENDING_HUMAN_REVIEW",
+      "lastSubstantiveUpdateAt": "2026-03-24",
+      "reviewedAtPending": true,
+      "trustScore": 50,
+      "trustLevel": "low",
+      "routePath": "/reviews/best-vpns-for-cybersecurity-professionals-2026"
     },
     {
       "title": "NordVPN vs ProtonVPN: A Security Professional's Comparison",
@@ -372,7 +430,16 @@
           "title": "The Independent — ProtonVPN open-source and Swiss jurisdiction"
         }
       ],
-      "fileName": "nordvpn-vs-protonvpn-security-comparison.md"
+      "fileName": "nordvpn-vs-protonvpn-security-comparison.md",
+      "section": "review",
+      "monetization": "affiliate",
+      "reviewedBy": "PENDING_HUMAN_REVIEW",
+      "reviewedAt": "PENDING_HUMAN_REVIEW",
+      "lastSubstantiveUpdateAt": "2026-03-24",
+      "reviewedAtPending": true,
+      "trustScore": 50,
+      "trustLevel": "low",
+      "routePath": "/reviews/nordvpn-vs-protonvpn-security-comparison"
     },
     {
       "title": "AI Flaws in Amazon Bedrock, LangSmith, and SGLang Enable Data Exfiltration and RCE",
@@ -421,7 +488,16 @@
           "title": "NVD — CVE-2026-3989 (SGLang insecure pickle deserialization, CVSS 7.8)"
         }
       ],
-      "fileName": "ai-flaws-in-amazon-bedrock-langsmith-and-sglang-enable-data-exfiltration-and-rce.md"
+      "fileName": "ai-flaws-in-amazon-bedrock-langsmith-and-sglang-enable-data-exfiltration-and-rce.md",
+      "section": "editorial",
+      "monetization": "none",
+      "reviewedBy": "PENDING_HUMAN_REVIEW",
+      "reviewedAt": "PENDING_HUMAN_REVIEW",
+      "lastSubstantiveUpdateAt": "2026-03-19",
+      "reviewedAtPending": true,
+      "trustScore": 50,
+      "trustLevel": "blocked",
+      "routePath": "/blog/ai-flaws-in-amazon-bedrock-langsmith-and-sglang-enable-data-exfiltration-and-rce"
     },
     {
       "title": "CursorJack: How MCP Deeplinks Turn Cursor IDE Into a Code Execution Vector",
@@ -470,7 +546,16 @@
           "title": "Truefoundry — MCP Servers in Cursor: Setup, Configuration, and Security (2026 Guide): Technical overview of CVE-2025-54136 (MCPoison) and CVE-2025-54135 (CurXecute) and MCP security posture guidance"
         }
       ],
-      "fileName": "cursorjack-attack-path-exposes-code-execution-risk-in-ai-development-environment.md"
+      "fileName": "cursorjack-attack-path-exposes-code-execution-risk-in-ai-development-environment.md",
+      "section": "editorial",
+      "monetization": "none",
+      "reviewedBy": "PENDING_HUMAN_REVIEW",
+      "reviewedAt": "PENDING_HUMAN_REVIEW",
+      "lastSubstantiveUpdateAt": "2026-03-19",
+      "reviewedAtPending": true,
+      "trustScore": 50,
+      "trustLevel": "blocked",
+      "routePath": "/blog/cursorjack-attack-path-exposes-code-execution-risk-in-ai-development-environment"
     },
     {
       "title": "LLM Guardrails Are Failing: What the 2025–2026 Research Actually Shows",
@@ -543,7 +628,16 @@
           "title": "Cisco — Death by a Thousand Prompts: Open Model Vulnerability Analysis, November 2025: Multi-turn ASR up to 92.78%; 87% single-turn block rate collapses under persistence"
         }
       ],
-      "fileName": "researchers-discover-major-security-gaps-in-llm-guardrails.md"
+      "fileName": "researchers-discover-major-security-gaps-in-llm-guardrails.md",
+      "section": "editorial",
+      "monetization": "none",
+      "reviewedBy": "PENDING_HUMAN_REVIEW",
+      "reviewedAt": "PENDING_HUMAN_REVIEW",
+      "lastSubstantiveUpdateAt": "2026-03-17",
+      "reviewedAtPending": true,
+      "trustScore": 50,
+      "trustLevel": "blocked",
+      "routePath": "/blog/researchers-discover-major-security-gaps-in-llm-guardrails"
     },
     {
       "title": "Hive0163 Deploys AI-Assisted Slopoly Malware for Persistent Access in Ransomware Attacks",
@@ -608,7 +702,16 @@
           "title": "Fortinet — \"Interlock Ransomware: New Techniques, Same Old Tricks\" (January 29, 2026)"
         }
       ],
-      "fileName": "hive0163-uses-ai-assisted-slopoly-malware-for-persistent-access-in-ransomware-attacks.md"
+      "fileName": "hive0163-uses-ai-assisted-slopoly-malware-for-persistent-access-in-ransomware-attacks.md",
+      "section": "editorial",
+      "monetization": "none",
+      "reviewedBy": "PENDING_HUMAN_REVIEW",
+      "reviewedAt": "PENDING_HUMAN_REVIEW",
+      "lastSubstantiveUpdateAt": "2026-03-16",
+      "reviewedAtPending": true,
+      "trustScore": 50,
+      "trustLevel": "blocked",
+      "routePath": "/blog/hive0163-uses-ai-assisted-slopoly-malware-for-persistent-access-in-ransomware-attacks"
     },
     {
       "title": "OpenClaw AI Agent Flaws: CVEs, Prompt Injection, and a Government Warning",
@@ -693,7 +796,16 @@
           "title": "RunZero — CVE-2026-25253 OpenClaw Overview (February 3, 2026)"
         }
       ],
-      "fileName": "openclaw-ai-agent-flaws-could-enable-prompt-injection-and-data-exfiltration.md"
+      "fileName": "openclaw-ai-agent-flaws-could-enable-prompt-injection-and-data-exfiltration.md",
+      "section": "editorial",
+      "monetization": "none",
+      "reviewedBy": "PENDING_HUMAN_REVIEW",
+      "reviewedAt": "PENDING_HUMAN_REVIEW",
+      "lastSubstantiveUpdateAt": "2026-03-16",
+      "reviewedAtPending": true,
+      "trustScore": 50,
+      "trustLevel": "blocked",
+      "routePath": "/blog/openclaw-ai-agent-flaws-could-enable-prompt-injection-and-data-exfiltration"
     },
     {
       "title": "Australia's Privacy Act Reforms 2026: What You Need to Know",
@@ -734,7 +846,16 @@
           "title": "MinterEllison — OAIC Ramps Up Privacy Enforcement: Are You Ready? (February 2026): ADM disclosure compliance sweep, Bunnings APP 1.3 case, December 2026 enforcement context"
         }
       ],
-      "fileName": "australias-privacy-act-reforms-2026.md"
+      "fileName": "australias-privacy-act-reforms-2026.md",
+      "section": "editorial",
+      "monetization": "none",
+      "reviewedBy": "PENDING_HUMAN_REVIEW",
+      "reviewedAt": "PENDING_HUMAN_REVIEW",
+      "lastSubstantiveUpdateAt": "2026-03-14",
+      "reviewedAtPending": true,
+      "trustScore": 50,
+      "trustLevel": "blocked",
+      "routePath": "/blog/australias-privacy-act-reforms-2026"
     },
     {
       "title": "Agentic AI Security Risks: What Every Developer Must Know",
@@ -775,7 +896,16 @@
           "title": "Kiteworks — AI Agents Are the Biggest Data Security Threat You're Not Governing: 32% of organisations cite unsupervised agent data access as critical; Trend Micro zero-click exfiltration demo"
         }
       ],
-      "fileName": "agentic-ai-security-risks.md"
+      "fileName": "agentic-ai-security-risks.md",
+      "section": "editorial",
+      "monetization": "none",
+      "reviewedBy": "PENDING_HUMAN_REVIEW",
+      "reviewedAt": "PENDING_HUMAN_REVIEW",
+      "lastSubstantiveUpdateAt": "2026-03-12",
+      "reviewedAtPending": true,
+      "trustScore": 50,
+      "trustLevel": "blocked",
+      "routePath": "/blog/agentic-ai-security-risks"
     },
     {
       "title": "How AI Is Being Used to Launch Cyberattacks in 2026",
@@ -816,7 +946,16 @@
           "title": "BrightSide Technologies — AI-Generated Phishing vs Human Attacks: 2025 Risk Analysis: 1,265% phishing surge, 82.6% of emails use AI-generated content, 95% cost reduction"
         }
       ],
-      "fileName": "how-ai-is-being-used-to-launch-cyberattacks-in-2026.md"
+      "fileName": "how-ai-is-being-used-to-launch-cyberattacks-in-2026.md",
+      "section": "editorial",
+      "monetization": "none",
+      "reviewedBy": "PENDING_HUMAN_REVIEW",
+      "reviewedAt": "PENDING_HUMAN_REVIEW",
+      "lastSubstantiveUpdateAt": "2026-03-10",
+      "reviewedAtPending": true,
+      "trustScore": 50,
+      "trustLevel": "blocked",
+      "routePath": "/blog/how-ai-is-being-used-to-launch-cyberattacks-in-2026"
     },
     {
       "title": "AI Model Prompt Injection Attacks Explained",
@@ -857,7 +996,16 @@
           "title": "Lasso Security — Prompt Injection Examples That Expose Real AI Security Risks (January 2026): EchoLeak CVE-2025-32711, Gemini memory poisoning, MCP exploitation, AI Recommendation Poisoning"
         }
       ],
-      "fileName": "ai-model-prompt-injection-attacks-explained.md"
+      "fileName": "ai-model-prompt-injection-attacks-explained.md",
+      "section": "editorial",
+      "monetization": "none",
+      "reviewedBy": "PENDING_HUMAN_REVIEW",
+      "reviewedAt": "PENDING_HUMAN_REVIEW",
+      "lastSubstantiveUpdateAt": "2026-03-08",
+      "reviewedAtPending": true,
+      "trustScore": 50,
+      "trustLevel": "blocked",
+      "routePath": "/blog/ai-model-prompt-injection-attacks-explained"
     }
   ]
 }

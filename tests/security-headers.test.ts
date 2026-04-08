@@ -6,6 +6,7 @@ import {
   SECURITY_HEADERS,
   getExpectedSecurityHeaderValue,
   getSecurityHeaders,
+  getStaticSecurityHeaders,
 } from '../lib/security-headers.mjs';
 
 test('security headers expose the expected baseline response protections', () => {
@@ -33,7 +34,7 @@ test('security header helpers return fresh header objects', () => {
   assert.deepEqual(getSecurityHeaders(), SECURITY_HEADERS);
 });
 
-test('next config applies the baseline security headers to every route', async () => {
+test('next config applies the static fallback security headers to every route', async () => {
   assert.ok(nextConfig.headers, 'Expected next config to define a headers function.');
   const headersResolver = nextConfig.headers;
 
@@ -42,7 +43,7 @@ test('next config applies the baseline security headers to every route', async (
   assert.deepEqual(headerRules, [
     {
       source: '/:path*',
-      headers: SECURITY_HEADERS,
+      headers: getStaticSecurityHeaders(),
     },
   ]);
 });

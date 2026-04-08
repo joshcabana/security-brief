@@ -14,7 +14,7 @@ import {
   writeText,
 } from './common.mjs';
 import { guardedText, requestJsonFromGitHubModels } from './github-models.mjs';
-import { buildArticleFactoryPrompts } from './prompt-builders.mjs';
+import { buildArticleFactoryContext, buildArticleFactoryPrompts } from './prompt-builders.mjs';
 import {
   buildExpectedArticlePlan,
   findRedundantCurrentWeekArticleFiles,
@@ -185,6 +185,10 @@ async function main() {
       ].join('\n'),
     )
     .join('\n\n');
+  const articleFactoryContext = buildArticleFactoryContext({
+    articlePlan,
+    harvestSourcePack,
+  });
   const prompts = buildArticleFactoryPrompts({
     effectiveDate: context.effectiveDate,
     articlePlan,
@@ -196,7 +200,7 @@ async function main() {
     maxTokens: 7000,
     systemPrompt: prompts.systemPrompt,
     userPrompt: prompts.userPrompt,
-    guardedText: guardedText(harvestSourcePack),
+    guardedText: guardedText(articleFactoryContext),
     validate: (value) => validateArticlePayload(value, expectedSlugs, allowedReferences),
   });
 

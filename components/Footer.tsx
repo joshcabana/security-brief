@@ -16,8 +16,9 @@ const footerSections = [
     title: 'Resources',
     links: [
       { label: 'Security tools', href: '/tools' },
+      { label: 'Tool reviews', href: '/reviews' },
       { label: 'Readiness review', href: '/assessment' },
-      { label: 'VPN reviews', href: '/tools#vpns' },
+      { label: 'VPN reviews', href: '/reviews?category=Privacy' },
       { label: 'Password managers', href: '/tools#password-managers' },
       { label: 'Email security', href: '/tools#email-security' },
     ],

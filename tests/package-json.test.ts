@@ -89,6 +89,10 @@ test('repo pins Node.js 20.x for local, CI, and Vercel builds', () => {
 
 test('trust and production verification scripts point at the new repo-local runners', () => {
   assert.equal(
+    packageJson.scripts?.['verify:iocs'],
+    'node scripts/verify-iocs.mjs',
+  );
+  assert.equal(
     packageJson.scripts?.['verify:trust'],
     'node scripts/verify-trust.mjs',
   );

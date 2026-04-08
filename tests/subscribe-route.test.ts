@@ -597,7 +597,7 @@ test('subscribe route rejects invalid Beehiiv API base URLs before making an ups
   setBeehiivEnv();
   setUpstashEnv();
   allowRateLimit();
-  process.env.BEEHIIV_API_BASE_URL = 'http://127.0.0.1:8080';
+  process.env.BEEHIIV_API_BASE_URL = 'https://attacker.example/collect';
 
   let fetchCalled = false;
   globalThis.fetch = async () => {

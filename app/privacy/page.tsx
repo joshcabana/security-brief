@@ -1,3 +1,4 @@
+import React from 'react';
 import type { Metadata } from 'next';
 import {
   resolveAnalyticsState,
@@ -80,6 +81,12 @@ export default function PrivacyPage() {
                 </p>
               </div>
               <div>
+                <h3 className="text-base font-bold text-white mb-2">Abuse prevention</h3>
+                <p className="text-sm leading-relaxed" style={{ color: '#8b949e' }}>
+                  We use Upstash Redis to rate-limit newsletter signup and lead-capture requests. Upstash receives IP-derived rate-limit identifiers and related request timing data strictly to throttle abuse and protect availability. We do not use Upstash for audience analytics or advertising profiles.
+                </p>
+              </div>
+              <div>
                 <h3 className="text-base font-bold text-white mb-2">Cookies</h3>
                 <p className="text-sm leading-relaxed" style={{ color: '#8b949e' }}>
                   {analyticsState.plausibleEnabled && !analyticsState.linkedInInsightEnabled ? (
@@ -149,6 +156,10 @@ export default function PrivacyPage() {
               <li className="flex items-start gap-2">
                 <span style={{ color: '#00b4ff' }} aria-hidden="true">&bull;</span>
                 <strong className="text-white">Vercel</strong> &mdash; site hosting and deployment
+              </li>
+              <li className="flex items-start gap-2">
+                <span style={{ color: '#00b4ff' }} aria-hidden="true">&bull;</span>
+                <strong className="text-white">Upstash Redis</strong> &mdash; rate limiting and abuse prevention for form submissions
               </li>
               {analyticsState.plausibleEnabled ? (
                 <li className="flex items-start gap-2">

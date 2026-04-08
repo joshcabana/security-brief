@@ -30,6 +30,11 @@ primarySources:
     title: "Panto AI — Cursor AI Statistics 2026 (March 2026): Cursor user growth, DAU, enterprise penetration, and revenue milestones"
   - url: "https://www.truefoundry.com/blog/mcp-servers-in-cursor-setup-configuration-and-security-guide"
     title: "Truefoundry — MCP Servers in Cursor: Setup, Configuration, and Security (2026 Guide): Technical overview of CVE-2025-54136 (MCPoison) and CVE-2025-54135 (CurXecute) and MCP security posture guidance"
+section: "editorial"
+monetization: "none"
+reviewed_by: "PENDING_HUMAN_REVIEW"
+reviewed_at: "PENDING_HUMAN_REVIEW"
+last_substantive_update_at: "2026-03-19"
 ---
 # CursorJack: How MCP Deeplinks Turn Cursor IDE Into a Code Execution Vector
 

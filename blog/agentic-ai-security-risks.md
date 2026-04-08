@@ -26,6 +26,11 @@ primarySources:
     title: "Tenable — Cloud and AI Security Risk Report 2026: 86% of organisations host third-party packages with critical CVEs; non-human identities carry higher risk than humans"
   - url: "https://www.kiteworks.com/cybersecurity-risk-management/ai-agents-ungoverned-data-security-threat/"
     title: "Kiteworks — AI Agents Are the Biggest Data Security Threat You're Not Governing: 32% of organisations cite unsupervised agent data access as critical; Trend Micro zero-click exfiltration demo"
+section: "editorial"
+monetization: "none"
+reviewed_by: "PENDING_HUMAN_REVIEW"
+reviewed_at: "PENDING_HUMAN_REVIEW"
+last_substantive_update_at: "2026-03-12"
 ---
 # Agentic AI Security Risks: What Every Developer Must Know
 

@@ -5,10 +5,11 @@ import { buildSiteUrl } from '@/lib/site';
 interface ShareButtonsProps {
   title: string;
   slug: string;
+  path?: string;
 }
 
-export default function ShareButtons({ title, slug }: ShareButtonsProps) {
-  const articleUrl = buildSiteUrl(`/blog/${slug}`);
+export default function ShareButtons({ title, slug, path }: ShareButtonsProps) {
+  const articleUrl = buildSiteUrl(path ?? `/blog/${slug}`);
   const encodedUrl = encodeURIComponent(articleUrl);
   const encodedTitle = encodeURIComponent(title);
 

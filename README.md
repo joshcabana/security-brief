@@ -24,6 +24,8 @@ The repository combines a markdown-backed editorial site, a server-side Beehiiv 
 | `/assessment` | Flagship advisory offer page for the fixed-scope AI Agent Security Readiness Review |
 | `/blog` | Article index sourced from `blog/*.md` |
 | `/blog/[slug]` | Individual article pages rendered from markdown |
+| `/reviews` | Commercial reviews and comparison archive sourced from `reviews/*.md` |
+| `/reviews/[slug]` | Individual review pages with affiliate disclosure and runtime affiliate resolution |
 | `/tools` | Security tools directory with runtime affiliate resolution |
 | `/newsletter` | Newsletter landing page backed by the live subscribe API route |
 | `/subscribe` | Free newsletter signup page with the advisory offer ladder |

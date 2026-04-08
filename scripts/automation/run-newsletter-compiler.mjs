@@ -10,7 +10,7 @@ import {
   readText,
   writeText,
 } from './common.mjs';
-import { requestJsonFromGitHubModels } from './github-models.mjs';
+import { guardedText, requestJsonFromGitHubModels } from './github-models.mjs';
 import {
   extractNewsletterIssueNumber,
   getNextNewsletterIssueNumber,
@@ -19,7 +19,10 @@ import {
   parseHarvestMarkdown,
   renderNewsletterDraft,
 } from './renderers.mjs';
-import { buildNewsletterCompilerPrompts } from './prompt-builders.mjs';
+import {
+  buildNewsletterCompilerContext,
+  buildNewsletterCompilerPrompts,
+} from './prompt-builders.mjs';
 import { finishAutomationRun, prepareAutomationRun, requireEnvVars } from './workflow.mjs';
 
 function validateNewsletterPayload(payload, validArticleMap, validHarvestSourceMap) {
@@ -184,6 +187,14 @@ async function main() {
     existingIssueNumbers,
     currentDraftIssueNumber,
   });
+  const newsletterContext = buildNewsletterCompilerContext({
+    effectiveDate: context.effectiveDate,
+    issueNumber,
+    harvestFindings,
+    datedArticles,
+    selectedProgram,
+    toolPlaceholder,
+  });
   const prompts = buildNewsletterCompilerPrompts({
     effectiveDate: context.effectiveDate,
     issueNumber,
@@ -198,6 +209,7 @@ async function main() {
     maxTokens: 4500,
     systemPrompt: prompts.systemPrompt,
     userPrompt: prompts.userPrompt,
+    guardedText: guardedText(newsletterContext),
     validate: (value) => validateNewsletterPayload(value, articleMap, harvestSourceMap),
   });
 

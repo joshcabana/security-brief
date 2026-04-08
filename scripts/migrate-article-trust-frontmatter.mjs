@@ -4,6 +4,7 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import matter from 'gray-matter';
 import {
+  PENDING_HUMAN_REVIEW,
   dedupePrimarySources,
   extractPrimarySourcesFromReferences,
   normaliseExistingAuthor,
@@ -13,6 +14,7 @@ import {
 
 const ROOT = process.cwd();
 const BLOG_DIR = path.join(ROOT, 'blog');
+const REVIEWS_DIR = path.join(ROOT, 'reviews');
 const ORDERED_FIELDS = [
   'title',
   'slug',
@@ -26,12 +28,26 @@ const ORDERED_FIELDS = [
   'keywords',
   'read_time',
   'primarySources',
+  'section',
+  'monetization',
+  'reviewed_by',
+  'reviewed_at',
+  'last_substantive_update_at',
 ];
 
-function buildOrderedFrontmatter(data, body, fileName) {
+function resolveSectionDefaults(section, data) {
+  return {
+    section,
+    monetization: data.monetization ?? (section === 'review' ? 'affiliate' : 'none'),
+  };
+}
+
+function buildOrderedFrontmatter(data, body, fileName, section) {
   const existingPrimarySources = normaliseExistingPrimarySources(data.primarySources, fileName);
   const harvestedPrimarySources = extractPrimarySourcesFromReferences(body);
   const primarySources = dedupePrimarySources([...existingPrimarySources, ...harvestedPrimarySources]);
+  const sectionDefaults = resolveSectionDefaults(section, data);
+  const lastSubstantiveUpdateAt = data.last_substantive_update_at ?? data.date;
 
   const orderedFrontmatter = {
     title: data.title,
@@ -46,6 +62,11 @@ function buildOrderedFrontmatter(data, body, fileName) {
     keywords: data.keywords,
     read_time: data.read_time,
     primarySources,
+    section: sectionDefaults.section,
+    monetization: sectionDefaults.monetization,
+    reviewed_by: data.reviewed_by ?? PENDING_HUMAN_REVIEW,
+    reviewed_at: data.reviewed_at ?? PENDING_HUMAN_REVIEW,
+    last_substantive_update_at: lastSubstantiveUpdateAt,
   };
 
   for (const [key, value] of Object.entries(data)) {
@@ -59,10 +80,10 @@ function buildOrderedFrontmatter(data, body, fileName) {
   return orderedFrontmatter;
 }
 
-async function migrateArticle(fileName) {
-  const filePath = path.join(BLOG_DIR, fileName);
+async function migrateArticle(directory, fileName, section) {
+  const filePath = path.join(directory, fileName);
   const source = await fs.readFile(filePath, 'utf8');
-  const nextSource = migrateArticleSource(source, fileName);
+  const nextSource = migrateArticleSource(source, fileName, section);
   const frontmatter = matter(nextSource).data;
   const primarySourceCount = Array.isArray(frontmatter.primarySources)
     ? frontmatter.primarySources.length
@@ -76,22 +97,41 @@ async function migrateArticle(fileName) {
   return { fileName, changed: true, primarySourceCount };
 }
 
-export function migrateArticleSource(source, fileName) {
+export function migrateArticleSource(source, fileName, section = 'editorial') {
   const parsed = matter(source);
   const body = parsed.content.replace(/^\n+/, '');
-  const frontmatter = buildOrderedFrontmatter(parsed.data, body, fileName);
+  const frontmatter = buildOrderedFrontmatter(parsed.data, body, fileName, section);
 
   return `${renderYamlFrontmatter(frontmatter)}${body.replace(/\s+$/, '')}\n`;
 }
 
-async function main() {
-  const fileNames = (await fs.readdir(BLOG_DIR))
-    .filter((entry) => entry.endsWith('.md'))
-    .sort((left, right) => left.localeCompare(right));
-  const results = [];
+async function readMarkdownEntries(directory) {
+  try {
+    return (await fs.readdir(directory))
+      .filter((entry) => entry.endsWith('.md'))
+      .sort((left, right) => left.localeCompare(right));
+  } catch (error) {
+    if (error && typeof error === 'object' && 'code' in error && error.code === 'ENOENT') {
+      return [];
+    }
 
-  for (const fileName of fileNames) {
-    results.push(await migrateArticle(fileName));
+    throw error;
+  }
+}
+
+async function main() {
+  const results = [];
+  const directories = [
+    { directory: BLOG_DIR, section: 'editorial' },
+    { directory: REVIEWS_DIR, section: 'review' },
+  ];
+
+  for (const { directory, section } of directories) {
+    const fileNames = await readMarkdownEntries(directory);
+
+    for (const fileName of fileNames) {
+      results.push(await migrateArticle(directory, fileName, section));
+    }
   }
 
   const changedCount = results.filter((result) => result.changed).length;

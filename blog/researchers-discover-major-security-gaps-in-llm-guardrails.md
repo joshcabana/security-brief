@@ -42,6 +42,11 @@ primarySources:
     title: "OWASP — Top 10 for Large Language Model Applications 2025: LLM01 Prompt Injection at 1"
   - url: "https://blogs.cisco.com/ai/open-model-vulnerability-analysis"
     title: "Cisco — Death by a Thousand Prompts: Open Model Vulnerability Analysis, November 2025: Multi-turn ASR up to 92.78%; 87% single-turn block rate collapses under persistence"
+section: "editorial"
+monetization: "none"
+reviewed_by: "PENDING_HUMAN_REVIEW"
+reviewed_at: "PENDING_HUMAN_REVIEW"
+last_substantive_update_at: "2026-03-17"
 ---
 The enterprise pitch for generative AI has always carried a reassuring footnote: safety guardrails are in place. Content filters, AI judges, alignment training, and red-teaming pipelines collectively stand between the model and misuse. The research published between mid-2025 and early 2026 systematically dismantles that reassurance.
 

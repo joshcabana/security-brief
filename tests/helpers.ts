@@ -19,6 +19,11 @@ interface ArticleOverrides {
   meta_description?: string;
   keywords?: string[];
   read_time?: string;
+  section?: 'editorial' | 'review';
+  monetization?: 'none' | 'affiliate';
+  reviewed_by?: string;
+  reviewed_at?: string;
+  last_substantive_update_at?: string;
   primarySources?: Array<{
     url: string;
     title: string;
@@ -104,6 +109,11 @@ export function buildArticleMarkdown(overrides: ArticleOverrides = {}): string {
     meta_description: overrides.meta_description ?? 'Example meta description for testing.',
     keywords: overrides.keywords ?? ['keyword one', 'keyword two', 'keyword three', 'keyword four', 'keyword five'],
     read_time: overrides.read_time ?? '6 min',
+    section: overrides.section ?? 'editorial',
+    monetization: overrides.monetization ?? 'none',
+    reviewed_by: overrides.reviewed_by ?? 'PENDING_HUMAN_REVIEW',
+    reviewed_at: overrides.reviewed_at ?? 'PENDING_HUMAN_REVIEW',
+    last_substantive_update_at: overrides.last_substantive_update_at ?? (overrides.date ?? '2026-03-10'),
     primarySources: overrides.primarySources ?? [
       {
         url: 'https://example.com/source-one',
@@ -138,6 +148,7 @@ export async function createWorkspace(files: Array<{ fileName: string; source: s
   const blogDir = path.join(workspaceDir, 'blog');
 
   await mkdir(blogDir, { recursive: true });
+  await mkdir(path.join(workspaceDir, 'reviews'), { recursive: true });
   await mkdir(path.join(workspaceDir, 'harvests'), { recursive: true });
   await mkdir(path.join(workspaceDir, 'drafts'), { recursive: true });
 

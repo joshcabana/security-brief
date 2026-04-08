@@ -13,6 +13,9 @@ import {
 } from '../lib/articles';
 
 function buildArticleSource(body: string, category = 'AI Threats'): string {
+  const section = category === 'Privacy Tools' ? 'review' : 'editorial';
+  const monetization = section === 'review' ? 'affiliate' : 'none';
+
   return [
     '---',
     'title: "Alpha"',
@@ -33,6 +36,11 @@ function buildArticleSource(body: string, category = 'AI Threats'): string {
     '  - four',
     '  - five',
     'read_time: "5 min"',
+    `section: "${section}"`,
+    `monetization: "${monetization}"`,
+    'reviewed_by: "PENDING_HUMAN_REVIEW"',
+    'reviewed_at: "PENDING_HUMAN_REVIEW"',
+    'last_substantive_update_at: "2026-03-17"',
     'primarySources:',
     '  - url: "https://example.com/source-one"',
     '    title: "Primary source one"',
@@ -88,6 +96,7 @@ test('getAffiliateUrl rejects hostname mismatches and credentialed urls', () => 
 
 test('normalizeOutboundUrl only allows absolute https targets without placeholders', () => {
   assert.equal(normalizeOutboundUrl(' https://example.com/vendor '), 'https://example.com/vendor');
+  assert.equal(normalizeOutboundUrl('https://example.com/vendor\\n'), 'https://example.com/vendor');
   assert.equal(normalizeOutboundUrl('http://example.com/vendor'), null);
   assert.equal(normalizeOutboundUrl('javascript:alert(1)'), null);
   assert.equal(normalizeOutboundUrl('https://example.com/{placeholder}'), null);

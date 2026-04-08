@@ -91,7 +91,7 @@ test('buildStatusSnapshot leaves STATUS.md deploy identity untouched when runtim
   assert.match(snapshot.status_document.drift.summary, /Runtime git metadata is unavailable/);
 });
 
-test('buildStatusSnapshot drops malformed runtime urls instead of surfacing them publicly', () => {
+test('buildStatusSnapshot drops malformed runtime urls and falls back to the canonical public production url', () => {
   const snapshot = buildStatusSnapshot({
     statusSource: baselineStatusSource,
     runtimeOverrides: {
@@ -103,5 +103,5 @@ test('buildStatusSnapshot drops malformed runtime urls instead of surfacing them
 
   assert.equal(snapshot.runtime.deployment_url, null);
   assert.equal(snapshot.runtime.branch_url, null);
-  assert.equal(snapshot.runtime.production_url, null);
+  assert.equal(snapshot.runtime.production_url, 'https://aithreatbrief.com');
 });
