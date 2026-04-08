@@ -1,7 +1,7 @@
 <!-- markdownlint-disable MD034 -->
 # AI Security Brief — Project Status
 
-**Pinned baseline:** `origin/main` @ `4dca3d3f94aec4ab13b79176bcefbf32d1712a2c` **Last updated:** 07 April 2026 **Updated by:** Codex
+**Pinned baseline:** `origin/main` @ `e5095ca775dbdf7cb2787d5ad23e93ead433afda` **Last updated:** 09 April 2026 **Updated by:** Codex
 
 **Verification pipeline:** `pnpm verify:pr`, `pnpm verify:ops`, `NEXT_PUBLIC_PLAUSIBLE_DOMAIN=aithreatbrief.com pnpm verify:live`, plus cache-bypassed checks against the production runtime
 
@@ -10,7 +10,7 @@
 | Component | Status |
 | --- | --- |
 | Live URL | https://aithreatbrief.com |
-| Latest deploy | `main` @ `4dca3d3f94aec4ab13b79176bcefbf32d1712a2c` — runtime reported active deployment |
+| Latest deploy | `main` @ `e5095ca775dbdf7cb2787d5ad23e93ead433afda` — runtime reported active deployment |
 | Rate limiting | Upstash-backed distributed 5 req/min per IP on `/api/subscribe` |
 | Repository license | MIT (`LICENSE`) |
 | Public status surface | `/status` and `/status.json` (runtime snapshot) |
