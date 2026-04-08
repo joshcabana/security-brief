@@ -48,9 +48,14 @@ function orClause(parts) {
 export function buildBrowserSearchQueries(policy, memory) {
   const recentDays = policy.search_windows?.recent_days ?? 30;
   const contextDays = policy.search_windows?.context_days ?? 90;
-  const projectClause = orClause((policy.project_identifiers ?? []).map(phrase));
-  const priorityClause = orClause((policy.priority_senders ?? []).map((sender) => `from:${sender}`));
-  const opsClause = orClause((policy.ops_senders ?? []).map((sender) => `from:${sender}`));
+  const projectTerms = policy.matching?.domain_terms ?? policy.project_identifiers ?? [];
+  const commercialTerms = policy.matching?.commercial_terms ?? [];
+  const prioritySenders = policy.matching?.priority_senders ?? policy.priority_senders ?? [];
+  const opsSenders = policy.matching?.ops_senders ?? policy.ops_senders ?? [];
+  const projectClause = orClause(projectTerms.map(phrase));
+  const commercialClause = orClause(commercialTerms.map(phrase));
+  const priorityClause = orClause(prioritySenders.map((sender) => `from:${sender}`));
+  const opsClause = orClause(opsSenders.map((sender) => `from:${sender}`));
   const queries = [];
 
   if (projectClause) {
@@ -68,6 +73,20 @@ export function buildBrowserSearchQueries(policy, memory) {
     queries.push({
       name: 'older_priority_contacts',
       query: `in:inbox newer_than:${contextDays}d older_than:7d ${priorityClause}`,
+    });
+  }
+
+  if (commercialClause && priorityClause) {
+    queries.push({
+      name: 'recent_priority_affiliate_terms',
+      query: `in:inbox newer_than:${recentDays}d ${priorityClause} ${commercialClause}`,
+    });
+  }
+
+  if (commercialClause && projectClause) {
+    queries.push({
+      name: 'recent_project_affiliate_terms',
+      query: `in:inbox newer_than:${recentDays}d ${projectClause} ${commercialClause}`,
     });
   }
 
@@ -92,6 +111,34 @@ export function buildBrowserSearchQueries(policy, memory) {
   }
 
   return queries;
+}
+
+function trimThreadMessages(messages, policy) {
+  const maxMessages = policy.browser_fallback?.max_messages_per_thread ?? 4;
+  const maxMessageChars = policy.browser_fallback?.max_message_chars ?? 1200;
+  const maxThreadChars = policy.browser_fallback?.max_thread_chars ?? 3600;
+  const trimmed = [];
+  let consumed = 0;
+
+  for (const message of messages.slice(0, maxMessages)) {
+    const remaining = maxThreadChars - consumed;
+
+    if (remaining <= 0) {
+      break;
+    }
+
+    const maxBodyChars = Math.min(maxMessageChars, remaining);
+    const body = compactWhitespace(message.body).slice(0, maxBodyChars);
+    consumed += body.length;
+    trimmed.push({
+      sender_name: message.sender_name,
+      sender_email: message.sender_email,
+      timestamp: message.timestamp,
+      body,
+    });
+  }
+
+  return trimmed;
 }
 
 export function resolveBrowserRuntimeDir(policy = {}) {
@@ -392,8 +439,8 @@ async function readThread(page, candidate) {
 }
 
 export async function collectBrowserMailboxSnapshot(policy, memory, {
-  searchResultLimit = DEFAULT_SEARCH_RESULT_LIMIT,
-  threadLimit = DEFAULT_THREAD_LIMIT,
+  searchResultLimit = policy.browser_fallback?.search_result_limit ?? DEFAULT_SEARCH_RESULT_LIMIT,
+  threadLimit = policy.browser_fallback?.thread_limit ?? DEFAULT_THREAD_LIMIT,
 } = {}) {
   const { chromium } = loadBrowserRuntime(policy);
   const debuggerState = await ensureChromeDebugger(policy);
@@ -433,7 +480,11 @@ export async function collectBrowserMailboxSnapshot(policy, memory, {
     const threads = [];
 
     for (const candidate of selectedCandidates) {
-      threads.push(await readThread(page, candidate));
+      const thread = await readThread(page, candidate);
+      threads.push({
+        ...thread,
+        messages: trimThreadMessages(thread.messages, policy),
+      });
     }
 
     await page.goto(GMAIL_INBOX_URL, { waitUntil: 'domcontentloaded' });
@@ -503,18 +554,44 @@ async function fillDraftBody(page, body) {
   await page.waitForTimeout(2500);
 }
 
-export async function createBrowserDrafts(policy, snapshot, draftRequests) {
+async function clickSend(page) {
+  const clicked = await page.evaluate(() => {
+    const buttons = [...document.querySelectorAll('div[role="button"], button')];
+    const target = buttons.find((entry) => {
+      const aria = entry.getAttribute('aria-label') || '';
+      const text = (entry.textContent || '').trim();
+      return /^send\b/i.test(aria) || /^send$/i.test(text);
+    });
+
+    if (!target) {
+      return false;
+    }
+
+    target.click();
+    return true;
+  });
+
+  if (!clicked) {
+    throw new Error('Send button was not available in Gmail.');
+  }
+
+  await page.waitForTimeout(2500);
+}
+
+export async function createBrowserReplies(policy, snapshot, replyRequests) {
   const { chromium } = loadBrowserRuntime(policy);
   const debuggerState = await ensureChromeDebugger(policy);
   const browser = await chromium.connectOverCDP(debuggerState.cdpUrl);
   const created = [];
+  const sent = [];
   const failures = [];
+  const autoSend = policy.reply_policy?.mode === 'auto_send';
 
   try {
     const { page } = await getOrCreateGmailPage(browser, policy.mailbox_email);
     const threadMap = new Map(snapshot.threads.map((thread) => [thread.thread_id, thread]));
 
-    for (const request of draftRequests) {
+    for (const request of replyRequests) {
       const thread = threadMap.get(request.thread_id);
 
       if (!thread?.thread_url) {
@@ -530,16 +607,26 @@ export async function createBrowserDrafts(policy, snapshot, draftRequests) {
         await openThreadUrl(page, thread.thread_url);
         await ensureReplyEditor(page, request.reply_all === true);
         await fillDraftBody(page, request.body);
-        created.push({
-          thread_id: request.thread_id,
-          sender: request.sender,
-          subject: request.subject,
-          draft_id: `browser-draft:${request.thread_id}`,
-        });
+        if (autoSend) {
+          await clickSend(page);
+          sent.push({
+            thread_id: request.thread_id,
+            sender: request.sender,
+            subject: request.subject,
+            reply_id: `browser-send:${request.thread_id}`,
+          });
+        } else {
+          created.push({
+            thread_id: request.thread_id,
+            sender: request.sender,
+            subject: request.subject,
+            draft_id: `browser-draft:${request.thread_id}`,
+          });
+        }
       } catch (error) {
         failures.push({
-          stage: 'draft',
-          message: `Draft creation failed for "${request.subject}": ${error instanceof Error ? error.message : String(error)}`,
+          stage: autoSend ? 'send' : 'draft',
+          message: `${autoSend ? 'Reply send' : 'Draft creation'} failed for "${request.subject}": ${error instanceof Error ? error.message : String(error)}`,
           retryable: false,
         });
       }
@@ -551,5 +638,5 @@ export async function createBrowserDrafts(policy, snapshot, draftRequests) {
     await browser.close();
   }
 
-  return { created, failures };
+  return { created, sent, failures };
 }

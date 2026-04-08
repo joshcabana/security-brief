@@ -26,12 +26,97 @@ import {
 import { requestJsonFromGitHubModels } from './github-models.mjs';
 import {
   collectBrowserMailboxSnapshot,
-  createBrowserDrafts,
+  createBrowserReplies,
 } from './gmail-browser.mjs';
 import { parseCliOptions } from './common.mjs';
 
 const execFile = promisify(execFileCallback);
 const DEFAULT_GH_BIN = '/opt/homebrew/bin/gh';
+
+function chunkThreads(threads, chunkSize) {
+  const chunks = [];
+
+  for (let index = 0; index < threads.length; index += chunkSize) {
+    chunks.push(threads.slice(index, index + chunkSize));
+  }
+
+  return chunks;
+}
+
+function mergeByThreadId(items, key = 'thread_id') {
+  const merged = new Map();
+
+  for (const item of items) {
+    if (!item?.[key]) {
+      continue;
+    }
+
+    merged.set(item[key], item);
+  }
+
+  return [...merged.values()];
+}
+
+async function runBrowserModelTriage({ policy, memory, context, browserSnapshot, dryRun }) {
+  const chunkSize = Math.max(1, Number(policy.browser_fallback?.triage_chunk_size ?? 2));
+  const chunks = chunkThreads(browserSnapshot.threads ?? [], chunkSize);
+  const decisions = [];
+
+  for (const [index, threads] of chunks.entries()) {
+    const chunkSnapshot = {
+      ...browserSnapshot,
+      search_runs: index === 0 ? browserSnapshot.search_runs : [],
+      threads,
+    };
+
+    const decision = await requestJsonFromGitHubModels({
+      systemPrompt: [
+        'You are a deterministic Gmail inbox triage assistant for a project owner.',
+        'Return valid JSON only.',
+        'Use only the supplied mailbox snapshot and project context.',
+        'Do not invent threads, senders, or facts that are not present in the provided data.',
+      ].join('\n'),
+      userPrompt: buildBrowserTriagePrompt({
+        policy,
+        memory,
+        context,
+        browserSnapshot: chunkSnapshot,
+        dryRun,
+      }),
+      validate: validateBrowserTriageResult,
+      maxTokens: 4000,
+      temperature: 0.2,
+      model: process.env.GITHUB_MODELS_MODEL?.trim() || 'openai/gpt-4.1',
+    });
+
+    decisions.push(decision);
+  }
+
+  return {
+    success: decisions.every((decision) => decision.success),
+    delivery_mode: decisions[0]?.delivery_mode ?? (policy.reply_policy?.mode === 'auto_send' ? 'auto_send' : 'draft_only'),
+    coverage: decisions[0]?.coverage ?? {
+      recent_days: policy.search_windows?.recent_days ?? 30,
+      context_days: policy.search_windows?.context_days ?? 90,
+      scope_note: `Chunked browser triage across ${chunks.length} batch(es).`,
+    },
+    summary: decisions.map((decision) => decision.summary).filter(Boolean).join(' ').trim(),
+    reply: mergeByThreadId(decisions.flatMap((decision) => decision.reply ?? [])),
+    waiting: mergeByThreadId(decisions.flatMap((decision) => decision.waiting ?? [])),
+    ops_alert: mergeByThreadId(decisions.flatMap((decision) => decision.ops_alert ?? [])),
+    ignore: mergeByThreadId(decisions.flatMap((decision) => decision.ignore ?? [])),
+    advice_review: mergeByThreadId(decisions.flatMap((decision) => decision.advice_review ?? [])),
+    drafts_created: mergeByThreadId(decisions.flatMap((decision) => decision.drafts_created ?? [])),
+    replies_sent: mergeByThreadId(decisions.flatMap((decision) => decision.replies_sent ?? [])),
+    follow_ups: mergeByThreadId(decisions.flatMap((decision) => decision.follow_ups ?? [])),
+    failures: decisions.flatMap((decision) => decision.failures ?? []),
+    notes: [
+      ...decisions.flatMap((decision) => decision.notes ?? []),
+      `Browser triage used ${chunks.length} chunk${chunks.length === 1 ? '' : 's'} for model classification.`,
+    ],
+    reply_requests: mergeByThreadId(decisions.flatMap((decision) => decision.reply_requests ?? [])),
+  };
+}
 
 function extractPreflightFailure(preflightResult) {
   if (!preflightResult.json || preflightResult.code !== 0) {
@@ -79,23 +164,12 @@ async function runBrowserFallback({
 
   try {
     await ensureGitHubModelsToken();
-    browserDecision = await requestJsonFromGitHubModels({
-      systemPrompt: [
-        'You are a deterministic Gmail inbox triage assistant for a project owner.',
-        'Return valid JSON only.',
-        'Use only the supplied mailbox snapshot and project context.',
-        'Do not invent threads, senders, or facts that are not present in the provided data.',
-      ].join('\n'),
-      userPrompt: buildBrowserTriagePrompt({
-        policy,
-        memory,
-        context,
-        browserSnapshot,
-        dryRun: options.dryRun,
-      }),
-      validate: validateBrowserTriageResult,
-      maxTokens: 4000,
-      temperature: 0.2,
+    browserDecision = await runBrowserModelTriage({
+      policy,
+      memory,
+      context,
+      browserSnapshot,
+      dryRun: options.dryRun,
     });
   } catch (error) {
     return buildFailureResult({
@@ -115,17 +189,19 @@ async function runBrowserFallback({
   }
 
   let draftsCreated = [];
-  let draftFailures = [];
+  let repliesSent = [];
+  let replyFailures = [];
 
-  if (!options.dryRun && browserDecision.draft_requests.length > 0) {
+  if (!options.dryRun && browserDecision.reply_requests.length > 0) {
     try {
-      const draftOutcome = await createBrowserDrafts(policy, browserSnapshot, browserDecision.draft_requests);
-      draftsCreated = draftOutcome.created;
-      draftFailures = draftOutcome.failures;
+      const replyOutcome = await createBrowserReplies(policy, browserSnapshot, browserDecision.reply_requests);
+      draftsCreated = replyOutcome.created;
+      repliesSent = replyOutcome.sent;
+      replyFailures = replyOutcome.failures;
     } catch (error) {
-      draftFailures = [
+      replyFailures = [
         {
-          stage: 'draft',
+          stage: policy.reply_policy?.mode === 'auto_send' ? 'send' : 'draft',
           message: error instanceof Error ? error.message : String(error),
           retryable: false,
         },
@@ -134,7 +210,8 @@ async function runBrowserFallback({
   }
 
   return {
-    success: browserDecision.success && draftFailures.length === 0,
+    success: browserDecision.success && replyFailures.length === 0,
+    delivery_mode: browserDecision.delivery_mode,
     mailbox: browserSnapshot.mailbox_email,
     coverage: browserDecision.coverage,
     summary: browserDecision.summary,
@@ -144,18 +221,21 @@ async function runBrowserFallback({
     ignore: browserDecision.ignore,
     advice_review: browserDecision.advice_review,
     drafts_created: options.dryRun ? [] : draftsCreated,
+    replies_sent: options.dryRun ? [] : repliesSent,
     follow_ups: browserDecision.follow_ups,
     failures: [
       ...browserDecision.failures,
-      ...draftFailures,
+      ...replyFailures,
     ],
     notes: [
       ...browserDecision.notes,
       `Gmail connector preflight failed: ${preflightFailure.message}`,
       `Browser fallback used Chrome CDP ${browserSnapshot.cdp_url}${browserSnapshot.launched_browser ? ' after launching Chrome' : ''}.`,
       options.dryRun
-        ? 'Dry run mode was enabled; browser drafts were not created.'
-        : `Browser fallback prepared ${draftsCreated.length} Gmail draft${draftsCreated.length === 1 ? '' : 's'}.`,
+        ? 'Dry run mode was enabled; browser replies were not created.'
+        : policy.reply_policy?.mode === 'auto_send'
+          ? `Browser fallback sent ${repliesSent.length} Gmail repl${repliesSent.length === 1 ? 'y' : 'ies'}.`
+          : `Browser fallback prepared ${draftsCreated.length} Gmail draft${draftsCreated.length === 1 ? '' : 's'}.`,
     ],
   };
 }
@@ -249,7 +329,11 @@ async function main() {
       failure: classifyFailure(triage.stderr, 'triage'),
       preflight: preflight.json,
       notes: [
-        options.dryRun ? 'Dry run mode was enabled.' : 'Draft creation was enabled for reply-worthy threads.',
+        options.dryRun
+          ? 'Dry run mode was enabled.'
+          : policy.reply_policy?.mode === 'auto_send'
+            ? 'Reply sending was enabled for reply-worthy threads.'
+            : 'Draft creation was enabled for reply-worthy threads.',
       ],
     });
   } else {
@@ -261,7 +345,11 @@ async function main() {
       notes: [
         ...(triage.json.notes ?? []),
         `Mailbox preflight succeeded for ${preflight.json.email}.`,
-        options.dryRun ? 'Dry run mode was enabled; no Gmail drafts should have been created.' : 'Draft-only mode is active; auto-send is disabled.',
+        options.dryRun
+          ? 'Dry run mode was enabled; no Gmail replies should have been created.'
+          : policy.reply_policy?.mode === 'auto_send'
+            ? 'Auto-send mode is active for reply-worthy Gmail threads.'
+            : 'Draft-only mode is active; auto-send is disabled.',
       ],
     };
   }

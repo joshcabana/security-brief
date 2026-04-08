@@ -31,6 +31,10 @@ export const TRIAGE_OUTPUT_SCHEMA = {
   type: 'object',
   properties: {
     success: { type: 'boolean' },
+    delivery_mode: {
+      type: 'string',
+      enum: ['draft_only', 'auto_send'],
+    },
     mailbox: { type: 'string' },
     coverage: {
       type: 'object',
@@ -67,6 +71,10 @@ export const TRIAGE_OUTPUT_SCHEMA = {
       type: 'array',
       items: { $ref: '#/$defs/draftSummary' },
     },
+    replies_sent: {
+      type: 'array',
+      items: { $ref: '#/$defs/replySummary' },
+    },
     follow_ups: {
       type: 'array',
       items: { $ref: '#/$defs/followUpSummary' },
@@ -82,6 +90,7 @@ export const TRIAGE_OUTPUT_SCHEMA = {
   },
   required: [
     'success',
+    'delivery_mode',
     'mailbox',
     'coverage',
     'summary',
@@ -91,6 +100,7 @@ export const TRIAGE_OUTPUT_SCHEMA = {
     'ignore',
     'advice_review',
     'drafts_created',
+    'replies_sent',
     'follow_ups',
     'failures',
     'notes',
@@ -146,6 +156,17 @@ export const TRIAGE_OUTPUT_SCHEMA = {
       required: ['thread_id', 'sender', 'subject', 'draft_id'],
       additionalProperties: false,
     },
+    replySummary: {
+      type: 'object',
+      properties: {
+        thread_id: { type: 'string' },
+        sender: { type: 'string' },
+        subject: { type: 'string' },
+        reply_id: { type: 'string' },
+      },
+      required: ['thread_id', 'sender', 'subject', 'reply_id'],
+      additionalProperties: false,
+    },
     followUpSummary: {
       type: 'object',
       properties: {
@@ -175,6 +196,7 @@ export const BROWSER_TRIAGE_OUTPUT_SCHEMA = {
   type: 'object',
   properties: {
     success: { type: 'boolean' },
+    delivery_mode: TRIAGE_OUTPUT_SCHEMA.properties.delivery_mode,
     mailbox: { type: 'string' },
     coverage: TRIAGE_OUTPUT_SCHEMA.properties.coverage,
     summary: { type: 'string' },
@@ -184,10 +206,11 @@ export const BROWSER_TRIAGE_OUTPUT_SCHEMA = {
     ignore: TRIAGE_OUTPUT_SCHEMA.properties.ignore,
     advice_review: TRIAGE_OUTPUT_SCHEMA.properties.advice_review,
     drafts_created: TRIAGE_OUTPUT_SCHEMA.properties.drafts_created,
+    replies_sent: TRIAGE_OUTPUT_SCHEMA.properties.replies_sent,
     follow_ups: TRIAGE_OUTPUT_SCHEMA.properties.follow_ups,
     failures: TRIAGE_OUTPUT_SCHEMA.properties.failures,
     notes: TRIAGE_OUTPUT_SCHEMA.properties.notes,
-    draft_requests: {
+    reply_requests: {
       type: 'array',
       items: {
         type: 'object',
@@ -205,6 +228,7 @@ export const BROWSER_TRIAGE_OUTPUT_SCHEMA = {
   },
   required: [
     'success',
+    'delivery_mode',
     'mailbox',
     'coverage',
     'summary',
@@ -214,43 +238,67 @@ export const BROWSER_TRIAGE_OUTPUT_SCHEMA = {
     'ignore',
     'advice_review',
     'drafts_created',
+    'replies_sent',
     'follow_ups',
     'failures',
     'notes',
-    'draft_requests',
+    'reply_requests',
   ],
   additionalProperties: false,
 };
 
 export function buildDefaultPolicy() {
   return {
-    version: 1,
+    version: 2,
     connector_id: GMAIL_CONNECTOR_ID,
     mailbox_email: 'cabana.collections2025@gmail.com',
     project_name: 'AI Security Brief',
     project_identifiers: [
       'AI Security Brief',
+      'AITHREATBRIEF.com',
       'aithreatbrief',
       'aithreatbrief.com',
-      'security-brief',
     ],
     search_windows: {
       recent_days: 30,
       context_days: 90,
     },
-    priority_senders: [
-      'puresquare.com',
-      'partnerize.com',
-      'surfshark.com',
-      'proton.ch',
-      'proton.me',
-    ],
-    ops_senders: [
-      'github.com',
-      'vercel.com',
-      'supabase.com',
-      'beehiiv.com',
-    ],
+    matching: {
+      mode: 'broad',
+      domain_terms: [
+        'AI Security Brief',
+        'AITHREATBRIEF.com',
+        'aithreatbrief',
+        'aithreatbrief.com',
+      ],
+      commercial_terms: [
+        'affiliate',
+        'affiliates',
+        'referral',
+        'referrals',
+        'partner',
+        'partnership',
+        'partner program',
+        'commission',
+        'collaboration',
+        'sponsor',
+        'sponsorship',
+        'newsletter swap',
+        'media buy',
+        'paid placement',
+        'promo',
+        'promotion',
+      ],
+      priority_senders: [
+        'puresquare.com',
+        'partnerize.com',
+        'impact.com',
+        'surfshark.com',
+        'proton.ch',
+        'proton.me',
+      ],
+      ops_senders: [],
+    },
     tone: {
       style: 'direct, credible, concise, commercially aware',
       avoid: [
@@ -264,9 +312,13 @@ export function buildDefaultPolicy() {
         'clear next steps',
       ],
     },
-    escalation_rules: {
-      never_auto_send: true,
-      draft_only: true,
+    reply_policy: {
+      mode: 'auto_send',
+      read_full_thread_context: true,
+      skip_if_last_message_from_mailbox: true,
+      skip_if_recent_substantive_reply: true,
+      recent_reply_window_hours: 72,
+      avoid_duplicate_replies: true,
       sensitive_topics: ['legal', 'commercial terms', 'pricing', 'contracts', 'conflict'],
     },
     browser_fallback: {
@@ -275,6 +327,12 @@ export function buildDefaultPolicy() {
       chrome_binary: '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
       chrome_profile_dir: path.join(homedir(), '.gemini', 'antigravity-browser-profile'),
       runtime_dir: path.join(homedir(), '.codex', 'automations', 'gmail-triage-runtime'),
+      search_result_limit: 8,
+      thread_limit: 4,
+      triage_chunk_size: 1,
+      max_messages_per_thread: 3,
+      max_message_chars: 500,
+      max_thread_chars: 1400,
     },
     advice_heuristics: {
       take: 'Improves conversion, trust, operations, or partnership quality with low downside.',
@@ -286,14 +344,99 @@ export function buildDefaultPolicy() {
 
 export function buildDefaultMemory() {
   return {
-    version: 1,
+    version: 2,
     last_run_at: null,
     last_successful_run_at: null,
     handled_threads: {},
+    reply_history: {},
     open_follow_ups: {},
     advice_history: {},
     draft_history: {},
     notes: [],
+  };
+}
+
+function getPrioritySenders(policy) {
+  return policy.matching?.priority_senders ?? policy.priority_senders ?? [];
+}
+
+function getOpsSenders(policy) {
+  return policy.matching?.ops_senders ?? policy.ops_senders ?? [];
+}
+
+function getCommercialTerms(policy) {
+  return policy.matching?.commercial_terms ?? [];
+}
+
+function getReplyMode(policy) {
+  return policy.reply_policy?.mode === 'draft_only' ? 'draft_only' : 'auto_send';
+}
+
+function getMemorySnapshot(memory) {
+  const handledEntries = Object.entries(memory?.handled_threads ?? {})
+    .slice(-12)
+    .map(([threadId, value]) => [threadId, value]);
+  const replyEntries = Object.entries(memory?.reply_history ?? {})
+    .slice(-12)
+    .map(([threadId, value]) => [threadId, value]);
+  const followUpEntries = Object.entries(memory?.open_follow_ups ?? {})
+    .slice(0, 8)
+    .map(([threadId, value]) => [threadId, value]);
+
+  return {
+    last_run_at: memory?.last_run_at ?? null,
+    last_successful_run_at: memory?.last_successful_run_at ?? null,
+    handled_threads: Object.fromEntries(handledEntries),
+    reply_history: Object.fromEntries(replyEntries),
+    open_follow_ups: Object.fromEntries(followUpEntries),
+    notes: Array.isArray(memory?.notes) ? memory.notes.slice(-6) : [],
+  };
+}
+
+function getPolicySnapshot(policy) {
+  return {
+    mailbox_email: policy.mailbox_email,
+    project_name: policy.project_name,
+    project_identifiers: policy.project_identifiers,
+    search_windows: policy.search_windows,
+    matching: {
+      mode: policy.matching?.mode,
+      domain_terms: policy.matching?.domain_terms ?? [],
+      commercial_terms: policy.matching?.commercial_terms ?? [],
+      priority_senders: getPrioritySenders(policy),
+    },
+    reply_policy: policy.reply_policy,
+    tone: policy.tone,
+    advice_heuristics: policy.advice_heuristics,
+  };
+}
+
+function getProjectContextSnapshot(context) {
+  return {
+    status_excerpt: trimContext(context?.status_excerpt ?? '', 1800),
+    readme_excerpt: trimContext(context?.readme_excerpt ?? '', 900),
+  };
+}
+
+function getBrowserSnapshotForPrompt(browserSnapshot) {
+  return {
+    transport: browserSnapshot.transport,
+    mailbox_email: browserSnapshot.mailbox_email,
+    search_runs: browserSnapshot.search_runs,
+    threads: (browserSnapshot.threads ?? []).map((thread) => ({
+      thread_id: thread.thread_id,
+      subject: thread.subject,
+      row_date_label: thread.row_date_label,
+      row_sender: thread.row_sender,
+      row_sender_email: thread.row_sender_email,
+      thread_url: thread.thread_url,
+      messages: (thread.messages ?? []).map((message) => ({
+        sender_name: message.sender_name,
+        sender_email: message.sender_email,
+        timestamp: message.timestamp,
+        body: message.body,
+      })),
+    })),
   };
 }
 
@@ -379,23 +522,25 @@ export function buildTriagePrompt({
     `Recent search window: ${policy.search_windows.recent_days} days.`,
     `Human context window: ${policy.search_windows.context_days} days.`,
     dryRun
-      ? 'Dry run: do not create Gmail drafts. Simulate draft-needed decisions in the structured output.'
-      : 'Create Gmail drafts when a reply is clearly needed and confidence is sufficient. Never send email.',
+      ? 'Dry run: do not draft or send Gmail replies. Simulate reply-needed decisions in the structured output.'
+      : getReplyMode(policy) === 'draft_only'
+        ? 'Create Gmail drafts when a reply is clearly needed and confidence is sufficient. Never send email.'
+        : 'Send Gmail replies when a reply is clearly needed and confidence is sufficient. Do not leave drafts unless delivery fails.',
     'Classify relevant threads into reply, waiting, ops_alert, or ignore.',
     'For advice from humans or partners, label it as take, consider, or push_back.',
     'Only use push_back when the advice is weak, self-serving, risky, or off-strategy.',
     'Avoid sounding vague, late, inflated, or naive in any draft stance.',
-    'Avoid duplicate drafts for threads already recorded in memory unless the thread materially changed.',
+    'Avoid duplicate replies for threads already recorded in memory unless the thread materially changed.',
     'Use the project context and prior memory to keep continuity.',
     '',
     'Policy JSON:',
-    JSON.stringify(policy, null, 2),
+    JSON.stringify(getPolicySnapshot(policy)),
     '',
     'Memory JSON:',
-    JSON.stringify(memory, null, 2),
+    JSON.stringify(getMemorySnapshot(memory)),
     '',
     'Project context:',
-    JSON.stringify(context, null, 2),
+    JSON.stringify(getProjectContextSnapshot(context)),
     '',
     'Return JSON only using the provided schema.',
   ].join('\n');
@@ -415,26 +560,29 @@ export function buildBrowserTriagePrompt({
     `Observed mailbox: ${browserSnapshot.mailbox_email}.`,
     `Project: ${policy.project_name}.`,
     dryRun
-      ? 'Dry run: do not request draft creation. Return an empty draft_requests array.'
-      : 'Prepare draft_requests for reply-worthy threads when confidence is sufficient. Never send email.',
+      ? 'Dry run: do not request reply creation. Return an empty reply_requests array.'
+      : getReplyMode(policy) === 'draft_only'
+        ? 'Prepare reply_requests for reply-worthy threads when confidence is sufficient. Gmail drafts will be created.'
+        : 'Prepare reply_requests for reply-worthy threads when confidence is sufficient. Gmail replies will be sent automatically.',
     'Every supplied thread already includes full-thread context from Gmail before classification.',
     'Classify each supplied thread into reply, waiting, ops_alert, or ignore.',
     'For advice from humans or partners, label it as take, consider, or push_back.',
-    'Only include draft_requests for threads that are in the reply bucket.',
-    'Each draft request must include the full reply body and whether reply_all should be used.',
-    'Do not create duplicate drafts when memory already records a stable prior draft unless the thread materially changed.',
+    'Only include reply_requests for threads that are in the reply bucket.',
+    'Each reply request must include the full reply body and whether reply_all should be used.',
+    'If the latest message is already from the mailbox, do not include that thread in reply_requests.',
+    'Do not create duplicate replies when memory already records a recent stable reply unless the thread materially changed.',
     '',
     'Policy JSON:',
-    JSON.stringify(policy, null, 2),
+    JSON.stringify(getPolicySnapshot(policy)),
     '',
     'Memory JSON:',
-    JSON.stringify(memory, null, 2),
+    JSON.stringify(getMemorySnapshot(memory)),
     '',
     'Project context:',
-    JSON.stringify(context, null, 2),
+    JSON.stringify(getProjectContextSnapshot(context)),
     '',
     'Browser mailbox snapshot JSON:',
-    JSON.stringify(browserSnapshot, null, 2),
+    JSON.stringify(getBrowserSnapshotForPrompt(browserSnapshot)),
     '',
     'Return JSON only using the provided schema.',
   ].join('\n');
@@ -537,6 +685,7 @@ export function classifyFailure(stderr, stage) {
 export function buildFailureResult({ runStamp, mailbox, failure, preflight = null, notes = [] }) {
   return {
     success: false,
+    delivery_mode: 'draft_only',
     run_at: runStamp.display,
     mailbox,
     coverage: {
@@ -551,6 +700,7 @@ export function buildFailureResult({ runStamp, mailbox, failure, preflight = nul
     ignore: [],
     advice_review: [],
     drafts_created: [],
+    replies_sent: [],
     follow_ups: [],
     failures: [failure],
     notes: [
@@ -562,6 +712,7 @@ export function buildFailureResult({ runStamp, mailbox, failure, preflight = nul
 
 export function mergeMemory(memory, result, runStamp) {
   const next = structuredClone(memory);
+  next.reply_history ??= {};
   next.last_run_at = runStamp.display;
 
   if (result.success) {
@@ -616,6 +767,15 @@ export function mergeMemory(memory, result, runStamp) {
     };
   }
 
+  for (const reply of result.replies_sent ?? []) {
+    next.reply_history[reply.thread_id] = {
+      sender: reply.sender,
+      subject: reply.subject,
+      reply_id: reply.reply_id,
+      updated_at: runStamp.display,
+    };
+  }
+
   return next;
 }
 
@@ -638,7 +798,7 @@ export function renderMarkdownBrief(result) {
   appendBucket(lines, 'Waiting', result.waiting);
   appendBucket(lines, 'Ops Alerts', result.ops_alert);
   appendAdvice(lines, result.advice_review);
-  appendDrafts(lines, result.drafts_created);
+  appendReplyActions(lines, result);
   appendFollowUps(lines, result.follow_ups);
   appendFailures(lines, result.failures);
 
@@ -685,16 +845,25 @@ function appendAdvice(lines, items) {
   lines.push('');
 }
 
-function appendDrafts(lines, items) {
-  lines.push('## Drafts Created', '');
+function appendReplyActions(lines, result) {
+  const repliesSent = result.replies_sent ?? [];
+  const draftsCreated = result.drafts_created ?? [];
+  const deliveryMode = result.delivery_mode ?? 'draft_only';
 
-  if (!items?.length) {
+  lines.push(deliveryMode === 'auto_send' ? '## Replies Sent' : '## Drafts Created', '');
+
+  const items = deliveryMode === 'auto_send' ? repliesSent : draftsCreated;
+
+  if (!items.length) {
     lines.push('- None', '');
     return;
   }
 
   for (const item of items) {
-    lines.push(`- ${item.sender} — ${item.subject} — draft ${item.draft_id}`);
+    const identifier = deliveryMode === 'auto_send'
+      ? `reply ${item.reply_id}`
+      : `draft ${item.draft_id}`;
+    lines.push(`- ${item.sender} — ${item.subject} — ${identifier}`);
   }
   lines.push('');
 }
@@ -805,6 +974,7 @@ export async function writeRunArtifacts({ runStamp, result, memory }) {
 
 export function validateTriageResult(result) {
   assert.equal(typeof result.success, 'boolean');
+  assert.equal(typeof result.delivery_mode, 'string');
   assert.equal(Array.isArray(result.reply), true);
   assert.equal(Array.isArray(result.waiting), true);
   assert.equal(Array.isArray(result.ops_alert), true);
@@ -813,9 +983,10 @@ export function validateTriageResult(result) {
   assert.equal(Array.isArray(result.drafts_created), true);
   assert.equal(Array.isArray(result.follow_ups), true);
   assert.equal(Array.isArray(result.failures), true);
+  assert.equal(Array.isArray(result.replies_sent ?? []), true);
 }
 
 export function validateBrowserTriageResult(result) {
   validateTriageResult(result);
-  assert.equal(Array.isArray(result.draft_requests), true);
+  assert.equal(Array.isArray(result.reply_requests), true);
 }
