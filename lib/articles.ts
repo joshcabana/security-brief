@@ -255,7 +255,7 @@ async function renderMarkdown(markdown: string, title: string): Promise<string> 
     allowedAttributes: {
       a: ['href', 'rel'],
     },
-    allowedSchemes: ['https'],
+    allowedSchemes: ['http', 'https'],
     allowedSchemesAppliedToAttributes: ['href'],
     allowProtocolRelative: false,
     transformTags: {
