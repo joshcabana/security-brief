@@ -87,6 +87,16 @@ function getRetryDelayMs(attempt) {
   return Math.min(4000, 500 * (2 ** (attempt - 1)));
 }
 
+function getRequestTimeoutMs() {
+  const configured = Number(process.env.GITHUB_MODELS_TIMEOUT_MS ?? 45000);
+
+  if (!Number.isFinite(configured) || configured < 1000) {
+    return 45000;
+  }
+
+  return configured;
+}
+
 /**
  * @param {{
  *   systemPrompt: string;
@@ -111,6 +121,7 @@ export async function requestJsonFromGitHubModels({
 }) {
   const token = resolveToken();
   const maxAttempts = 3;
+  const requestTimeoutMs = getRequestTimeoutMs();
   const resolvedSystemPrompt = buildSystemPrompt(systemPrompt, guardedText);
   const baseUserPrompt = buildUserPrompt(userPrompt, guardedText);
 
@@ -118,10 +129,13 @@ export async function requestJsonFromGitHubModels({
   let prompt = baseUserPrompt;
 
   for (let attempt = 1; attempt <= maxAttempts; attempt += 1) {
-    let response;
+    const controller = new AbortController();
+    const timeout = setTimeout(() => {
+      controller.abort(new Error(`GitHub Models request timed out after ${requestTimeoutMs}ms.`));
+    }, requestTimeoutMs);
 
     try {
-      response = await fetchImpl(GITHUB_MODELS_API_URL, {
+      const response = await fetchImpl(GITHUB_MODELS_API_URL, {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${token}`,
@@ -139,9 +153,50 @@ export async function requestJsonFromGitHubModels({
             { role: 'user', content: prompt },
           ],
         }),
+        signal: controller.signal,
       });
+
+      if (!response.ok) {
+        const body = await response.text();
+        lastError = new Error(`GitHub Models request failed with ${response.status}: ${body}`);
+
+        if (attempt < maxAttempts && isRetryableStatus(response.status)) {
+          await sleep(getRetryDelayMs(attempt));
+          continue;
+        }
+
+        throw lastError;
+      }
+
+      const payload = await response.json();
+      const content = payload?.choices?.[0]?.message?.content;
+
+      if (typeof content !== 'string' || content.trim().length === 0) {
+        lastError = new Error('GitHub Models returned an empty completion.');
+        continue;
+      }
+
+      try {
+        const parsed = JSON.parse(extractJsonCandidate(content));
+        validate(parsed);
+        return parsed;
+      } catch (error) {
+        const baseError = error instanceof Error ? error : new Error('Unknown JSON validation error.');
+        const contentPreview = extractJsonCandidate(content).slice(0, 1200);
+        lastError = new Error(`${baseError.message}\nRaw model output preview:\n${contentPreview}`);
+        prompt = [
+          baseUserPrompt,
+          '',
+          `Previous response failed validation: ${baseError.message}`,
+          'Return valid JSON only with no markdown fences, no commentary, and no omitted required fields.',
+        ].join('\n');
+      }
     } catch (error) {
-      lastError = error instanceof Error ? error : new Error(String(error));
+      if (error instanceof Error && error.name === 'AbortError') {
+        lastError = new Error(`GitHub Models request timed out after ${requestTimeoutMs}ms.`);
+      } else {
+        lastError = error instanceof Error ? error : new Error(String(error));
+      }
 
       if (attempt < maxAttempts) {
         await sleep(getRetryDelayMs(attempt));
@@ -149,42 +204,8 @@ export async function requestJsonFromGitHubModels({
       }
 
       throw lastError;
-    }
-
-    if (!response.ok) {
-      const body = await response.text();
-      lastError = new Error(`GitHub Models request failed with ${response.status}: ${body}`);
-
-      if (attempt < maxAttempts && isRetryableStatus(response.status)) {
-        await sleep(getRetryDelayMs(attempt));
-        continue;
-      }
-
-      throw lastError;
-    }
-
-    const payload = await response.json();
-    const content = payload?.choices?.[0]?.message?.content;
-
-    if (typeof content !== 'string' || content.trim().length === 0) {
-      lastError = new Error('GitHub Models returned an empty completion.');
-      continue;
-    }
-
-    try {
-      const parsed = JSON.parse(extractJsonCandidate(content));
-      validate(parsed);
-      return parsed;
-    } catch (error) {
-      const baseError = error instanceof Error ? error : new Error('Unknown JSON validation error.');
-      const contentPreview = extractJsonCandidate(content).slice(0, 1200);
-      lastError = new Error(`${baseError.message}\nRaw model output preview:\n${contentPreview}`);
-      prompt = [
-        baseUserPrompt,
-        '',
-        `Previous response failed validation: ${baseError.message}`,
-        'Return valid JSON only with no markdown fences, no commentary, and no omitted required fields.',
-      ].join('\n');
+    } finally {
+      clearTimeout(timeout);
     }
   }
 

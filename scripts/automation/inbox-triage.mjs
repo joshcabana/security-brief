@@ -245,6 +245,7 @@ export const BROWSER_TRIAGE_OUTPUT_SCHEMA = {
     'reply_requests',
   ],
   additionalProperties: false,
+  $defs: TRIAGE_OUTPUT_SCHEMA.$defs,
 };
 
 export function buildDefaultPolicy() {
@@ -320,6 +321,10 @@ export function buildDefaultPolicy() {
       recent_reply_window_hours: 72,
       avoid_duplicate_replies: true,
       sensitive_topics: ['legal', 'commercial terms', 'pricing', 'contracts', 'conflict'],
+    },
+    degraded_mode: {
+      dry_run_policy: 'heuristic_ok',
+      live_policy: 'fail_closed',
     },
     browser_fallback: {
       enabled: true,
@@ -406,6 +411,7 @@ function getPolicySnapshot(policy) {
       priority_senders: getPrioritySenders(policy),
     },
     reply_policy: policy.reply_policy,
+    degraded_mode: policy.degraded_mode ?? null,
     tone: policy.tone,
     advice_heuristics: policy.advice_heuristics,
   };

@@ -1,6 +1,18 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
-import { getSecurityHeaders } from './lib/security-headers.mjs';
+import { CSP_NONCE_HEADER, getSecurityHeaders } from './lib/security-headers.mjs';
+
+function generateScriptNonce(): string {
+  const bytes = new Uint8Array(16);
+  crypto.getRandomValues(bytes);
+
+  let binary = '';
+  for (const byte of bytes) {
+    binary += String.fromCharCode(byte);
+  }
+
+  return btoa(binary);
+}
 
 /**
  * Next.js middleware that enforces security headers on every response.
@@ -12,8 +24,16 @@ import { getSecurityHeaders } from './lib/security-headers.mjs';
  * CDN edge caches.
  */
 export function middleware(_request: NextRequest) {
-  const response = NextResponse.next();
-  const securityHeaders = getSecurityHeaders();
+  const scriptNonce = generateScriptNonce();
+  const requestHeaders = new Headers(_request.headers);
+  requestHeaders.set(CSP_NONCE_HEADER, scriptNonce);
+
+  const response = NextResponse.next({
+    request: {
+      headers: requestHeaders,
+    },
+  });
+  const securityHeaders = getSecurityHeaders({ scriptNonce });
 
   for (const header of securityHeaders) {
     response.headers.set(header.key, header.value);
