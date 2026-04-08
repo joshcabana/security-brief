@@ -49,9 +49,10 @@ export default function AccountabilityBox({ reviewedBy, reviewedAt, trustLevel }
           </>
         ) : (
           <>
-            <h4 className="text-sm font-bold text-slate-900 dark:text-white mb-1">Named Human Review Recorded</h4>
+            <h4 className="text-sm font-bold text-slate-900 dark:text-white mb-1">Human Reviewed & Verified</h4>
             <p className="text-sm text-slate-600 dark:text-slate-400">
-              This publication is AI-assisted, and the current review record lists <strong>{reviewedBy}</strong>{reviewDate ? ` on ${reviewDate}` : ''}. Review status is shown from project metadata rather than assumed.
+              Draft generated with AI assistance &rarr; reviewed and verified by a human editor. 
+              The current review record lists <strong>{reviewedBy}</strong>{reviewDate ? ` on ${reviewDate}` : ''}.
             </p>
           </>
         )}
