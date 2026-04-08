@@ -3,7 +3,7 @@
 import fs from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
-import { normalizeOutboundUrl } from '../lib/url-safety.mjs';
+import { normalizeApprovedAffiliateUrl } from '../lib/affiliate-url-policy.mjs';
 
 const root = process.cwd();
 const blogDir = path.join(root, 'blog');
@@ -112,10 +112,10 @@ async function loadMappings() {
       continue;
     }
 
-    const normalizedUrl = normalizeOutboundUrl(trimmedValue);
+    const normalizedUrl = normalizeApprovedAffiliateUrl(key, trimmedValue);
     assert(
       normalizedUrl,
-      `Invalid ${mappingSource.displayPath}: expected "${key}" to map to an absolute HTTPS URL.`,
+      `Invalid ${mappingSource.displayPath}: expected "${key}" to map to an approved absolute HTTPS affiliate URL.`,
     );
     normalizedMappings[key] = normalizedUrl;
   }

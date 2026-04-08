@@ -1,13 +1,14 @@
 'use client';
 
+import { buildSiteUrl } from '@/lib/site';
+
 interface ShareButtonsProps {
   title: string;
   slug: string;
 }
 
 export default function ShareButtons({ title, slug }: ShareButtonsProps) {
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://aithreatbrief.com';
-  const articleUrl = `${siteUrl}/blog/${slug}`;
+  const articleUrl = buildSiteUrl(`/blog/${slug}`);
   const encodedUrl = encodeURIComponent(articleUrl);
   const encodedTitle = encodeURIComponent(title);
 

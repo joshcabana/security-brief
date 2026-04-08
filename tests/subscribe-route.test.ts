@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import { Buffer } from 'node:buffer';
 import test from 'node:test';
 import { POST } from '../app/api/subscribe/route';
 import { ratelimit } from '../lib/rate-limit';
@@ -125,6 +126,55 @@ test('subscribe route returns 400 for invalid JSON payloads before service confi
 
   assert.equal(response.status, 400);
   assert.equal((await response.json()).message, 'The signup request body was invalid JSON.');
+});
+
+test('subscribe route rejects non-json content types and oversized request bodies', async () => {
+  const unsupportedMediaTypeResponse = await POST(
+    new Request('http://localhost/api/subscribe', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'text/plain',
+        origin: 'http://localhost',
+      },
+      body: '{"email":"reader@example.com"}',
+    }),
+  );
+  const oversizedBody = JSON.stringify({ email: 'reader@example.com', source: 'x'.repeat(5000) });
+  const oversizedResponse = await POST(
+    new Request('http://localhost/api/subscribe', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        origin: 'http://localhost',
+        'Content-Length': String(Buffer.byteLength(oversizedBody, 'utf8')),
+      },
+      body: oversizedBody,
+    }),
+  );
+
+  assert.equal(unsupportedMediaTypeResponse.status, 415);
+  assert.equal(
+    (await unsupportedMediaTypeResponse.json()).message,
+    'This signup endpoint only accepts application/json payloads.',
+  );
+  assert.equal(oversizedResponse.status, 413);
+  assert.equal((await oversizedResponse.json()).message, 'The signup request body is too large.');
+});
+
+test('subscribe route rejects json payloads that are not objects', async () => {
+  const response = await POST(
+    new Request('http://localhost/api/subscribe', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        origin: 'http://localhost',
+      },
+      body: '[]',
+    }),
+  );
+
+  assert.equal(response.status, 400);
+  assert.equal((await response.json()).message, 'The signup request body must be a JSON object.');
 });
 
 test('subscribe route returns 400 for invalid email addresses', async () => {

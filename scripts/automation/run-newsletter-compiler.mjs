@@ -107,6 +107,7 @@ async function main() {
       context,
       commitMessage: `automation: refresh newsletter draft ${context.effectiveDate}`,
       model,
+      allowedPaths: ['drafts'],
       outputs: [`Newsletter draft already exists: \`drafts/newsletter-${context.effectiveDate}.md\``],
       notes: ['No-op run. Weekly newsletter draft is already present.'],
     });
@@ -221,6 +222,7 @@ async function main() {
     context,
     commitMessage: `automation: add newsletter draft ${context.effectiveDate}`,
     model,
+    allowedPaths: ['drafts'],
     outputs: [`Newsletter draft generated: \`drafts/newsletter-${context.effectiveDate}.md\``],
     notes: context.options.force ? ['Forced regeneration requested. Existing newsletter draft was overwritten.'] : [],
   });

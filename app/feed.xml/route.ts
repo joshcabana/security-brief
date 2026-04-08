@@ -1,8 +1,5 @@
 import { getAllArticles } from '@/lib/articles';
-
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL?.trim() || 'https://aithreatbrief.com';
-const siteName = process.env.NEXT_PUBLIC_SITE_NAME?.trim() || 'AI Security Brief';
-const siteDescription = 'AI-assisted security briefings on AI-powered threats, privacy defence strategies, and security tooling for technology professionals.';
+import { buildSiteUrl, siteDescription, siteName, siteUrl } from '@/lib/site';
 
 function escapeXml(text: string): string {
   return text
@@ -21,8 +18,8 @@ export async function GET() {
     .map(
       (article) => `    <item>
       <title>${escapeXml(article.title)}</title>
-      <link>${siteUrl}/blog/${article.slug}</link>
-      <guid isPermaLink="true">${siteUrl}/blog/${article.slug}</guid>
+      <link>${buildSiteUrl(`/blog/${article.slug}`)}</link>
+      <guid isPermaLink="true">${buildSiteUrl(`/blog/${article.slug}`)}</guid>
       <description>${escapeXml(article.excerpt)}</description>
       <pubDate>${new Date(article.date).toUTCString()}</pubDate>
       <category>${escapeXml(article.category)}</category>
@@ -37,7 +34,7 @@ export async function GET() {
     <link>${siteUrl}</link>
     <description>${escapeXml(siteDescription)}</description>
     <language>en-au</language>
-    <atom:link href="${siteUrl}/feed.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="${buildSiteUrl('/feed.xml')}" rel="self" type="application/rss+xml" />
 ${items}
   </channel>
 </rss>`;

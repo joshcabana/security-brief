@@ -104,6 +104,7 @@ async function main() {
       context,
       commitMessage: `automation: refresh SEO metadata ${context.effectiveDate}`,
       model,
+      allowedPaths: ['blog', 'content-manifest.json'],
       outputs: ['SEO optimiser found no metadata or affiliate changes to apply.'],
       notes: ['No-op run. Changed weekly drafts were already complete.'],
     });
@@ -117,6 +118,7 @@ async function main() {
     context,
     commitMessage: `automation: optimise SEO metadata ${context.effectiveDate}`,
     model,
+    allowedPaths: ['blog', 'content-manifest.json'],
     outputs: updatedFiles.map((entry) => `Updated: \`${entry}\``),
   });
 }

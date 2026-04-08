@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import { Buffer } from 'node:buffer';
 import test from 'node:test';
 import { POST } from '../app/api/lead-capture/route';
 import { ratelimit } from '../lib/rate-limit';
@@ -83,6 +84,55 @@ test('lead capture rejects off-site requests', async () => {
 
   assert.equal(response.status, 403);
   assert.equal((await response.json()).message, 'This request could not be verified. Refresh the page and try again.');
+});
+
+test('lead capture rejects non-json content types, oversized bodies, and non-object json payloads', async () => {
+  const unsupportedMediaTypeResponse = await POST(
+    new Request('http://localhost/api/lead-capture', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'text/plain',
+        origin: 'http://localhost',
+      },
+      body: '{"email":"worker@example.com","jobTitle":"Security Engineer"}',
+    }),
+  );
+  const oversizedBody = JSON.stringify({
+    email: 'worker@example.com',
+    jobTitle: 'Security Engineer',
+    source: 'x'.repeat(5000),
+  });
+  const oversizedResponse = await POST(
+    new Request('http://localhost/api/lead-capture', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        origin: 'http://localhost',
+        'Content-Length': String(Buffer.byteLength(oversizedBody, 'utf8')),
+      },
+      body: oversizedBody,
+    }),
+  );
+  const invalidShapeResponse = await POST(
+    new Request('http://localhost/api/lead-capture', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        origin: 'http://localhost',
+      },
+      body: '[]',
+    }),
+  );
+
+  assert.equal(unsupportedMediaTypeResponse.status, 415);
+  assert.equal(
+    (await unsupportedMediaTypeResponse.json()).message,
+    'This endpoint only accepts application/json payloads.',
+  );
+  assert.equal(oversizedResponse.status, 413);
+  assert.equal((await oversizedResponse.json()).message, 'The request body is too large.');
+  assert.equal(invalidShapeResponse.status, 400);
+  assert.equal((await invalidShapeResponse.json()).message, 'Request body must be a JSON object.');
 });
 
 test('lead capture sanitises source and asset fields before sending them upstream', async () => {

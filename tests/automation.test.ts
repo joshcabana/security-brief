@@ -1,7 +1,9 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import {
+  assertAllowedAutomationPaths,
   buildAutomationIdentity,
+  getDisallowedChangedPaths,
   getLocalTimeParts,
   shouldRunInScheduledWindow,
 } from '../scripts/automation/common.mjs';
@@ -93,6 +95,21 @@ test('automation identity uses ISO week naming for content and performance branc
     branchName: 'codex/performance-week-2026-11',
     pullRequestTitle: 'Automation: performance week 2026-11',
   });
+});
+
+test('automation commit allowlists reject unsafe path roots and isolate disallowed changes', () => {
+  assert.deepEqual(assertAllowedAutomationPaths(['drafts', './content-manifest.json', 'drafts']), [
+    'content-manifest.json',
+    'drafts',
+  ]);
+  assert.throws(() => assertAllowedAutomationPaths(['../blog']), /Invalid automation path allowlist entry/);
+  assert.deepEqual(
+    getDisallowedChangedPaths(
+      ['drafts/newsletter-2026-03-16.md', 'content-manifest.json', 'blog/rogue.md'],
+      ['drafts', 'content-manifest.json'],
+    ),
+    ['blog/rogue.md'],
+  );
 });
 
 test('GitHub Models client retries once when the first response is invalid JSON', async () => {

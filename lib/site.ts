@@ -1,5 +1,6 @@
 const fallbackSiteName = 'AI Security Brief';
-const fallbackSiteUrl = 'http://localhost:3000';
+const fallbackLocalSiteUrl = 'http://localhost:3000';
+const fallbackProductionSiteUrl = 'https://aithreatbrief.com';
 const fallbackLinkedInProfileUrl = 'https://www.linkedin.com/in/josh-cabana-351631393/';
 
 function resolvePublicHttpsUrl(rawValue: string | undefined): string | null {
@@ -26,8 +27,57 @@ function resolvePublicHttpsUrl(rawValue: string | undefined): string | null {
   }
 }
 
+function resolveConfiguredSiteUrl(rawValue: string | undefined): string | null {
+  if (typeof rawValue !== 'string') {
+    return null;
+  }
+
+  const trimmedValue = rawValue.trim();
+
+  if (trimmedValue.length === 0) {
+    return null;
+  }
+
+  try {
+    const parsed = new URL(trimmedValue);
+    const hostname = parsed.hostname.toLowerCase();
+    const isLocalDevelopmentHost =
+      hostname === 'localhost' ||
+      hostname === '127.0.0.1' ||
+      hostname === '[::1]';
+
+    if (parsed.username || parsed.password) {
+      return null;
+    }
+
+    if (parsed.protocol === 'https:') {
+      return parsed.origin;
+    }
+
+    if (isLocalDevelopmentHost && (parsed.protocol === 'http:' || parsed.protocol === 'https:')) {
+      return parsed.origin;
+    }
+
+    return null;
+  } catch {
+    return null;
+  }
+}
+
+function getFallbackSiteUrl(): string {
+  return process.env.NODE_ENV === 'development' ? fallbackLocalSiteUrl : fallbackProductionSiteUrl;
+}
+
+export function getCanonicalSiteUrl(): string {
+  return resolveConfiguredSiteUrl(process.env.NEXT_PUBLIC_SITE_URL) ?? getFallbackSiteUrl();
+}
+
+export function buildSiteUrl(pathname = '/'): string {
+  return new URL(pathname, getCanonicalSiteUrl()).toString();
+}
+
 export const siteName = process.env.NEXT_PUBLIC_SITE_NAME?.trim() || fallbackSiteName;
-export const siteUrl = process.env.NEXT_PUBLIC_SITE_URL?.trim() || fallbackSiteUrl;
+export const siteUrl = getCanonicalSiteUrl();
 export const siteDescription =
   'AI-assisted security briefings on AI-powered threats, privacy defence, and security tooling for technical teams.';
 

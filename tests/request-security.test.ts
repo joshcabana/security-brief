@@ -1,9 +1,11 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import {
+  DEFAULT_JSON_BODY_LIMIT_BYTES,
   MAX_MARKETING_FIELD_LENGTH,
   REQUEST_IP_FALLBACK,
   getRequestIp,
+  parseJsonRequestBody,
   sanitizeMarketingField,
 } from '../lib/request-security.mjs';
 
@@ -47,4 +49,47 @@ test('sanitizeMarketingField lowercases valid values and falls back for invalid 
   assert.equal(sanitizeMarketingField('Assessment-Page', 'unknown'), 'assessment-page');
   assert.equal(sanitizeMarketingField('Bad Source', 'lead-capture'), 'lead-capture');
   assert.equal(sanitizeMarketingField('a'.repeat(MAX_MARKETING_FIELD_LENGTH + 1), 'unknown'), 'unknown');
+});
+
+test('parseJsonRequestBody rejects non-json content types, oversized bodies, and non-object payloads', async () => {
+  const unsupportedMediaTypeResult = await parseJsonRequestBody(
+    new Request('http://localhost/api/test', {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain' },
+      body: '{"email":"reader@example.com"}',
+    }),
+  );
+  const oversizedResult = await parseJsonRequestBody(
+    new Request('http://localhost/api/test', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Content-Length': String(DEFAULT_JSON_BODY_LIMIT_BYTES + 1),
+      },
+      body: JSON.stringify({ payload: 'x' }),
+    }),
+  );
+  const invalidShapeResult = await parseJsonRequestBody(
+    new Request('http://localhost/api/test', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: '[]',
+    }),
+  );
+
+  assert.deepEqual(unsupportedMediaTypeResult, {
+    ok: false,
+    status: 415,
+    message: 'This endpoint only accepts application/json payloads.',
+  });
+  assert.deepEqual(oversizedResult, {
+    ok: false,
+    status: 413,
+    message: 'The request body is too large.',
+  });
+  assert.deepEqual(invalidShapeResult, {
+    ok: false,
+    status: 400,
+    message: 'The request body must be a JSON object.',
+  });
 });

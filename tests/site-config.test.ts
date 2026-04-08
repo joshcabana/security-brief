@@ -1,12 +1,16 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import {
+  buildSiteUrl,
   getAssessmentBookingUrl,
+  getCanonicalSiteUrl,
   getAssessmentPaymentUrl,
   getFounderLinkedInUrl,
   isBeehiivCheckoutLive,
   siteConfig,
 } from '../lib/site';
+
+const mutableEnv = process.env as Record<string, string | undefined>;
 
 test('Beehiiv runtime config targets the AI Security Brief publication host', () => {
   assert.equal(siteConfig.beehiiv.upgradeUrl, 'https://aisec.beehiiv.com/upgrade');
@@ -83,5 +87,38 @@ test('assessment booking and payment URLs only accept public https links', () =>
     delete process.env.NEXT_PUBLIC_ASSESSMENT_PAYMENT_URL;
   } else {
     process.env.NEXT_PUBLIC_ASSESSMENT_PAYMENT_URL = originalPaymentValue;
+  }
+});
+
+test('site url contract falls back safely and only accepts https or explicit localhost development urls', () => {
+  const originalSiteUrl = process.env.NEXT_PUBLIC_SITE_URL;
+  const originalNodeEnv = process.env.NODE_ENV;
+
+  mutableEnv.NODE_ENV = 'production';
+  delete process.env.NEXT_PUBLIC_SITE_URL;
+  assert.equal(getCanonicalSiteUrl(), 'https://aithreatbrief.com');
+  assert.equal(buildSiteUrl('/feed.xml'), 'https://aithreatbrief.com/feed.xml');
+
+  process.env.NEXT_PUBLIC_SITE_URL = 'http://evil.example.com';
+  assert.equal(getCanonicalSiteUrl(), 'https://aithreatbrief.com');
+
+  mutableEnv.NODE_ENV = 'development';
+  process.env.NEXT_PUBLIC_SITE_URL = 'http://localhost:4000';
+  assert.equal(getCanonicalSiteUrl(), 'http://localhost:4000');
+  assert.equal(buildSiteUrl('/tools'), 'http://localhost:4000/tools');
+
+  process.env.NEXT_PUBLIC_SITE_URL = 'https://brief.example.com';
+  assert.equal(getCanonicalSiteUrl(), 'https://brief.example.com');
+
+  if (originalSiteUrl === undefined) {
+    delete process.env.NEXT_PUBLIC_SITE_URL;
+  } else {
+    process.env.NEXT_PUBLIC_SITE_URL = originalSiteUrl;
+  }
+
+  if (originalNodeEnv === undefined) {
+    delete mutableEnv.NODE_ENV;
+  } else {
+    mutableEnv.NODE_ENV = originalNodeEnv;
   }
 });

@@ -153,6 +153,7 @@ async function main() {
         context,
         commitMessage: `automation: refresh articles ${context.effectiveDate}`,
         model,
+        allowedPaths: ['blog', 'drafts', 'content-manifest.json'],
         outputs: staleDuplicateFiles.map((stalePath) => `Removed stale duplicate: \`${path.relative(REPO_ROOT, stalePath)}\``),
         notes: ['Removed redundant same-week article drafts without regenerating content.'],
       });
@@ -163,6 +164,7 @@ async function main() {
       context,
       commitMessage: `automation: refresh articles ${context.effectiveDate}`,
       model,
+      allowedPaths: ['blog', 'drafts', 'content-manifest.json'],
       outputs: articlePlan.map((item) => `Article already exists: \`${path.relative(REPO_ROOT, item.filePath)}\``),
       notes: ['No-op run. Weekly article files are already present.'],
     });
@@ -234,6 +236,7 @@ async function main() {
     context,
     commitMessage: `automation: add weekly articles ${context.effectiveDate}`,
     model,
+    allowedPaths: ['blog', 'drafts', 'content-manifest.json'],
     outputs,
     notes: context.options.force ? ['Forced regeneration requested. Existing article drafts were overwritten.'] : [],
   });

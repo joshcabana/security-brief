@@ -43,7 +43,7 @@ function runReplaceAffiliateLinks(
 test('dry-run mode reports tokens without writing files', async () => {
   const workspace = await createWorkspace({
     'ops/affiliate-links.json': JSON.stringify({
-      NORDVPN: 'https://example.com/nordvpn',
+      NORDVPN: 'https://go.nordvpn.net/aff_c?aff_id=143381',
       PROTON: '',
     }, null, 2),
     'blog/security-stack.md': [
@@ -79,7 +79,7 @@ test('dry-run mode reports tokens without writing files', async () => {
 test('--include-drafts processes draft tokens when drafts are present', async () => {
   const workspace = await createWorkspace({
     'ops/affiliate-links.json': JSON.stringify({
-      NORDVPN: 'https://example.com/nordvpn',
+      NORDVPN: 'https://go.nordvpn.net/aff_c?aff_id=143381',
       PROTON: '',
     }, null, 2),
     'blog/security-stack.md': 'Blog [AFFILIATE:NORDVPN]\n',
@@ -92,8 +92,8 @@ test('--include-drafts processes draft tokens when drafts are present', async ()
     const draft = await readFile(path.join(workspace.workspaceDir, 'drafts', 'newsletter.md'), 'utf8');
 
     assert.equal(result.status, 0);
-    assert.equal(blog, 'Blog https://example.com/nordvpn\n');
-    assert.equal(draft, 'Draft https://example.com/nordvpn [AFFILIATE:PROTON]\n');
+    assert.equal(blog, 'Blog https://go.nordvpn.net/aff_c?aff_id=143381\n');
+    assert.equal(draft, 'Draft https://go.nordvpn.net/aff_c?aff_id=143381 [AFFILIATE:PROTON]\n');
     assert.match(result.stdout, /Affiliate replacement scope: blog \+ drafts/);
     assert.match(result.stdout, /blog\/security-stack\.md/);
     assert.match(result.stdout, /drafts\/newsletter\.md/);
@@ -108,8 +108,8 @@ test('--include-drafts processes draft tokens when drafts are present', async ()
 test('--write mode replaces populated tokens across files and duplicates', async () => {
   const workspace = await createWorkspace({
     'ops/affiliate-links.json': JSON.stringify({
-      NORDVPN: 'https://example.com/nordvpn',
-      PROTON: 'https://example.com/proton',
+      NORDVPN: 'https://go.nordvpn.net/aff_c?aff_id=143381',
+      PROTON: 'https://go.getproton.me/aff_c?url_id=471',
     }, null, 2),
     'blog/one.md': 'One [AFFILIATE:NORDVPN] two [AFFILIATE:PROTON] three [AFFILIATE:NORDVPN]\n',
     'blog/two.md': 'Again [AFFILIATE:PROTON]\n',
@@ -121,8 +121,8 @@ test('--write mode replaces populated tokens across files and duplicates', async
     const two = await readFile(path.join(workspace.workspaceDir, 'blog', 'two.md'), 'utf8');
 
     assert.equal(result.status, 0);
-    assert.equal(one, 'One https://example.com/nordvpn two https://example.com/proton three https://example.com/nordvpn\n');
-    assert.equal(two, 'Again https://example.com/proton\n');
+    assert.equal(one, 'One https://go.nordvpn.net/aff_c?aff_id=143381 two https://go.getproton.me/aff_c?url_id=471 three https://go.nordvpn.net/aff_c?aff_id=143381\n');
+    assert.equal(two, 'Again https://go.getproton.me/aff_c?url_id=471\n');
     assert.match(result.stdout, /tokens found: 4/);
     assert.match(result.stdout, /tokens replaced: 4/);
     assert.match(result.stdout, /tokens skipped: 0/);
@@ -134,7 +134,7 @@ test('--write mode replaces populated tokens across files and duplicates', async
 test('--include-drafts does not fail when drafts directory is missing', async () => {
   const workspace = await createWorkspace({
     'ops/affiliate-links.json': JSON.stringify({
-      NORDVPN: 'https://example.com/nordvpn',
+      NORDVPN: 'https://go.nordvpn.net/aff_c?aff_id=143381',
     }, null, 2),
     'blog/example.md': 'Blog [AFFILIATE:NORDVPN]\n',
   });
@@ -154,11 +154,11 @@ test('--include-drafts does not fail when drafts directory is missing', async ()
 test('local affiliate-links.json overrides the repo template when HOME is set', async () => {
   const workspace = await createWorkspace({
     'ops/affiliate-links.json': JSON.stringify({
-      NORDVPN: 'https://repo.example/nordvpn',
+      NORDVPN: 'https://nordvpn.com/repo-offer',
     }, null, 2),
     'blog/example.md': 'Blog [AFFILIATE:NORDVPN]\n',
     '.ai-security-brief/affiliate-links.json': JSON.stringify({
-      NORDVPN: 'https://local.example/nordvpn',
+      NORDVPN: 'https://go.nordvpn.net/aff_c?aff_id=143381',
     }, null, 2),
   });
 
@@ -169,7 +169,7 @@ test('local affiliate-links.json overrides the repo template when HOME is set', 
     const updated = await readFile(path.join(workspace.workspaceDir, 'blog', 'example.md'), 'utf8');
 
     assert.equal(result.status, 0);
-    assert.equal(updated, 'Blog https://local.example/nordvpn\n');
+    assert.equal(updated, 'Blog https://go.nordvpn.net/aff_c?aff_id=143381\n');
     assert.match(result.stdout, /Affiliate mapping source: ~\/\.ai-security-brief\/affiliate-links\.json/);
   } finally {
     await workspace.cleanup();
@@ -179,13 +179,13 @@ test('local affiliate-links.json overrides the repo template when HOME is set', 
 test('AFFILIATE_LINKS_PATH takes precedence over local and repo mappings', async () => {
   const workspace = await createWorkspace({
     'ops/affiliate-links.json': JSON.stringify({
-      NORDVPN: 'https://repo.example/nordvpn',
+      NORDVPN: 'https://nordvpn.com/repo-offer',
     }, null, 2),
     '.ai-security-brief/affiliate-links.json': JSON.stringify({
-      NORDVPN: 'https://local.example/nordvpn',
+      NORDVPN: 'https://nordvpn.com/local-offer',
     }, null, 2),
     'private/custom-links.json': JSON.stringify({
-      NORDVPN: 'https://env.example/nordvpn',
+      NORDVPN: 'https://go.nordvpn.net/aff_c?aff_id=143381',
     }, null, 2),
     'blog/example.md': 'Blog [AFFILIATE:NORDVPN]\n',
   });
@@ -198,7 +198,7 @@ test('AFFILIATE_LINKS_PATH takes precedence over local and repo mappings', async
     const updated = await readFile(path.join(workspace.workspaceDir, 'blog', 'example.md'), 'utf8');
 
     assert.equal(result.status, 0);
-    assert.equal(updated, 'Blog https://env.example/nordvpn\n');
+    assert.equal(updated, 'Blog https://go.nordvpn.net/aff_c?aff_id=143381\n');
     assert.match(result.stdout, /Affiliate mapping source: private\/custom-links\.json/);
   } finally {
     await workspace.cleanup();
@@ -209,7 +209,7 @@ test('tokens with empty mappings are skipped in write mode', async () => {
   const workspace = await createWorkspace({
     'ops/affiliate-links.json': JSON.stringify({
       NORDVPN: '',
-      PROTON: 'https://example.com/proton',
+      PROTON: 'https://go.getproton.me/aff_c?url_id=471',
     }, null, 2),
     'blog/stack.md': 'Use [AFFILIATE:NORDVPN] and [AFFILIATE:PROTON].\n',
   });
@@ -219,7 +219,7 @@ test('tokens with empty mappings are skipped in write mode', async () => {
     const updated = await readFile(path.join(workspace.workspaceDir, 'blog', 'stack.md'), 'utf8');
 
     assert.equal(result.status, 0);
-    assert.equal(updated, 'Use [AFFILIATE:NORDVPN] and https://example.com/proton.\n');
+    assert.equal(updated, 'Use [AFFILIATE:NORDVPN] and https://go.getproton.me/aff_c?url_id=471.\n');
     assert.match(result.stdout, /tokens found: 2/);
     assert.match(result.stdout, /tokens replaced: 1/);
     assert.match(result.stdout, /tokens skipped: 1/);
@@ -254,7 +254,7 @@ test('malformed JSON and missing blog directory exit clearly', async () => {
   });
   const missingBlogWorkspace = await createWorkspace({
     'ops/affiliate-links.json': JSON.stringify({
-      NORDVPN: 'https://example.com/nordvpn',
+      NORDVPN: 'https://go.nordvpn.net/aff_c?aff_id=143381',
     }, null, 2),
   });
 
@@ -285,7 +285,7 @@ test('invalid affiliate mapping urls fail closed before replacements are applied
     const result = runReplaceAffiliateLinks(workspace.workspaceDir);
 
     assert.equal(result.status, 1);
-    assert.match(result.stderr, /absolute HTTPS URL/);
+    assert.match(result.stderr, /approved absolute HTTPS affiliate URL/);
   } finally {
     await workspace.cleanup();
   }

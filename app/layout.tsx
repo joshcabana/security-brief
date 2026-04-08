@@ -5,7 +5,7 @@ import './globals.css';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import AffiliateBanner from '@/components/AffiliateBanner';
-import { getSiteUrl, siteDescription, siteName, siteUrl } from '@/lib/site';
+import { buildSiteUrl, getSiteUrl, siteDescription, siteName, siteUrl } from '@/lib/site';
 import { resolveAnalyticsState } from '@/lib/analytics-config.mjs';
 import { serializeJsonForHtml } from '@/lib/json-escape.mjs';
 
@@ -47,7 +47,7 @@ export const metadata: Metadata = {
   metadataBase: getSiteUrl(),
   alternates: {
     types: {
-      'application/rss+xml': `${siteUrl}/feed.xml`,
+      'application/rss+xml': buildSiteUrl('/feed.xml'),
     },
   },
   openGraph: {
@@ -93,7 +93,7 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <head>
-        <link rel="alternate" type="application/rss+xml" title={siteName} href={`${siteUrl}/feed.xml`} />
+        <link rel="alternate" type="application/rss+xml" title={siteName} href={buildSiteUrl('/feed.xml')} />
         {/* JSON-LD Structured Data */}
         <script
           type="application/ld+json"
