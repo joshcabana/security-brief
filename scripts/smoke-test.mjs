@@ -419,7 +419,9 @@ async function main() {
       assert.match(articleHtml, new RegExp(article.title.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')));
       assert.match(articleHtml, new RegExp(article.category.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')));
       assert.match(articleHtml, /Back to all articles/);
-      assert.match(articleHtml, /Browse tools/);
+      assert.match(articleHtml, /Primary offer/);
+      assert.match(articleHtml, /View the readiness review/);
+      assert.match(articleHtml, /href="\/assessment"/);
     }
 
     for (const article of reviewArticles) {

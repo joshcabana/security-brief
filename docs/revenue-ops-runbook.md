@@ -45,6 +45,16 @@ Expected live behavior:
 
 Run `pnpm verify:ops` after updating envs. Missing booking or payment URLs should be treated as warnings to clear before pushing hard on outbound.
 
+After changing any of these public envs in Vercel, trigger a fresh production deployment before you trust `/assessment`. The route is prerendered, so env changes do not become visible on the live page until a new deployment is active.
+
+Recommended post-change sequence:
+
+1. Update the Vercel production envs.
+2. Redeploy production.
+3. Run `npx pnpm@10.23.0 verify:ops` locally so the local runtime contract matches the intended live state.
+4. Run `npx pnpm@10.23.0 verify:production -- --base-url https://aithreatbrief.com`.
+5. Open `https://aithreatbrief.com/assessment` and confirm the CTA state matches the envs you just deployed.
+
 ## Weekly cadence
 
 ### Sunday
