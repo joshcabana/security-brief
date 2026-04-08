@@ -118,12 +118,14 @@ Hi [First Name],
 Thanks for the conversation today. Based on what you shared, I recommend the fixed-scope `AI Agent Security Readiness Review`.
 
 Scope:
+
 - review of the nominated AI feature, workflow, and tool boundaries
 - threat map covering prompt injection, tool-use risk, unsafe data access, and operational control gaps
 - prioritised remediation memo
 - 60-minute readout
 
 Timeline:
+
 - delivery within 7 business days from payment and kickoff inputs
 
 Fee:
