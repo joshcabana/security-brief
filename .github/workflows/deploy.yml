@@ -236,8 +236,8 @@ jobs:
           retention-days: 90
 
   override_vercel_status:
-    needs: verify_preview
-    if: ${{ always() && github.event_name == 'pull_request' && needs.verify_preview.result == 'success' }}
+    needs: verify
+    if: ${{ always() && github.event_name == 'pull_request' && needs.verify.result == 'success' }}
     runs-on: ubuntu-latest
     permissions:
       contents: read
