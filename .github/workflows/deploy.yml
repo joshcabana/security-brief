@@ -22,16 +22,16 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@fc06bc1257f339d1d5d8b3a19a8cae5388b55320 # v5
-        with:
-          version: 10.23.0
-
       - name: Setup Node.js
         uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6
         with:
           node-version: '20'
           cache: 'pnpm'
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@fc06bc1257f339d1d5d8b3a19a8cae5388b55320 # v5
+        with:
+          version: 10.23.0
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -93,16 +93,16 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@fc06bc1257f339d1d5d8b3a19a8cae5388b55320 # v5
-        with:
-          version: 10.23.0
-
       - name: Setup Node.js
         uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6
         with:
           node-version: '20'
           cache: 'pnpm'
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@fc06bc1257f339d1d5d8b3a19a8cae5388b55320 # v5
+        with:
+          version: 10.23.0
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -124,8 +124,10 @@ jobs:
           else
             DEPLOYMENT_OUTPUT=$(pnpm dlx vercel@$VERCEL_CLI_VERSION deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }} 2>&1)
           fi
-          printf '%s\n' "$DEPLOYMENT_OUTPUT"
-          DEPLOYMENT_URL=$(printf '%s\n' "$DEPLOYMENT_OUTPUT" | grep -Eo 'https://[^[:space:]]+' | grep -v 'https://vercel.com/' | tail -n 1)
+          printf '%s
+' "$DEPLOYMENT_OUTPUT"
+          DEPLOYMENT_URL=$(printf '%s
+' "$DEPLOYMENT_OUTPUT" | grep -Eo 'https://[^[:space:]]+' | grep -v 'https://vercel.com/' | tail -n 1)
           if [ -z "$DEPLOYMENT_URL" ]; then
             echo "Failed to parse deployment URL from Vercel CLI output." >&2
             exit 1
