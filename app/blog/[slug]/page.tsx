@@ -5,6 +5,7 @@ import ArticleCard from '@/components/ArticleCard';
 import NewsletterForm from '@/components/NewsletterForm';
 import ShareButtons from '@/components/ShareButtons';
 import PaywallCTA from '@/components/PaywallCTA';
+import PrimarySources from '@/components/PrimarySources';
 import { getAllArticles, getArticleBySlug } from '@/lib/articles';
 import { siteUrl, siteName } from '@/lib/site';
 
@@ -150,6 +151,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
               dangerouslySetInnerHTML={{ __html: article.contentHtml }}
             />
             {article.isPaywalled && <PaywallCTA />}
+            <PrimarySources sources={article.primarySources} />
             <div className="flex flex-wrap gap-2 mt-12 pt-8 border-t border-slate-800">
               <span className="text-xs text-slate-500 self-center">Filed under:</span>
               {tags.map((tag) => (
