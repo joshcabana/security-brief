@@ -1,21 +1,16 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
 import NewsletterForm from '@/components/NewsletterForm';
 import { createPageMetadata } from '@/lib/page-metadata.mjs';
-import { siteConfig } from '@/lib/site';
 import { Shield, Terminal, GlobeLock } from 'lucide-react';
 import React from 'react';
 
 export const metadata: Metadata = createPageMetadata({
   canonicalPath: '/lead-magnet',
-  title: '2026 AI Threat Landscape Preview',
-  description:
-    'Preview the 2026 AI Threat Landscape report, join the mailing list, and continue into the readiness review if your team needs hands-on support.',
+  title: '2026 AI Threat Landscape — Free Research PDF',
+  description: 'Download the definitive briefing on agentic AI threats, context-window injections, and escaping isolation.',
 });
 
 export default function LeadMagnetPage() {
-  const assessment = siteConfig.offers.assessment;
-
   return (
     <div className="min-h-screen bg-white dark:bg-slate-950 flex flex-col justify-center">
       <section className="relative overflow-hidden py-24 flex-grow flex items-center">
@@ -33,7 +28,7 @@ export default function LeadMagnetPage() {
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
                   <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-500"></span>
                 </span>
-                Preview Report
+                Declassified Briefing
               </div>
               
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-slate-900 dark:text-white mb-6">
@@ -42,7 +37,7 @@ export default function LeadMagnetPage() {
               </h1>
               
               <p className="text-lg md:text-xl text-slate-600 dark:text-slate-400 mb-8 leading-relaxed">
-                Preview the 2026 AI Threat Landscape report and join the mailing list for future report and briefing updates. If your team is already shipping AI features, use the readiness review as the next step.
+                Autonomous agents are circumventing traditional WAFs using invisible payloads. Get the exact architecture blueprints required to isolate context-window injections and sandbox LLM execution.
               </p>
               
               <div className="space-y-4 mb-10 text-left">
@@ -74,41 +69,26 @@ export default function LeadMagnetPage() {
                   </div>
                 </div>
               </div>
-
-              <div className="flex flex-col sm:flex-row gap-4">
-                <Link
-                  href={assessment.path}
-                  className="inline-flex items-center justify-center rounded-xl px-5 py-3 text-sm font-bold text-slate-950 bg-cyan-400 hover:bg-cyan-300 transition-colors"
-                >
-                  View the readiness review
-                </Link>
-                <Link
-                  href={assessment.previewReportPath}
-                  className="inline-flex items-center justify-center rounded-xl px-5 py-3 text-sm font-semibold text-slate-700 dark:text-slate-200 border border-slate-300 dark:border-slate-700 hover:border-cyan-500 dark:hover:border-cyan-500 transition-colors"
-                >
-                  Preview the report page
-                </Link>
-              </div>
             </div>
 
             {/* Right side: Opt-in Form */}
             <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-8 shadow-2xl relative">
               <div className="absolute -top-4 -right-4 w-24 h-24 bg-cyan-500/20 blur-2xl rounded-full pointer-events-none"></div>
               
-              <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">Join the briefing list</h3>
+              <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">Where should we send the PDF?</h3>
               <p className="text-slate-600 dark:text-slate-400 mb-8 text-sm">
-                Enter your work email to subscribe to the weekly briefing and hear when the full report is available.
+                Enter your work email to receive the briefing immediately. You will also get our weekly intelligence feed.
               </p>
               
               <NewsletterForm 
                 variant="page" 
                 placeholder="your@work-email.com" 
-                buttonText="Join the Briefing List" 
+                buttonText="Send me the Briefing" 
                 source="lead-magnet-page" 
               />
               
               <div className="mt-6 pt-6 border-t border-slate-200 dark:border-slate-800 text-center text-xs text-slate-500 dark:text-slate-400">
-                Weekly briefing signup. Unsubscribe anytime.
+                Join 4,500+ security professionals. Unsubscribe anytime.
               </div>
             </div>
           </div>

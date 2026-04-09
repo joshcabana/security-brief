@@ -1,129 +1,229 @@
 import type { Metadata } from 'next';
-import { buildStatusSnapshot } from '@/lib/status-data.mjs';
+import Link from 'next/link';
 import { createPageMetadata } from '@/lib/page-metadata.mjs';
+import { buildStatusSnapshot } from '@/lib/status-data.mjs';
 
 export const dynamic = 'force-dynamic';
-export const revalidate = 0;
 
 export const metadata: Metadata = createPageMetadata({
   canonicalPath: '/status',
-  title: 'Public Status',
+  title: 'Operational Status — Deployment Truth & Release Verification',
   description:
-    'Runtime deployment snapshot and public operational status for AI Security Brief.',
+    'Public operational status for AI Security Brief: pinned main baseline, deployment context, and release verification signals.',
+  openGraphTitle: 'Operational Status — AI Security Brief',
   openGraphDescription:
     'Public operational status for AI Security Brief: pinned main baseline, deployment context, and release verification signals.',
+  twitterTitle: 'AI Security Brief Status',
   twitterDescription:
-    'Public operational status for AI Security Brief: pinned main baseline, deployment context, and release verification signals.',
+    'Pinned main baseline, deployment context, and release verification signals for AI Security Brief.',
 });
 
-type StatusRow = {
+interface StatusRow {
   key: string;
   label: string;
   value: string;
-};
-
-function formatLabel(label: string) {
-  return label
-    .replace(/_/g, ' ')
-    .replace(/\b\w/g, (char) => char.toUpperCase());
 }
 
-export default function StatusPage() {
-  const snapshot = buildStatusSnapshot();
-  const runtimeEntries = Object.entries(snapshot.runtime).filter(([, value]) => value !== null && value !== '');
-  const driftDetected = snapshot.status_document.drift?.detected === true;
+interface StatusDocumentSnapshot {
+  pinned_baseline_ref: string;
+  pinned_baseline_sha: string;
+  last_updated: string;
+  updated_by: string;
+  verification_pipeline: string;
+  site_status_rows: StatusRow[];
+  content_rows: StatusRow[];
+  open_pull_requests: string[];
+  recent_merges: string[];
+  drift: {
+    detected: boolean;
+    summary: string;
+    document_pinned_baseline_ref: string;
+    document_pinned_baseline_sha: string;
+    document_latest_deploy: string | null;
+    runtime_git_commit_ref: string | null;
+    runtime_git_commit_sha: string | null;
+    runtime_latest_deploy: string | null;
+  };
+}
+
+function renderStatusRows(rows: StatusRow[]) {
+  return rows.map((row) => (
+    <div
+      key={row.key}
+      className="grid gap-2 rounded-xl border px-4 py-4 sm:grid-cols-[220px_minmax(0,1fr)]"
+      style={{ borderColor: '#21262d', background: 'rgba(13, 17, 23, 0.72)' }}
+    >
+      <dt className="text-xs font-mono uppercase tracking-widest" style={{ color: '#8b949e', letterSpacing: '0.12em' }}>
+        {row.label}
+      </dt>
+      <dd className="text-sm leading-7 text-white" style={{ wordBreak: 'break-word' }}>
+        {row.value}
+      </dd>
+    </div>
+  ));
+}
+
+export default async function StatusPage() {
+  const snapshot = buildStatusSnapshot({});
+  const baseline = snapshot.status_document as StatusDocumentSnapshot;
+  const runtimeRows: StatusRow[] = [
+    {
+      key: 'generated_at',
+      label: 'Generated at',
+      value: snapshot.generated_at,
+    },
+    {
+      key: 'runtime_commit',
+      label: 'Runtime commit',
+      value: snapshot.runtime.git_commit_sha ?? 'Not exposed in runtime environment variables.',
+    },
+    {
+      key: 'runtime_ref',
+      label: 'Runtime ref',
+      value: snapshot.runtime.git_commit_ref ?? 'Not exposed in runtime environment variables.',
+    },
+    {
+      key: 'target_env',
+      label: 'Target environment',
+      value: snapshot.runtime.target_env ?? 'Unknown',
+    },
+    {
+      key: 'deployment_url',
+      label: 'Deployment URL',
+      value: snapshot.runtime.deployment_url ?? snapshot.site.url,
+    },
+    {
+      key: 'production_url',
+      label: 'Production URL',
+      value: snapshot.runtime.production_url,
+    },
+  ];
+  const baselineRows: StatusRow[] = [
+    {
+      key: 'pinned_baseline',
+      label: 'Pinned baseline',
+      value: `${baseline.pinned_baseline_ref} @ ${baseline.pinned_baseline_sha}`,
+    },
+    {
+      key: 'last_updated',
+      label: 'Last updated',
+      value: baseline.last_updated,
+    },
+    {
+      key: 'updated_by',
+      label: 'Updated by',
+      value: baseline.updated_by,
+    },
+    {
+      key: 'verification_pipeline',
+      label: 'Verification pipeline',
+      value: baseline.verification_pipeline,
+    },
+  ];
 
   return (
-    <div className="bg-[#0d1117] min-h-screen">
-      <div className="relative overflow-hidden bg-gradient-to-b from-[#080c11] to-[#0d1117] border-b border-[#21262d] py-14">
+    <div style={{ background: '#0d1117', minHeight: '100vh' }}>
+      <section
+        className="relative overflow-hidden"
+        style={{
+          background: 'linear-gradient(to bottom, #080c11, #0d1117)',
+          borderBottom: '1px solid #21262d',
+          paddingTop: '4.5rem',
+          paddingBottom: '4rem',
+        }}
+      >
         <div className="absolute inset-0 bg-grid opacity-40 pointer-events-none" aria-hidden="true" />
-        <div className="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="section-label mb-3">Operations</div>
-          <h1 className="text-white mb-4">Public Status</h1>
-          <p className="text-lg max-w-3xl text-[#8b949e]">
-            Runtime deployment snapshot for AI Security Brief, including the operator-maintained status document and the currently reported production metadata.
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{ background: 'radial-gradient(circle at top right, rgba(0,180,255,0.12), transparent 45%)' }}
+          aria-hidden="true"
+        />
+        <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div
+            className="inline-flex items-center gap-2 rounded-full px-4 py-2 text-xs font-mono uppercase tracking-widest"
+            style={{ border: '1px solid rgba(0,180,255,0.28)', background: 'rgba(0,180,255,0.08)', color: '#00b4ff', letterSpacing: '0.12em' }}
+          >
+            Operational Truth Surface
+          </div>
+          <h1 className="mt-6 text-white" style={{ letterSpacing: '-0.03em' }}>
+            Public deployment truth for the site, the repo baseline, and the current runtime.
+          </h1>
+          <p className="mt-5 max-w-3xl text-lg leading-8" style={{ color: '#8b949e' }}>
+            This page is the human-readable companion to the machine-readable
+            {' '}
+            <Link href="/status.json" className="underline decoration-[#00b4ff] underline-offset-4 hover:text-white" style={{ color: '#00b4ff' }}>
+              /status.json
+            </Link>
+            {' '}
+            endpoint. The document baseline comes from `STATUS.md`; runtime deployment fields come from the live environment.
           </p>
         </div>
-      </div>
+      </section>
 
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-16 space-y-12">
-        <section
-          className={`rounded-2xl border p-6 bg-[#161b22] ${driftDetected ? 'border-[#d29922]' : 'border-[#30363d]'}`}
-        >
-          <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-            <div>
-              <h2 className="text-white text-xl font-bold">Deployment Health</h2>
-              <p className="text-sm mt-2 text-[#8b949e]">
-                Generated at {snapshot.generated_at}
-              </p>
-            </div>
+      <section className="py-14" style={{ background: '#0d1117' }}>
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+          <div>
+            <div className="section-label mb-4">Runtime Snapshot</div>
+            <dl className="space-y-3">{renderStatusRows(runtimeRows)}</dl>
+          </div>
+
+          <div>
+            <div className="section-label mb-4">Document Baseline</div>
+            {baseline.drift.detected && (
+              <div
+                className="mb-4 rounded-2xl border px-4 py-4 text-sm leading-7"
+                style={{ borderColor: 'rgba(255, 166, 87, 0.35)', background: 'rgba(255, 166, 87, 0.08)', color: '#ffa657' }}
+              >
+                {baseline.drift.summary}
+              </div>
+            )}
+            <dl className="space-y-3">{renderStatusRows(baselineRows)}</dl>
+          </div>
+
+          <div>
+            <div className="section-label mb-4">Site Status</div>
+            <dl className="space-y-3">{renderStatusRows(baseline.site_status_rows)}</dl>
+          </div>
+
+          <div>
+            <div className="section-label mb-4">Content Snapshot</div>
+            <dl className="space-y-3">{renderStatusRows(baseline.content_rows)}</dl>
+          </div>
+
+          <div className="grid gap-6 lg:grid-cols-2">
             <div
-              className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-mono font-semibold uppercase tracking-widest border ${
-                driftDetected 
-                  ? 'bg-[rgba(210,153,34,0.12)] text-[#d29922] border-[rgba(210,153,34,0.28)]' 
-                  : 'bg-[rgba(63,185,80,0.12)] text-[#3fb950] border-[rgba(63,185,80,0.28)]'
-              }`}
+              className="rounded-2xl border p-6"
+              style={{ borderColor: '#21262d', background: 'rgba(13, 17, 23, 0.72)' }}
             >
-              {driftDetected ? 'Document drift detected' : 'Status aligned'}
+              <h2 className="text-white text-2xl">Open Pull Requests</h2>
+              <p className="mt-3 text-sm leading-7" style={{ color: '#8b949e' }}>
+                {baseline.open_pull_requests.length === 0
+                  ? 'No open pull requests are recorded in the status document.'
+                  : `${baseline.open_pull_requests.length} open pull requests are recorded in the status document.`}
+              </p>
+              {baseline.open_pull_requests.length > 0 && (
+                <ul className="mt-4 space-y-2 text-sm" style={{ color: '#e6edf3' }}>
+                  {baseline.open_pull_requests.map((pullRequest) => (
+                    <li key={pullRequest}>{pullRequest}</li>
+                  ))}
+                </ul>
+              )}
+            </div>
+
+            <div
+              className="rounded-2xl border p-6"
+              style={{ borderColor: '#21262d', background: 'rgba(13, 17, 23, 0.72)' }}
+            >
+              <h2 className="text-white text-2xl">Recent Merges</h2>
+              <ul className="mt-4 space-y-2 text-sm leading-7" style={{ color: '#e6edf3' }}>
+                {baseline.recent_merges.map((mergeSummary) => (
+                  <li key={mergeSummary}>{mergeSummary}</li>
+                ))}
+              </ul>
             </div>
           </div>
-          <p className="text-sm mt-4 leading-relaxed text-[#8b949e]">
-            {snapshot.status_document.drift.summary}
-          </p>
-        </section>
-
-        <section className="grid gap-6 lg:grid-cols-2">
-          <div className="rounded-2xl border p-6 bg-[#161b22] border-[#30363d]">
-            <h2 className="text-white text-xl font-bold mb-4">Site Status</h2>
-            <dl className="space-y-3">
-              {snapshot.status_document.site_status_rows.map((row: StatusRow) => (
-                <div key={row.key} className="flex flex-col gap-1 border-b pb-3 last:border-b-0 last:pb-0 border-[#21262d]">
-                  <dt className="text-xs font-mono uppercase tracking-widest text-[#00b4ff]">
-                    {row.label}
-                  </dt>
-                  <dd className="text-sm leading-relaxed text-[#e6edf3]">
-                    {row.value}
-                  </dd>
-                </div>
-              ))}
-            </dl>
-          </div>
-
-          <div className="rounded-2xl border p-6 bg-[#161b22] border-[#30363d]">
-            <h2 className="text-white text-xl font-bold mb-4">Runtime Metadata</h2>
-            <dl className="space-y-3">
-              {runtimeEntries.map(([key, value]: [string, any]) => (
-                <div key={key} className="flex flex-col gap-1 border-b pb-3 last:border-b-0 last:pb-0 border-[#21262d]">
-                  <dt className="text-xs font-mono uppercase tracking-widest text-[#00b4ff]">
-                    {formatLabel(key)}
-                  </dt>
-                  <dd className="text-sm break-all text-[#e6edf3]">
-                    {String(value)}
-                  </dd>
-                </div>
-              ))}
-            </dl>
-          </div>
-        </section>
-
-        <section className="rounded-2xl border p-6 bg-[#161b22] border-[#30363d]">
-          <h2 className="text-white text-xl font-bold mb-4">Recent Merges</h2>
-          {snapshot.status_document.recent_merges.length > 0 ? (
-            <ul className="space-y-2 text-sm text-[#8b949e]">
-              {snapshot.status_document.recent_merges.map((entry: string) => (
-                <li key={entry} className="flex items-start gap-2">
-                  <span className="text-[#00b4ff]" aria-hidden="true">&bull;</span>
-                  <span>{entry}</span>
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p className="text-sm text-[#8b949e]">
-              No recent merges are currently listed in the status document.
-            </p>
-          )}
-        </section>
-      </div>
+        </div>
+      </section>
     </div>
   );
 }

@@ -1,7 +1,7 @@
 <!-- markdownlint-disable MD034 -->
 # AI Security Brief — Project Status
 
-**Pinned baseline:** `origin/main` @ `678d0f4fd5ad128f5236b132d2d655293dab167a` **Last updated:** 10 April 2026 **Updated by:** Codex
+**Pinned baseline:** `origin/main` @ `62e5a0be120cc2827ee58cfb7f24e36be16617e4` **Last updated:** 09 April 2026 **Updated by:** Codex
 
 **Verification pipeline:** `pnpm verify:pr`, `pnpm verify:ops`, `NEXT_PUBLIC_PLAUSIBLE_DOMAIN=aithreatbrief.com pnpm verify:live`, `pnpm verify:production -- --base-url https://aithreatbrief.com`, plus cache-bypassed checks against the production runtime
 
@@ -10,7 +10,7 @@
 | Component | Status |
 | --- | --- |
 | Live URL | https://aithreatbrief.com |
-| Latest deploy | `main` @ `678d0f4fd5ad128f5236b132d2d655293dab167a` — fix: pass CSP nonce from middleware to layout to unblock Next.js hydration |
+| Latest deploy | `main` @ `62e5a0be120cc2827ee58cfb7f24e36be16617e4` — runtime reported active deployment |
 | Rate limiting | Upstash-backed distributed 5 req/min per IP on `/api/subscribe` |
 | Repository license | MIT (`LICENSE`) |
 | Public status surface | `/status` and `/status.json` (runtime snapshot) |
@@ -52,19 +52,19 @@ None
 
 Most recent merges:
 
-- fix: pass CSP nonce from middleware to layout to unblock Next.js hydration
-- - feat: implement assessment page runtime verification and update deployment runbook
-  - - feat: update assessment page with fit signals and direct contact options, add verification test, and clean up blog page code.
-   
-    - ## System Notes
-   
-    - Run `pnpm status:sync` before pushing a change that advances `main` so the header, Latest deploy row, and recent merges stay aligned with the current `origin/main` baseline. Review and update the narrative sections manually. External tooling should verify state against this file, not against prior conversation context.
-   
-    - Local verification assumes the shell is actually using the pinned Node runtime from `.nvmrc`. Check `node -v` before running `pnpm verify:pr`, `pnpm verify:ops`, `NEXT_PUBLIC_PLAUSIBLE_DOMAIN=aithreatbrief.com pnpm verify:live`, or `pnpm verify:production -- --base-url https://aithreatbrief.com`; if the shell is not on `v20.20.2`, switch first so local results match CI and Vercel.
-   
-    - ## Remaining Blockers
-   
-    - 1. **The assessment booking and payment URLs are not live in the current production deployment** — `/assessment` is verified in fallback mode, not revenue-ready mode. Set `NEXT_PUBLIC_ASSESSMENT_BOOKING_URL` and `NEXT_PUBLIC_ASSESSMENT_PAYMENT_URL` in Vercel production, redeploy, and rerun `pnpm verify:production -- --base-url https://aithreatbrief.com`.
-      2. 2. **A real end-to-end paid conversion has not been executed during this audit** — The live UI and hosted upgrade handoff are verified, but no completed test purchase was run from this environment.
-         3. 3. **A live newsletter write-path test was not executed during this audit** — Beehiiv read access and Upstash connectivity were verified, but no real subscriber was added because that would mutate production data.
-            4. 4. **Campaign Manager launch is still a manual business decision** — The LinkedIn tag is present on production, but ad activation, spend controls, and conversion reporting still depend on Campaign Manager access.
+- docs: add deployment verification steps and update release checklist tests
+- feat: implement assessment page runtime verification and update deployment runbook
+- feat: update assessment page with fit signals and direct contact options, add verification test, and clean up blog page code.
+
+## System Notes
+
+Run `pnpm status:sync` before pushing a change that advances `main` so the header, Latest deploy row, and recent merges stay aligned with the current `origin/main` baseline. Review and update the narrative sections manually. External tooling should verify state against this file, not against prior conversation context.
+
+Local verification assumes the shell is actually using the pinned Node runtime from `.nvmrc`. Check `node -v` before running `pnpm verify:pr`, `pnpm verify:ops`, `NEXT_PUBLIC_PLAUSIBLE_DOMAIN=aithreatbrief.com pnpm verify:live`, or `pnpm verify:production -- --base-url https://aithreatbrief.com`; if the shell is not on `v20.20.2`, switch first so local results match CI and Vercel.
+
+## Remaining Blockers
+
+1. **The assessment booking and payment URLs are not live in the current production deployment** — `/assessment` is verified in fallback mode, not revenue-ready mode. Set `NEXT_PUBLIC_ASSESSMENT_BOOKING_URL` and `NEXT_PUBLIC_ASSESSMENT_PAYMENT_URL` in Vercel production, redeploy, and rerun `pnpm verify:production -- --base-url https://aithreatbrief.com`.
+2. **A real end-to-end paid conversion has not been executed during this audit** — The live UI and hosted upgrade handoff are verified, but no completed test purchase was run from this environment.
+3. **A live newsletter write-path test was not executed during this audit** — Beehiiv read access and Upstash connectivity were verified, but no real subscriber was added because that would mutate production data.
+4. **Campaign Manager launch is still a manual business decision** — The LinkedIn tag is present on production, but ad activation, spend controls, and conversion reporting still depend on Campaign Manager access.
