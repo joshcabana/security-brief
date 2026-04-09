@@ -5,6 +5,7 @@ import ArticleCard from '@/components/ArticleCard';
 import NewsletterForm from '@/components/NewsletterForm';
 import ShareButtons from '@/components/ShareButtons';
 import PaywallCTA from '@/components/PaywallCTA';
+import PrimarySources from '@/components/PrimarySources';
 import { getAllArticles, getArticleBySlug } from '@/lib/articles';
 import { siteUrl, siteName } from '@/lib/site';
 
@@ -49,7 +50,7 @@ export async function generateMetadata({ params }: ArticlePageProps): Promise<Me
       description: article.metaDescription,
       type: 'article',
       publishedTime: article.date,
-      authors: [article.author],
+      authors: [article.author.name],
       url: articleUrl,
     },
     twitter: {
@@ -91,7 +92,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
     datePublished: article.date,
     author: {
       '@type': 'Organization',
-      name: article.author,
+      name: article.author.name,
       url: siteUrl,
     },
     publisher: {
@@ -136,7 +137,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
             <span aria-hidden="true">·</span>
             <span className="font-mono">{article.readTime}</span>
             <span aria-hidden="true">·</span>
-            <span>{article.author}</span>
+            <span>{article.author.name}</span>
           </div>
         </div>
       </header>
@@ -163,6 +164,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
               </Link>
               <ShareButtons title={article.title} slug={article.slug} />
             </div>
+            <PrimarySources sources={article.primarySources} />
           </article>
 
           <aside className="space-y-6" aria-label="Article sidebar">
