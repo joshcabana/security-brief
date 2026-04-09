@@ -11,7 +11,7 @@ import { resolveAnalyticsState } from '@/lib/analytics-config.mjs';
 import { serializeJsonForHtml } from '@/lib/json-escape.mjs';
 import { CSP_NONCE_HEADER } from '@/lib/security-headers.mjs';
 
-const inter = Inter({
+const inter = Inter(
     subsets: ['latin'],
     variable: '--font-inter',
     display: 'swap',
@@ -112,11 +112,11 @@ export default async function RootLayout({
                                                 }),
                                   }}
                                 />
-              </head>head>
+              </head>
               <body className="min-h-screen flex flex-col bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-200 antialiased selection:bg-cyan-500/30">
                       <AffiliateBanner />
                       <Header />
-                      <main className="flex-1">{children}</main>main>
+                      <main className="flex-1">{children}</main>
                       <Footer />
                 {analyticsState.plausibleEnabled ? (
                     <Script
@@ -148,7 +148,7 @@ export default async function RootLayout({
                                   }}
                                 />
                   ) : null}
-              </body>body>
-        </html>html>
+              </body>
+        </html>
       );
 }</html>
