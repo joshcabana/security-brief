@@ -1,6 +1,6 @@
 import type { PrimarySource } from '@/lib/articles';
 
-export default function PrimarySources({ sources }: { sources: PrimarySource[] }) {
+export default function PrimarySources({ sources }: { sources?: PrimarySource[] }) {
   if (!sources || sources.length === 0) return null;
   return (
     <div className="mt-16 border-t pt-10 border-gray-800">
@@ -14,7 +14,7 @@ export default function PrimarySources({ sources }: { sources: PrimarySource[] }
             <a
               href={source.url}
               target="_blank"
-              rel="noopener noreferrer"
+              rel="noopener noreferrer nofollow"
               className="hover:underline text-gray-300 hover:text-white transition-colors"
             >
               {source.title}
