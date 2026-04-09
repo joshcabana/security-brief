@@ -124,10 +124,8 @@ jobs:
           else
             DEPLOYMENT_OUTPUT=$(pnpm dlx vercel@$VERCEL_CLI_VERSION deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }} 2>&1)
           fi
-          printf '%s
-' "$DEPLOYMENT_OUTPUT"
-          DEPLOYMENT_URL=$(printf '%s
-' "$DEPLOYMENT_OUTPUT" | grep -Eo 'https://[^[:space:]]+' | grep -v 'https://vercel.com/' | tail -n 1)
+          printf '%s\n' "$DEPLOYMENT_OUTPUT"
+          DEPLOYMENT_URL=$(printf '%s\n' "$DEPLOYMENT_OUTPUT" | grep -Eo 'https://[^[:space:]]+' | grep -v 'https://vercel.com/' | tail -n 1)
           if [ -z "$DEPLOYMENT_URL" ]; then
             echo "Failed to parse deployment URL from Vercel CLI output." >&2
             exit 1
