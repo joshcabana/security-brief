@@ -26,38 +26,38 @@ jobs:
         uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6
         with:
           node-version: '20'
-          cache: 'pnpm'
+          cache: 'npm'
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@fc06bc1257f339d1d5d8b3a19a8cae5388b55320 # v5
+      - name: Setup npm
+        uses: npm/action-setup@fc06bc1257f339d1d5d8b3a19a8cae5388b55320 # v5
         with:
           version: 10.23.0
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: npm install --frozen-lockfile
 
       - name: Verify STATUS.md baseline
         env:
           EXPECTED_STATUS_BASELINE_SHA: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || github.event.before }}
-        run: pnpm verify:status-doc
+        run: npm verify:status-doc
 
       - name: Lint
-        run: pnpm lint
+        run: npm lint
 
       - name: Check content manifest
-        run: pnpm check:content
+        run: npm check:content
 
       - name: Typecheck
-        run: pnpm typecheck
+        run: npm typecheck
 
       - name: Run unit tests
-        run: pnpm test:unit
+        run: npm test:unit
 
       - name: Build project
-        run: pnpm build
+        run: npm build
 
       - name: Run production smoke tests
-        run: pnpm test:smoke
+        run: npm test:smoke
 
   deploy_gate:
     needs: verify
@@ -97,32 +97,32 @@ jobs:
         uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6
         with:
           node-version: '20'
-          cache: 'pnpm'
+          cache: 'npm'
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@fc06bc1257f339d1d5d8b3a19a8cae5388b55320 # v5
+      - name: Setup npm
+        uses: npm/action-setup@fc06bc1257f339d1d5d8b3a19a8cae5388b55320 # v5
         with:
           version: 10.23.0
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: npm install --frozen-lockfile
 
       - name: Install Vercel CLI
-        run: pnpm dlx vercel@$VERCEL_CLI_VERSION --version
+        run: npm dlx vercel@$VERCEL_CLI_VERSION --version
 
       - name: Pull Vercel environment information
-        run: pnpm dlx vercel@$VERCEL_CLI_VERSION pull --yes --environment=${{ github.ref == 'refs/heads/main' && 'production' || 'preview' }} --token=${{ secrets.VERCEL_TOKEN }}
+        run: npm dlx vercel@$VERCEL_CLI_VERSION pull --yes --environment=${{ github.ref == 'refs/heads/main' && 'production' || 'preview' }} --token=${{ secrets.VERCEL_TOKEN }}
 
       - name: Build project
-        run: pnpm dlx vercel@$VERCEL_CLI_VERSION build ${{ github.ref == 'refs/heads/main' && '--prod' || '' }} --token=${{ secrets.VERCEL_TOKEN }}
+        run: npm dlx vercel@$VERCEL_CLI_VERSION build ${{ github.ref == 'refs/heads/main' && '--prod' || '' }} --token=${{ secrets.VERCEL_TOKEN }}
 
       - name: Deploy to Vercel
         id: deploy
         run: |
           if [ "${{ github.ref }}" == "refs/heads/main" ]; then
-            DEPLOYMENT_OUTPUT=$(pnpm dlx vercel@$VERCEL_CLI_VERSION deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }} 2>&1)
+            DEPLOYMENT_OUTPUT=$(npm dlx vercel@$VERCEL_CLI_VERSION deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }} 2>&1)
           else
-            DEPLOYMENT_OUTPUT=$(pnpm dlx vercel@$VERCEL_CLI_VERSION deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }} 2>&1)
+            DEPLOYMENT_OUTPUT=$(npm dlx vercel@$VERCEL_CLI_VERSION deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }} 2>&1)
           fi
           printf '%s\n' "$DEPLOYMENT_OUTPUT"
           DEPLOYMENT_URL=$(printf '%s\n' "$DEPLOYMENT_OUTPUT" | grep -Eo 'https://[^[:space:]]+' | grep -v 'https://vercel.com/' | tail -n 1)
