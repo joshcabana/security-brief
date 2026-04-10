@@ -22,11 +22,11 @@ export default function SubscribePage() {
             Join the Brief
           </div>
           <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight text-slate-900 dark:text-white leading-tight">
-            Weekly AI threat intel <br className="hidden sm:block" />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">that actually matters</span>
+            Weekly AI security briefings <br className="hidden sm:block" />
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">that actually matter</span>
           </h1>
           <p className="mt-6 text-lg text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
-            Choose your intelligence tier. From high-level summaries for the curious, to actionable vulnerability playbooks for the paranoid.
+            Choose your briefing tier. From high-level summaries for the curious, to actionable vulnerability playbooks for the paranoid.
           </p>
         </div>
 
@@ -38,7 +38,7 @@ export default function SubscribePage() {
               <div className="w-12 h-12 rounded-xl bg-slate-100 dark:bg-slate-800/50 flex items-center justify-center mb-6">
                 <Shield size={24} className="text-slate-600 dark:text-slate-400" />
               </div>
-              <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">Free Intelligence</h2>
+              <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">Free Briefing</h2>
               <p className="text-slate-500 dark:text-slate-400 text-sm">
                 The perfect starting point for staying aware of new agentic AI capabilities and surface-level exploits.
               </p>
@@ -111,7 +111,7 @@ export default function SubscribePage() {
                 href="/upgrade" 
                 className="flex items-center justify-center w-full px-6 py-4 rounded-xl font-bold text-slate-900 bg-cyan-400 hover:bg-cyan-300 hover:shadow-[0_0_20px_rgba(34,211,238,0.4)] transition-all duration-300"
               >
-                Secure Pro Intel — $9/mo
+                Secure Pro Access — $9/mo
               </a>
               <p className="text-center text-xs text-slate-500 mt-4">
                 Founding member rate locked forever. Cancel anytime.

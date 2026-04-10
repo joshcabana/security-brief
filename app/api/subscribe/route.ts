@@ -383,7 +383,7 @@ export async function POST(request: Request): Promise<Response> {
       {
         ok: false,
         message:
-          'Newsletter signup is temporarily unavailable. Check rate limiting service connectivity and try again.',
+          'Newsletter signup is temporarily unavailable. Please try again shortly.',
       },
       { status: 503 },
     );
@@ -408,7 +408,7 @@ export async function POST(request: Request): Promise<Response> {
       {
         ok: false,
         message:
-          'Newsletter signup is not configured yet. Add BEEHIIV_API_KEY and BEEHIIV_PUBLICATION_ID first.',
+          'Newsletter signup is temporarily unavailable. Please try again later.',
       },
       { status: 503 },
     );
@@ -439,7 +439,7 @@ export async function POST(request: Request): Promise<Response> {
         {
           ok: false,
           message:
-            'Beehiiv did not respond before the signup request timed out. Wait a moment and try again. If the delay continues, check Beehiiv API availability and publication settings.',
+            'The signup request timed out. Please wait a moment and try again.',
         },
         { status: 504 },
       );
@@ -450,7 +450,7 @@ export async function POST(request: Request): Promise<Response> {
       return NextResponse.json(
         {
           ok: false,
-          message: 'Beehiiv could not be reached. Check network access and publication settings, then try again.',
+          message: 'Subscription service temporarily unavailable. Please try again later.',
         },
         { status: 502 },
       );
@@ -459,7 +459,7 @@ export async function POST(request: Request): Promise<Response> {
     return NextResponse.json(
       {
         ok: false,
-        message: 'Beehiiv could not be reached. Check network access and publication settings, then try again.',
+        message: 'Subscription service temporarily unavailable. Please try again later.',
       },
       { status: 502 },
     );
@@ -481,7 +481,7 @@ export async function POST(request: Request): Promise<Response> {
         ok: false,
         message:
           upstreamMessage ||
-          'Beehiiv rejected the signup request. Double-check the publication settings and try again.',
+          'The signup request could not be completed. Please try again or contact us.',
       },
       { status: upstreamResponse.status },
     );
@@ -490,7 +490,7 @@ export async function POST(request: Request): Promise<Response> {
   return NextResponse.json(
     {
       ok: true,
-      message: "You're in. Check your inbox for Beehiiv's confirmation email.",
+      message: "You're in. Check your inbox for a confirmation email.",
     },
     { status: 200 },
   );

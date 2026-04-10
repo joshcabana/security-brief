@@ -83,7 +83,11 @@ async function main() {
       updates.keywords = seo.keywords;
     }
 
-    const injected = injectAffiliatePlaceholders(parsed.content, placeholders);
+    const category = String(parsed.data.category || '');
+    const AFFILIATE_EXCLUDED = ['AI Threats', 'Incident Analysis', 'Vulnerabilities'];
+    const injected = AFFILIATE_EXCLUDED.includes(category)
+      ? { markdown: parsed.content, injected: [] }
+      : injectAffiliatePlaceholders(parsed.content, placeholders);
     const nextContent = injected.markdown;
     const nextFrontmatter = {
       ...parsed.data,

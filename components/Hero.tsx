@@ -30,12 +30,12 @@ export default async function Hero() {
         </Link>
         
         <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight text-slate-900 dark:text-white mb-6">
-          Intelligence for the <br className="hidden md:block" />
+          Briefings for the <br className="hidden md:block" />
           <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-600">Agentic Era</span>
         </h1>
         
         <p className="mt-4 text-lg md:text-xl text-slate-600 dark:text-slate-400 max-w-3xl mx-auto mb-10 leading-relaxed">
-          Get the briefing that actually matters. Actionable threat intel, vulnerability research, and defense strategies for teams navigating AI risks in production.
+          AI-assisted security briefings covering threats, vulnerabilities, and defense strategies for teams navigating AI risks in production.
         </p>
         
         <div className="max-w-xl mx-auto flex flex-col sm:flex-row justify-center gap-4">

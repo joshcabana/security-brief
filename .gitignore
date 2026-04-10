@@ -40,5 +40,4 @@ next-env.d.ts
 marketing/
 logs/
 ops/*
-!ops/affiliate-intake.md
-!ops/affiliate-status.md
+STATUS.md

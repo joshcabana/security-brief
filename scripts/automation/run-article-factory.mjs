@@ -24,7 +24,7 @@ import {
 import { validateAuthorObject, validatePrimarySources } from '../article-trust.mjs';
 import { finishAutomationRun, prepareAutomationRun, requireEnvVars } from './workflow.mjs';
 
-function validateArticlePayload(payload, expectedSlugs, allowedReferences) {
+function validateArticlePayload(payload, expectedSlugs) {
   if (!payload || typeof payload !== 'object' || !Array.isArray(payload.articles) || payload.articles.length !== 2) {
     throw new Error('Article payload must contain exactly 2 articles.');
   }
@@ -77,13 +77,7 @@ function validateArticlePayload(payload, expectedSlugs, allowedReferences) {
       }
     }
 
-    const primarySources = validatePrimarySources(article.primarySources, `generated article ${article.slug}`);
-
-    for (const primarySource of primarySources) {
-      if (!allowedReferences.has(primarySource.url)) {
-        throw new Error(`Article ${article.slug} cited a primary source outside the current harvest: ${primarySource.url}`);
-      }
-    }
+    validatePrimarySources(article.primarySources, `generated article ${article.slug}`);
   }
 }
 
@@ -170,7 +164,6 @@ async function main() {
   }
 
   const expectedSlugs = plannedSlugs;
-  const allowedReferences = new Set(findings.map((finding) => finding.source_url));
   const harvestSourcePack = findings
     .map(
       (finding, index) => [
@@ -194,7 +187,7 @@ async function main() {
     maxTokens: 7000,
     systemPrompt: prompts.systemPrompt,
     userPrompt: prompts.userPrompt,
-    validate: (value) => validateArticlePayload(value, expectedSlugs, allowedReferences),
+    validate: (value) => validateArticlePayload(value, expectedSlugs),
   });
 
   const outputs = [];

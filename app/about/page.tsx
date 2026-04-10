@@ -79,7 +79,7 @@ export default function AboutPage() {
               The security landscape is actively fracturing. Traditional WAFs and EDRs are blind to context-window injections, zero-day data poisoning, and autonomous lateral movement. 
             </p>
             <p className="text-slate-600 dark:text-slate-400 leading-relaxed">
-              I built AI Security Brief because enterprise teams are starving for high-signal intelligence that bridges the gap between machine learning and offensive security. Most AI newsletters are written by hype-mongers. Most security blogs ignore LLM mechanics.
+              I built AI Security Brief because enterprise teams are starving for high-signal briefings that bridge the gap between machine learning and offensive security. Most AI newsletters are written by hype-mongers. Most security blogs ignore LLM mechanics.
             </p>
             <p className="text-slate-600 dark:text-slate-400 leading-relaxed">
               As an active practitioner intersecting Offensive Security and ML pipelines, I don&apos;t just report on the latest CVEs—I supply the actual Regex patterns, isolation blueprints, and execution context you need to patch your endpoints before a rogue agent executes a payload.
