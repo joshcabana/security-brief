@@ -29,7 +29,7 @@ primarySources:
   - url: "https://developers.cloudflare.com/ai-gateway/features/dlp/"
     title: "Cloudflare AI Gateway — Data Loss Prevention (DLP)"
 ---
-As enterprise deployments of autonomous agents and LLMs shift into production, the attack surface has fundamentally altered. We are no longer just securing static APIs; we operate in a landscape where an input string can manipulate logic, trigger unauthorized function calls, and exfiltrate sensitive context windows. 
+As enterprise deployments of autonomous agents and LLMs shift into production, the attack surface has fundamentally altered. We are no longer just securing static APIs; we operate in a landscape where an input string can manipulate logic, trigger unauthorized function calls, and exfiltrate sensitive context windows.
 
 If your company runs an agentic pipeline, **an LLM firewall is no longer optional—it is critical infrastructure.**
 
@@ -40,9 +40,11 @@ In this technical breakdown, we evaluate the best LLM firewalls of 2026, compari
 Unlike a traditional Web Application Firewall (WAF) that operates on strict rulesets and IP blocking, an LLM firewall must understand the **semantic intent** of natural language. It acts as a bidirectional proxy sitting between your application and the model provider (OpenAI, Anthropic, or an internal VLLM instance).
 
 A production-grade LLM firewall must handle:
+
 1. **Input validation:** Identifying prompt injections, harmful directives, and PII before the model processes them.
 2. **Output filtering:** Detecting data exfiltration, hallucinations, and unauthorized function call payloads on the way back to the user.
 3. **Latency:** Performing semantic checks in under 50ms to ensure the user experience remains real-time.
+
 
 ---
 
@@ -53,25 +55,29 @@ NVIDIA's open-source NeMo Guardrails has matured significantly, shifting from a 
 **Architecture:** NeMo operates using its own internal dialogue management graph. It routes user inputs through smaller, hyper-optimized classifier models (often running locally via TensorRT) to determine intent before ever touching the main LLM.
 
 **Pros:**
+
 - **Deterministic control:** Allows you to define strict API boundaries using Colang, meaning you can guarantee certain conversational paths.
 - **Self-hosting:** Perfect for air-gapped or high-compliance environments.
 - **Performance:** Extremely low latency when paired with NVIDIA hardware.
 
 **Cons:**
+
 - High engineering overhead to configure and maintain custom rulesets.
 
 ## 2. Lakera Guard
 
 Lakera has built massive momentum by focusing exclusively on enterprise-grade developer experience. Their API-first approach means you can integrate their firewall into a LangChain or LlamaIndex pipeline with three lines of code.
 
-**Architecture:** Lakera relies on a constantly updating proprietary database of emerging prompt injection techniques (partially crowdsourced via their famous 'Gandalf' hacking game). 
+**Architecture:** Lakera relies on a constantly updating proprietary database of emerging prompt injection techniques (partially crowdsourced via their famous 'Gandalf' hacking game).
 
 **Pros:**
+
 - Drop-in integration.
 - Excellent dashboard telemetry showing exactly what types of attacks are hitting your models.
 - "Set and Forget" capabilities for mid-market teams lacking dedicated MLSecOps engineers.
 
 **Cons:**
+
 - As a SaaS dependency, your prompt data traverses their systems (though they offer zero-data retention policies).
 
 ## 3. ProtectAI (Rebuff)
@@ -81,6 +87,7 @@ ProtectAI acquired Rebuff early on and has integrated it into a much larger suit
 **Architecture:** Rebuff uses a multi-layered approach: heuristics filtering, a dedicated LLM trained specifically to detect injection signatures, and a vector database of known bad prompts.
 
 **Pros:**
+
 - Comprehensive defense-in-depth approach.
 - Excellent ecosystem integration if you already use their AI-BOM (Bill of Materials) scanners.
 - Open-source core with a premium enterprise tier.
@@ -92,6 +99,7 @@ Cloudflare introduced AI Gateway as a unified proxy layer. While initially a cac
 **Architecture:** Operates at the edge, leveraging Cloudflare's massive global network. It inspects payloads at the worker level before routing them to endpoints.
 
 **Pros:**
+
 - Zero added network hops if you are already on Cloudflare.
 - Phenomenal cost-control mechanisms (caching responses inherently mitigates denial-of-wallet attacks).
 - Built-in data loss prevention (DLP) to redact PII automatically.
