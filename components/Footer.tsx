@@ -15,6 +15,7 @@ const footerSections = [
   {
     title: 'Resources',
     links: [
+      { label: 'AI Security Stack Matrix', href: '/matrix' },
       { label: 'Security tools', href: '/tools' },
       { label: 'Tool reviews', href: '/reviews' },
       { label: 'Readiness review', href: '/assessment' },
@@ -30,8 +31,8 @@ const footerSections = [
       { label: 'Methodology', href: '/methodology' },
       { label: 'About', href: '/about' },
       { label: 'Assessment', href: '/assessment' },
+      { label: 'Pricing & Pro', href: '/pricing' },
       { label: 'Subscribe Free', href: '/subscribe' },
-      { label: 'Pro access', href: '/pro' },
       { label: 'RSS feed', href: '/feed.xml', external: true },
       { label: 'Privacy policy', href: '/privacy' },
       { label: 'Terms of service', href: '/terms' },
