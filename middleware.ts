@@ -1,55 +1,62 @@
-import { NextResponse } from 'next/server';
-import type { NextRequest } from 'next/server';
-import { CSP_NONCE_HEADER, getSecurityHeaders } from './lib/security-headers.mjs';
+import { createServerClient } from '@supabase/ssr'
+import { NextResponse, type NextRequest } from 'next/server'
 
-function generateScriptNonce(): string {
-  const bytes = new Uint8Array(16);
-  crypto.getRandomValues(bytes);
-
-  let binary = '';
-  for (const byte of bytes) {
-    binary += String.fromCharCode(byte);
-  }
-
-  return btoa(binary);
-}
-
-/**
- * Next.js middleware that enforces security headers on every response.
- *
- * The next.config.mjs `headers()` block is kept as a fallback, but this
- * middleware is the primary enforcement mechanism because it runs on the
- * Edge Runtime and is guaranteed to execute for every request — including
- * statically generated pages that may bypass `headers()` on certain
- * CDN edge caches.
- */
-export function middleware(_request: NextRequest) {
-  const scriptNonce = generateScriptNonce();
-  const requestHeaders = new Headers(_request.headers);
-  requestHeaders.set(CSP_NONCE_HEADER, scriptNonce);
-
-  const response = NextResponse.next({
+export async function middleware(request: NextRequest) {
+  let supabaseResponse = NextResponse.next({
     request: {
-      headers: requestHeaders,
+      headers: request.headers,
     },
-  });
-  const securityHeaders = getSecurityHeaders({ scriptNonce });
+  })
 
-  for (const header of securityHeaders) {
-    response.headers.set(header.key, header.value);
+  const supabase = createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        getAll() {
+          return request.cookies.getAll()
+        },
+        setAll(cookiesToSet) {
+          cookiesToSet.forEach(({ name, value, options }) => request.cookies.set(name, value))
+          supabaseResponse = NextResponse.next({
+            request: {
+              headers: request.headers,
+            },
+          })
+          cookiesToSet.forEach(({ name, value, options }) =>
+            supabaseResponse.cookies.set(name, value, options)
+          )
+        },
+      },
+    }
+  )
+
+  // Refresh session if expired - this will update the cookie session
+  const { data: { user } } = await supabase.auth.getUser()
+
+  const isProtectedRoute = 
+    request.nextUrl.pathname.startsWith('/dashboard') || 
+    request.nextUrl.pathname.startsWith('/admin') ||
+    request.nextUrl.pathname.startsWith('/pro');
+
+  if (isProtectedRoute && !user) {
+    const url = request.nextUrl.clone()
+    url.pathname = '/login'
+    return NextResponse.redirect(url)
   }
 
-  return response;
+  return supabaseResponse
 }
 
 export const config = {
   matcher: [
     /*
-     * Match all request paths except:
+     * Match all request paths except for the ones starting with:
      * - _next/static (static files)
-     * - _next/image (image optimization)
+     * - _next/image (image optimization files)
      * - favicon.ico (favicon file)
+     * Feel free to modify this pattern to include more paths.
      */
-    '/((?!_next/static|_next/image|favicon.ico).*)',
+    '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
   ],
-};
+}

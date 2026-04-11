@@ -8,6 +8,7 @@ import { generateArticleSchema } from '@/lib/seo';
 import ShareButtons from '@/components/ShareButtons';
 import PaywallCTA from '@/components/PaywallCTA';
 import AccountabilityBox from '@/components/AccountabilityBox';
+import ArticleTOC from '@/components/ArticleTOC';
 import { getAllArticles, getArticleBySlug } from '@/lib/articles';
 import { siteConfig, siteUrl, siteName } from '@/lib/site';
 import { serializeJsonForHtml } from '@/lib/json-escape.mjs';
@@ -239,6 +240,9 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
                 Preview the report first
                 <svg width="10" height="10" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path fillRule="evenodd" d="M1 8a.5.5 0 01.5-.5h11.793l-3.147-3.146a.5.5 0 01.708-.708l4 4a.5.5 0 010 .708l-4 4a.5.5 0 01-.708-.708L13.293 8.5H1.5A.5.5 0 011 8z" /></svg>
               </Link>
+            </div>
+            <div className="hidden lg:block relative z-10 pt-4">
+              <ArticleTOC contentHtml={article.contentHtml} />
             </div>
           </aside>
         </div>

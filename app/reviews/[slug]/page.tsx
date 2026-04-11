@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation';
 import ArticleCard from '@/components/ArticleCard';
 import AccountabilityBox from '@/components/AccountabilityBox';
 import ShareButtons from '@/components/ShareButtons';
+import ArticleTOC from '@/components/ArticleTOC';
 import { generateArticleSchema } from '@/lib/seo';
 import { getAllReviewArticles, getReviewBySlug } from '@/lib/articles';
 import { siteName, siteUrl } from '@/lib/site';
@@ -191,6 +192,9 @@ export default async function ReviewPage({ params }: ReviewPageProps) {
                   </div>
                 ))}
               </div>
+            </div>
+            <div className="hidden lg:block relative z-10 pt-4">
+              <ArticleTOC contentHtml={article.contentHtml} />
             </div>
           </aside>
         </div>
