@@ -50,14 +50,10 @@ async function handleSubscriptionDeleted(subscription: Stripe.Subscription): Pro
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
   const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
-  if (!webhookSecret) {
-    return NextResponse.json({ error: 'Webhook secret not configured' }, { status: 500 });
-  }
+  if (!webhookSecret) return NextResponse.json({ error: 'Webhook secret not configured' }, { status: 500 });
 
   const signature = request.headers.get('stripe-signature');
-  if (!signature) {
-    return NextResponse.json({ error: 'Missing Stripe-Signature header' }, { status: 400 });
-  }
+  if (!signature) return NextResponse.json({ error: 'Missing Stripe-Signature header' }, { status: 400 });
 
   const rawBody = await request.text();
 
@@ -82,7 +78,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     }
   } catch (err) {
     console.error('[stripe/webhook] handler error:', err);
-    return NextResponse.json({ received: true }, { status: 200 });
+    return NextResponse.json({ received: true }, { status: 200 }); // Prevent Stripe retries on internal failure
   }
 
   return NextResponse.json({ received: true });

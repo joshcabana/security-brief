@@ -34,6 +34,7 @@ export async function POST(req: Request) {
       cancel_url: `${process.env.NEXT_PUBLIC_APP_URL || 'https://aithreatbrief.com'}/pricing?canceled=true`,
       metadata: {
         userId: user.id,
+        tier: priceId === 'price_pro_yearly_id' ? 'pro_yearly' : 'pro_monthly',
       },
     })
 
