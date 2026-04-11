@@ -17,7 +17,7 @@ export async function GET(request: Request) {
           getAll() {
             return cookieStore.getAll()
           },
-          setAll(cookiesToSet) {
+          setAll(cookiesToSet: { name: string; value: string; options: any }[]) {
             try {
               cookiesToSet.forEach(({ name, value, options }) =>
                 cookieStore.set(name, value, options)
@@ -51,7 +51,7 @@ export async function GET(request: Request) {
             .is('referred_by', null) // Only set if not already set
             
           // We could also log to referrals table here assuming the trigger doesn't do it
-          const { error: refError } = await supabase.from('referrals').insert({
+          await supabase.from('referrals').insert({
             referrer_id: referrer.id,
             referred_user_id: sessionData.user.id,
             status: 'pending'

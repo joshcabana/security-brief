@@ -13,7 +13,7 @@ export default async function DashboardPage() {
 
   const { data: profile } = await supabase.from('profiles').select('*').eq('id', user.id).single()
   const { data: savedRecords } = await supabase.from('saved_briefs').select('article_slug').eq('user_id', user.id)
-  const savedSlugs = new Set(savedRecords?.map((r) => r.article_slug) || [])
+  const savedSlugs = new Set(savedRecords?.map((r: { article_slug: string }) => r.article_slug) || [])
 
   // Streak Math Logic
   let updatedStreakCount = profile?.streak_count || 1;

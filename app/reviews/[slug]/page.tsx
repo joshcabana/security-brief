@@ -25,9 +25,9 @@ function formatDate(date: string): string {
   });
 }
 
-const categoryColors: Record<string, { bg: string; text: string; border: string }> = {
-  Tools: { bg: 'rgba(0,180,255,0.08)', text: '#00b4ff', border: 'rgba(0,180,255,0.2)' },
-  Privacy: { bg: 'rgba(34,197,94,0.08)', text: '#4ade80', border: 'rgba(34,197,94,0.2)' },
+const categoryColors: Record<string, string> = {
+  Tools: 'bg-[#00b4ff]/[0.08] text-[#00b4ff] border-[#00b4ff]/20',
+  Privacy: 'bg-[#4ade80]/[0.08] text-[#4ade80] border-[#4ade80]/20',
 };
 
 export async function generateMetadata({ params }: ReviewPageProps): Promise<Metadata> {
@@ -118,7 +118,7 @@ export default async function ReviewPage({ params }: ReviewPageProps) {
             <span className="text-slate-400 truncate max-w-48">{article.title}</span>
           </nav>
           <div className="mb-5 flex flex-wrap items-center gap-3">
-            <span className="text-xs font-mono font-semibold px-2.5 py-1 rounded border" style={{ background: colors.bg, color: colors.text, borderColor: colors.border }}>{article.category}</span>
+            <span className={`text-xs font-mono font-semibold px-2.5 py-1 rounded border ${colors}`}>{article.category}</span>
             <span className="text-xs font-mono font-semibold px-2.5 py-1 rounded border border-amber-500/30 bg-amber-500/10 text-amber-300">
               Affiliate disclosure applies
             </span>

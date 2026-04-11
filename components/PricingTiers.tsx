@@ -73,7 +73,9 @@ export default function PricingTiers({
           </span>
           <button
             role="switch"
-            aria-checked={yearly}
+            aria-checked={yearly ? 'true' : 'false'}
+            title="Toggle billing period"
+            aria-label="Toggle billing period"
             onClick={() => setYearly(!yearly)}
             className={`relative w-12 h-6 rounded-full transition-colors ${
               yearly ? 'bg-cyan-500' : 'bg-slate-700'
