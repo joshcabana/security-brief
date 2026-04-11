@@ -10,6 +10,7 @@ const navLinks = [
   { href: '/', label: 'Home' },
   { href: '/blog', label: 'Briefings' },
   { href: '/reviews', label: 'Reviews' },
+  { href: '/matrix', label: 'Matrix' },
   { href: '/assessment', label: 'Assessment' },
   { href: '/tools', label: 'Tools' },
   { href: '/archive', label: 'Archive' },
@@ -76,10 +77,12 @@ export default function Header() {
               <SearchBar />
             </div>
             <Link
-              href="/subscribe"
-              className="ml-2 px-4 py-2 rounded-md text-sm font-semibold text-slate-400 hover:text-cyan-400 transition-colors duration-200"
+              href="/pricing"
+              id="header-pro-cta"
+              className="ml-2 px-4 py-2 rounded-md text-sm font-bold text-cyan-400 hover:text-cyan-300 transition-colors duration-200 flex items-center gap-1.5"
             >
-              Subscribe Free
+              <span className="inline-block w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
+              Pro
             </Link>
             <Link
               href="/assessment"
@@ -125,11 +128,12 @@ export default function Header() {
                 );
               })}
               <Link
-                href="/subscribe"
-                className="mt-3 px-4 py-2.5 rounded-md text-sm font-semibold text-center text-slate-200 hover:bg-slate-800 transition-all duration-200"
+                href="/pricing"
+                id="header-pro-cta-mobile"
+                className="mt-3 px-4 py-2.5 rounded-md text-sm font-bold text-center text-cyan-400 hover:bg-cyan-950 transition-all duration-200"
                 onClick={() => setMobileOpen(false)}
               >
-                Subscribe Free
+                ⚡ Go Pro
               </Link>
               <Link
                 href="/assessment"

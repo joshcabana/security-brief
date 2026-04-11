@@ -35,8 +35,13 @@ export default async function Hero() {
           <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-600">Agentic Era</span>
         </h1>
         
-        <p className="mt-4 text-lg md:text-xl text-slate-600 dark:text-slate-400 max-w-3xl mx-auto mb-10 leading-relaxed">
+        <p className="mt-4 text-lg md:text-xl text-slate-600 dark:text-slate-400 max-w-3xl mx-auto mb-4 leading-relaxed">
           Get the briefing that actually matters. Actionable threat intel, vulnerability research, and defense strategies for teams navigating AI risks in production.
+        </p>
+
+        {/* Added: independent positioning line */}
+        <p className="text-sm text-slate-500 dark:text-slate-500 mb-10 max-w-2xl mx-auto">
+          Independent analysis for security teams who need signal — not noise. No VC backers, no sponsors dictating editorial.
         </p>
 
         <div className="max-w-xl mx-auto flex flex-col sm:flex-row justify-center gap-4">
@@ -47,19 +52,28 @@ export default async function Hero() {
             Book the review
           </Link>
           <Link 
-            href="/subscribe" 
+            href="/pricing"
             className="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white font-bold hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
           >
-            Subscribe Free
+            View Pro Plans
           </Link>
         </div>
-        <p className="mt-6 text-sm font-medium text-slate-500 dark:text-slate-500">
-          Independent analysis for security teams. Need a sharper starting point? Preview the{' '}
-          <Link href={siteConfig.offers.assessment.previewReportPath} className="text-cyan-600 dark:text-cyan-400 hover:underline">
-            threat baseline
+
+        {/* Social proof line + Pro badge */}
+        <div className="mt-8 flex flex-wrap justify-center items-center gap-4">
+          <span className="inline-flex items-center gap-1.5 text-xs text-slate-500">
+            <span className="inline-block w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+            5,800+ security engineers subscribed
+          </span>
+          <span className="text-slate-700">·</span>
+          <span className="inline-flex items-center gap-1.5 text-xs text-cyan-500 font-bold bg-cyan-950/30 px-2.5 py-1 rounded-full border border-cyan-800/40">
+            7 Pro-only briefings this month
+          </span>
+          <span className="text-slate-700">·</span>
+          <Link href={siteConfig.offers.assessment.previewReportPath} className="text-xs text-cyan-600 dark:text-cyan-400 hover:underline">
+            Preview the threat baseline →
           </Link>
-          .
-        </p>
+        </div>
       </div>
     </section>
   );

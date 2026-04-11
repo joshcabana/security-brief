@@ -3,6 +3,7 @@ import Link from 'next/link';
 import ArticleCard from '@/components/ArticleCard';
 import NewsletterForm from '@/components/NewsletterForm';
 import Hero from '@/components/Hero';
+import SocialProof from '@/components/SocialProof';
 import ToolsMatrix from '@/components/ToolsMatrix';
 import { getAllArticles } from '@/lib/articles';
 import { createPageMetadata } from '@/lib/page-metadata.mjs';
@@ -24,6 +25,9 @@ export default async function HomePage() {
       <Hero />
 
       <div className="h-px bg-gradient-to-r from-transparent via-cyan-500/50 to-transparent" aria-hidden="true" />
+
+      {/* Social Proof / Authority Signals */}
+      <SocialProof />
 
       {/* Latest Briefings Section */}
       <section className="pt-12 pb-20 bg-slate-50 dark:bg-slate-900/30" aria-label="Latest briefings">

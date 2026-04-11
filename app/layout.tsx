@@ -5,6 +5,8 @@ import './globals.css';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import AffiliateBanner from '@/components/AffiliateBanner';
+import UrgencyBanner from '@/components/UrgencyBanner';
+import ExitIntentModal from '@/components/ExitIntentModal';
 import { buildSiteUrl, getSiteUrl, siteDescription, siteName, siteUrl } from '@/lib/site';
 import { resolveAnalyticsState } from '@/lib/analytics-config.mjs';
 import { serializeJsonForHtml } from '@/lib/json-escape.mjs';
@@ -116,10 +118,12 @@ export default function RootLayout({
       <body
         className="min-h-screen flex flex-col bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-200 antialiased selection:bg-cyan-500/30"
       >
+        <UrgencyBanner />
         <AffiliateBanner />
         <Header />
         <main className="flex-1">{children}</main>
         <Footer />
+        <ExitIntentModal />
         {analyticsState.plausibleEnabled ? (
           <Script
             defer
