@@ -1,5 +1,0 @@
-- NordVPN: **Live in production** — use the current runtime link wired through `AFFILIATE_NORDVPN`
-- Proton: **Live in production** — use the current runtime link family for Proton VPN and Proton Mail
-- PureVPN: **Live in production** — use the current runtime link wired through `AFFILIATE_PUREVPN`
-- Surfshark: **Live in production** — use the current runtime link wired through `AFFILIATE_SURFSHARK`
-- Incogni: **Live in production** — use the current runtime link wired through `AFFILIATE_INCOGNI`

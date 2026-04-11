@@ -10,6 +10,9 @@ const RETRY_BASE_DELAY_MS = 250;
 const RETRY_JITTER_MS = 100;
 const INVALID_REQUEST_MESSAGE = 'This signup request could not be verified. Refresh the page and try again.';
 const RETRYABLE_STATUS_CODES = new Set<number>([429, 503]);
+const MAX_SOURCE_LENGTH = 64;
+const MAX_BODY_BYTES = 4096;
+const VALID_SOURCE_PATTERN = /^[a-z0-9][a-z0-9-]*$/;
 
 type BeehiivConfig = {
   apiKey: string | undefined;
@@ -79,6 +82,17 @@ function getBeehiivConfig(): BeehiivConfig {
 }
 
 function getRequestIp(request: Request): string {
+  const vercelForwardedFor = request.headers.get('x-vercel-forwarded-for');
+
+  if (vercelForwardedFor) {
+    const [vercelIp] = vercelForwardedFor.split(',');
+    const normalizedVercelIp = vercelIp?.trim();
+
+    if (normalizedVercelIp) {
+      return normalizedVercelIp;
+    }
+  }
+
   const forwardedFor = request.headers.get('x-forwarded-for');
 
   if (!forwardedFor) {
@@ -145,13 +159,17 @@ function normalizeSource(source: unknown): string {
     return DEFAULT_SOURCE;
   }
 
-  const normalizedSource = source.trim().toLowerCase();
+  const trimmed = source.trim();
 
-  if (!normalizedSource) {
+  if (!trimmed || trimmed.length > MAX_SOURCE_LENGTH || !VALID_SOURCE_PATTERN.test(trimmed)) {
     return DEFAULT_SOURCE;
   }
 
-  return normalizedSource.replace(/\s+/g, '-');
+  return trimmed;
+}
+
+function isAllowedApiBaseUrl(url: string): boolean {
+  return url === DEFAULT_API_BASE_URL || url.startsWith(`${DEFAULT_API_BASE_URL}/`);
 }
 
 function getReferringSite(request: Request): string {
@@ -343,6 +361,24 @@ function getUpstreamMessage(upstreamPayload: unknown): string {
 }
 
 export async function POST(request: Request): Promise<Response> {
+  const contentType = request.headers.get('content-type') ?? '';
+
+  if (!contentType.startsWith('application/json')) {
+    return NextResponse.json(
+      { ok: false, message: 'This signup endpoint only accepts application/json payloads.' },
+      { status: 415 },
+    );
+  }
+
+  const contentLength = Number(request.headers.get('content-length') ?? '0');
+
+  if (contentLength > MAX_BODY_BYTES) {
+    return NextResponse.json(
+      { ok: false, message: 'The signup request body is too large.' },
+      { status: 413 },
+    );
+  }
+
   let payload: SubscribeRequestPayload | null = null;
 
   try {
@@ -350,6 +386,13 @@ export async function POST(request: Request): Promise<Response> {
   } catch {
     return NextResponse.json(
       { ok: false, message: 'The signup request body was invalid JSON.' },
+      { status: 400 },
+    );
+  }
+
+  if (typeof payload !== 'object' || payload === null || Array.isArray(payload)) {
+    return NextResponse.json(
+      { ok: false, message: 'The signup request body must be a JSON object.' },
       { status: 400 },
     );
   }
@@ -392,7 +435,7 @@ export async function POST(request: Request): Promise<Response> {
       {
         ok: false,
         message:
-          'Newsletter signup is temporarily unavailable. Check rate limiting service connectivity and try again.',
+          'Newsletter signup is temporarily unavailable. Please try again shortly.',
       },
       { status: 503 },
     );
@@ -412,12 +455,12 @@ export async function POST(request: Request): Promise<Response> {
 
   const { apiKey, publicationId, apiBaseUrl, configured } = getBeehiivConfig();
 
-  if (!configured || !apiKey || !publicationId) {
+  if (!configured || !apiKey || !publicationId || !isAllowedApiBaseUrl(apiBaseUrl)) {
     return NextResponse.json(
       {
         ok: false,
         message:
-          'Newsletter signup is not configured yet. Add BEEHIIV_API_KEY and BEEHIIV_PUBLICATION_ID first.',
+          'Newsletter signup is temporarily unavailable. Please try again later.',
       },
       { status: 503 },
     );
@@ -448,7 +491,7 @@ export async function POST(request: Request): Promise<Response> {
         {
           ok: false,
           message:
-            'Beehiiv did not respond before the signup request timed out. Wait a moment and try again. If the delay continues, check Beehiiv API availability and publication settings.',
+            'The signup request timed out. Please wait a moment and try again.',
         },
         { status: 504 },
       );
@@ -459,7 +502,7 @@ export async function POST(request: Request): Promise<Response> {
       return NextResponse.json(
         {
           ok: false,
-          message: 'Beehiiv could not be reached. Check network access and publication settings, then try again.',
+          message: 'Subscription service temporarily unavailable. Please try again later.',
         },
         { status: 502 },
       );
@@ -468,7 +511,7 @@ export async function POST(request: Request): Promise<Response> {
     return NextResponse.json(
       {
         ok: false,
-        message: 'Beehiiv could not be reached. Check network access and publication settings, then try again.',
+        message: 'Subscription service temporarily unavailable. Please try again later.',
       },
       { status: 502 },
     );
@@ -483,14 +526,10 @@ export async function POST(request: Request): Promise<Response> {
   }
 
   if (!upstreamResponse.ok) {
-    const upstreamMessage = getUpstreamMessage(upstreamPayload);
-
     return NextResponse.json(
       {
         ok: false,
-        message:
-          upstreamMessage ||
-          'Beehiiv rejected the signup request. Double-check the publication settings and try again.',
+        message: 'The signup request was rejected. Double-check the submitted details and try again.',
       },
       { status: upstreamResponse.status },
     );
@@ -499,7 +538,7 @@ export async function POST(request: Request): Promise<Response> {
   return NextResponse.json(
     {
       ok: true,
-      message: "You're in. Check your inbox for Beehiiv's confirmation email.",
+      message: "You're in. Check your inbox for a confirmation email.",
     },
     { status: 200 },
   );

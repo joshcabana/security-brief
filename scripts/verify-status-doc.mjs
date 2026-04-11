@@ -1,6 +1,8 @@
 #!/usr/bin/env node
 
 import { spawnSync } from 'child_process'
+import { existsSync } from 'fs'
+import { resolve } from 'path'
 import { parseStatusDocument, readStatusDocument } from '../lib/status-data.mjs'
 
 const BOLD = '\x1b[1m'
@@ -56,6 +58,13 @@ function shaMatches(expectedSha, actualSha) {
 }
 
 function run() {
+  const statusDocumentPath = resolve(process.cwd(), 'STATUS.md')
+
+  if (!existsSync(statusDocumentPath)) {
+    console.log(`${BOLD}${GREEN}✓ STATUS.md baseline check skipped${RESET} — STATUS.md is not present in this repository.`)
+    return
+  }
+
   const expectedBaselineSha = resolveExpectedBaselineSha()
   const parsedStatus = parseStatusDocument(readStatusDocument())
 

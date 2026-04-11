@@ -28,7 +28,7 @@ export function buildArticleFactoryContext(input) {
 export function buildArticleFactoryPrompts(input) {
   return {
     systemPrompt:
-      'You are the article generation engine for AI Security Brief. Return strict JSON only. No markdown fences. Use only the supplied weekly harvest source pack. Do not cite URLs that are not in the source pack. Every article must include a named human author object and explicit primary sources. Brand-level bylines are forbidden.',
+      'You are the article generation engine for AI Security Brief. Return strict JSON only. No markdown fences. Use the supplied weekly harvest source pack as the primary research input. You may enrich articles with authoritative primary sources such as vendor advisories, CVE/NVD entries, GitHub security advisories, and official project disclosures. Prefer primary sources over aggregation sites. Every article must include a named human author object and explicit primary sources. Brand-level bylines are forbidden.',
     userPrompt: [
       `Write ${input.articlePlan.length} AI-assisted security briefings for ${input.effectiveDate}.`,
       'The guarded <TEXT> block contains the exact article plan and the weekly harvest source pack.',
@@ -45,7 +45,7 @@ export function buildArticleFactoryPrompts(input) {
       '- 4 or 5 H2 sections.',
       '- Every section must contain exactly 2 substantial paragraphs.',
       '- 4 to 5 key takeaways.',
-      '- Include at least 3 primarySources, and every primary source URL must come from the weekly harvest source pack.',
+      '- Include at least 3 primarySources. At least 1 must come from the weekly harvest source pack. Prioritise official vendor advisories, CVE entries, and GitHub disclosures for additional references.',
       '- Keep tone authoritative, data-driven, and written for tech professionals and IT decision-makers.',
       '- Do not invent statistics or sources. When the source pack is sparse, prefer careful analysis and defensive guidance over unsupported claims.',
       '- The rendered article template appends one newsletter CTA using the exact path pattern /newsletter?source=article-<slug>-cta. Write body copy that leads naturally into that CTA and do not add extra CTA blocks or promotional sections.',
@@ -155,7 +155,7 @@ export function buildSeoOptimiserContext(input) {
 export function buildSeoOptimiserPrompts(input) {
   return {
     systemPrompt:
-      'You are the SEO metadata optimiser for AI Security Brief, an elite enterprise B2B threat intelligence platform. Return strict JSON only. No markdown fences.',
+      'You are the SEO metadata optimiser for AI Security Brief, an enterprise B2B security briefing publication. Return strict JSON only. No markdown fences.',
     userPrompt: [
       'Optimise metadata for this AI security article draft.',
       'The guarded <TEXT> block contains the article title, slug, excerpt, and body excerpt.',

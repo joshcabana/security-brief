@@ -79,10 +79,9 @@ function validateArticlePayload(payload, expectedSlugs, allowedReferences) {
 
     const primarySources = validatePrimarySources(article.primarySources, `generated article ${article.slug}`);
 
-    for (const primarySource of primarySources) {
-      if (!allowedReferences.has(primarySource.url)) {
-        throw new Error(`Article ${article.slug} cited a primary source outside the current harvest: ${primarySource.url}`);
-      }
+    const hasHarvestSource = primarySources.some((source) => allowedReferences.has(source.url));
+    if (!hasHarvestSource) {
+      throw new Error(`Article ${article.slug} must cite at least one primary source from the current harvest.`);
     }
   }
 }

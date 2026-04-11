@@ -83,7 +83,7 @@ test('subscribe route returns 503 when Beehiiv is not configured', async () => {
   assert.equal(response.status, 503);
   assert.deepEqual(await response.json(), {
     ok: false,
-    message: 'Newsletter signup is temporarily unavailable. Try again shortly.',
+    message: 'Newsletter signup is temporarily unavailable. Please try again later.',
   });
 });
 
@@ -101,7 +101,7 @@ test('subscribe route returns 503 when Upstash rate limiting is unreachable', as
   assert.deepEqual(await response.json(), {
     ok: false,
     message:
-      'Newsletter signup is temporarily unavailable. Check rate limiting service connectivity and try again.',
+      'Newsletter signup is temporarily unavailable. Please try again shortly.',
   });
 });
 
@@ -264,7 +264,7 @@ test('subscribe route accepts same-site referer headers when origin is absent', 
   assert.equal(response.status, 200);
   assert.deepEqual(await response.json(), {
     ok: true,
-    message: "You're in. Check your inbox for Beehiiv's confirmation email.",
+    message: "You're in. Check your inbox for a confirmation email.",
   });
 });
 
@@ -325,7 +325,7 @@ test('subscribe route returns 502 when Beehiiv cannot be reached', async () => {
   assert.equal(response.status, 502);
   assert.equal(
     (await response.json()).message,
-    'Newsletter signup is temporarily unavailable. Try again shortly.',
+    'Subscription service temporarily unavailable. Please try again later.',
   );
 });
 
@@ -363,7 +363,7 @@ test('subscribe route retries once when Beehiiv responds with 429 before succeed
   assert.equal(response.status, 200);
   assert.deepEqual(await response.json(), {
     ok: true,
-    message: "You're in. Check your inbox for Beehiiv's confirmation email.",
+    message: "You're in. Check your inbox for a confirmation email.",
   });
 });
 
@@ -474,7 +474,7 @@ test('subscribe route returns 504 when Beehiiv times out', async () => {
   assert.equal(response.status, 504);
   assert.equal(
     (await response.json()).message,
-    'Newsletter signup is temporarily unavailable. Try again shortly.',
+    'The signup request timed out. Please wait a moment and try again.',
   );
 });
 
@@ -511,7 +511,7 @@ test('subscribe route returns 200 on a successful Beehiiv response', async () =>
   assert.equal(response.status, 200);
   assert.deepEqual(await response.json(), {
     ok: true,
-    message: "You're in. Check your inbox for Beehiiv's confirmation email.",
+    message: "You're in. Check your inbox for a confirmation email.",
   });
 });
 
@@ -545,7 +545,7 @@ test('subscribe route defaults the placement source to unknown when omitted', as
   assert.equal(response.status, 200);
   assert.deepEqual(await response.json(), {
     ok: true,
-    message: "You're in. Check your inbox for Beehiiv's confirmation email.",
+    message: "You're in. Check your inbox for a confirmation email.",
   });
 });
 
@@ -611,7 +611,7 @@ test('subscribe route rejects invalid Beehiiv API base URLs before making an ups
   assert.equal(response.status, 503);
   assert.deepEqual(await response.json(), {
     ok: false,
-    message: 'Newsletter signup is temporarily unavailable. Try again shortly.',
+    message: 'Newsletter signup is temporarily unavailable. Please try again later.',
   });
 });
 
