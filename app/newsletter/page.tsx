@@ -3,6 +3,10 @@ import Link from 'next/link';
 import ArticleCard from '@/components/ArticleCard';
 import NewsletterForm from '@/components/NewsletterForm';
 import { getAllArticles, getArticleCategories } from '@/lib/articles';
+import {
+  coerceSingleSearchParamValue,
+  resolveNewsletterSource,
+} from '@/lib/newsletter-source.mjs';
 import { createPageMetadata } from '@/lib/page-metadata.mjs';
 
 export const metadata: Metadata = createPageMetadata({
@@ -57,10 +61,18 @@ const benefits = [
   },
 ];
 
-export default async function NewsletterPage() {
+interface NewsletterPageProps {
+  searchParams: Promise<{ source?: string | string[] }>;
+}
+
+export default async function NewsletterPage({ searchParams }: NewsletterPageProps) {
   const articles = await getAllArticles();
   const categories = await getArticleCategories();
   const recentArticles = articles.slice(0, 4);
+  const resolvedSearchParams = await searchParams;
+  const requestedSource = coerceSingleSearchParamValue(resolvedSearchParams.source);
+  const heroSource = resolveNewsletterSource(requestedSource, 'newsletter-hero');
+  const ctaSource = resolveNewsletterSource(requestedSource, 'newsletter-cta');
 
   const stats = [
     { value: String(articles.length), label: 'Published briefings' },
@@ -116,7 +128,7 @@ export default async function NewsletterPage() {
           </h1>
 
           <p className="text-xl leading-relaxed mb-10" style={{ color: '#8b949e' }}>
-            Subscribe for weekly AI security briefings, privacy shifts, and practical tooling notes for teams operating in the AI era.
+            A low-noise weekly brief for operators, builders, and security teams tracking AI abuse, privacy changes, and the tooling choices that matter.
           </p>
 
           <div
@@ -129,13 +141,13 @@ export default async function NewsletterPage() {
           >
             <h2 className="text-xl font-bold text-white mb-2 text-left">Subscribe free</h2>
             <p className="text-sm text-left mb-6" style={{ color: '#8b949e' }}>
-              One concise issue each week covering AI threats, privacy changes, and tools worth evaluating.
+              One concise issue each week covering AI threats, privacy shifts, and the tools directory entries worth your attention next.
             </p>
             <NewsletterForm
               variant="page"
               placeholder="your@work-email.com"
               buttonText="Subscribe free"
-              source="newsletter-hero"
+              source={heroSource}
             />
 
             <div className="mt-6 pt-5 flex flex-wrap justify-center gap-6" style={{ borderTop: '1px solid #21262d' }}>
@@ -214,13 +226,13 @@ export default async function NewsletterPage() {
           >
             <h3 className="text-xl font-bold text-white mb-3">Get the next issue</h3>
             <p className="text-sm mb-6" style={{ color: '#8b949e' }}>
-              Get the next issue covering AI threats, privacy changes, and practical tooling notes worth your time.
+              Get the next issue with low-noise threat analysis, privacy movement, and the tool recommendations that complement each week&apos;s briefing.
             </p>
             <NewsletterForm
               variant="default"
               placeholder="your@email.com"
               buttonText="Subscribe for weekly briefings"
-              source="newsletter-cta"
+              source={ctaSource}
             />
           </div>
         </div>

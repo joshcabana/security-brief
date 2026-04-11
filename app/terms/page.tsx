@@ -54,7 +54,7 @@ export default function TermsPage() {
           <section>
             <h2 className="text-white text-xl font-bold mb-4">Accuracy of information</h2>
             <p className="text-sm leading-relaxed" style={{ color: '#8b949e' }}>
-              We make reasonable efforts to ensure the accuracy and timeliness of the information published on this site. However, the cybersecurity landscape evolves rapidly. We do not warrant that all content is complete, current, or free from error. Threat intelligence, tool recommendations, and security strategies may change without notice.
+              We make reasonable efforts to ensure the accuracy and timeliness of the information published on this site. However, the cybersecurity landscape evolves rapidly. We do not warrant that all content is complete, current, or free from error. Security briefings, tool recommendations, and security strategies may change without notice.
             </p>
           </section>
 

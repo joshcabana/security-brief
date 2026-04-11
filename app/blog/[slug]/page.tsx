@@ -3,15 +3,22 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import ArticleCard from '@/components/ArticleCard';
 import NewsletterForm from '@/components/NewsletterForm';
+import RepurposeCTA from '@/components/RepurposeCTA';
+import { generateArticleSchema } from '@/lib/seo';
 import ShareButtons from '@/components/ShareButtons';
 import PaywallCTA from '@/components/PaywallCTA';
+import AccountabilityBox from '@/components/AccountabilityBox';
 import { getAllArticles, getArticleBySlug } from '@/lib/articles';
-import { siteUrl, siteName } from '@/lib/site';
+import { siteConfig, siteUrl, siteName } from '@/lib/site';
+import { serializeJsonForHtml } from '@/lib/json-escape.mjs';
 
 interface ArticlePageProps {
   params: Promise<{ slug: string }>;
 }
 
+// Article bodies embed affiliate URLs that are sourced from runtime env vars.
+// Render them dynamically so monetization links stay aligned with current
+// production config instead of being frozen into the build artifact.
 export const dynamic = 'force-dynamic';
 
 function formatDate(date: string): string {
@@ -21,11 +28,6 @@ function formatDate(date: string): string {
     day: 'numeric',
   });
 }
-
-const categoryColors: Record<string, { bg: string; text: string; border: string }> = {
-  'AI Threats': { bg: 'rgba(248,81,73,0.08)', text: '#f85149', border: 'rgba(248,81,73,0.2)' },
-  Privacy: { bg: 'rgba(0,180,255,0.08)', text: '#00b4ff', border: 'rgba(0,180,255,0.2)' },
-};
 
 export async function generateMetadata({ params }: ArticlePageProps): Promise<Metadata> {
   const { slug } = await params;
@@ -49,7 +51,7 @@ export async function generateMetadata({ params }: ArticlePageProps): Promise<Me
       description: article.metaDescription,
       type: 'article',
       publishedTime: article.date,
-      authors: [article.author.name],
+      authors: [typeof article.author === 'string' ? article.author : article.author?.name ?? ''],
       url: articleUrl,
     },
     twitter: {
@@ -68,6 +70,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
     notFound();
   }
 
+  const assessment = siteConfig.offers.assessment;
   const allArticles = await getAllArticles();
   const relatedArticles = allArticles
     .filter((candidate) => candidate.slug !== article.slug)
@@ -80,39 +83,34 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
       return new Date(right.date).getTime() - new Date(left.date).getTime();
     })
     .slice(0, 3);
-  const colors = categoryColors[article.category] || categoryColors.Privacy;
   const tags = [article.category, ...article.keywords.slice(0, 2)];
+  const assessmentHighlights = [
+    `${assessment.priceLabel} fixed fee`,
+    `${assessment.deliveryWindow} turnaround`,
+    'Paid before delivery',
+  ];
 
-  const articleJsonLd = {
-    '@context': 'https://schema.org',
-    '@type': 'Article',
-    headline: article.title,
+  const articleUrl = `${siteUrl}/blog/${article.slug}`;
+
+  const articleJsonLd = generateArticleSchema({
+    title: article.title,
     description: article.excerpt,
     datePublished: article.date,
-    author: {
-      '@type': 'Organization',
-      name: article.author,
-      url: siteUrl,
-    },
-    publisher: {
-      '@type': 'Organization',
-      name: siteName,
-      url: siteUrl,
-    },
-    mainEntityOfPage: {
-      '@type': 'WebPage',
-      '@id': `${siteUrl}/blog/${article.slug}`,
-    },
-    keywords: article.keywords.join(', '),
-    articleSection: article.category,
+    authorName: typeof article.author === 'string' ? article.author : article.author?.name,
+    authorUrl: siteUrl,
+    publisherName: siteName,
+    publisherUrl: siteUrl,
+    url: articleUrl,
+    category: article.category,
+    keywords: article.keywords,
     wordCount: article.body.split(/\s+/).length,
-  };
+  });
 
   return (
     <div className="bg-slate-900 dark:bg-slate-950 min-h-screen">
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonForHtml(articleJsonLd) }}
       />
       <header className="relative overflow-hidden bg-gradient-to-b from-slate-900 to-slate-950 border-b border-slate-800 py-14">
         <div className="absolute inset-0 bg-grid opacity-30 pointer-events-none" aria-hidden="true" />
@@ -125,7 +123,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
             <span className="text-slate-400 truncate max-w-48">{article.title}</span>
           </nav>
           <div className="mb-5">
-            <span className="text-xs font-mono font-semibold px-2.5 py-1 rounded border" style={{ background: colors.bg, color: colors.text, borderColor: colors.border }}>{article.category}</span>
+            <span className="text-xs font-mono font-semibold px-2.5 py-1 rounded border bg-red-500/10 text-red-500 border-red-500/20">{article.category}</span>
           </div>
           <h1 className="text-white font-black leading-tight mb-6 tracking-tight">{article.title}</h1>
           <div className="flex flex-wrap items-center gap-4 text-sm text-slate-500">
@@ -136,7 +134,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
             <span aria-hidden="true">·</span>
             <span className="font-mono">{article.readTime}</span>
             <span aria-hidden="true">·</span>
-            <span>{article.author}</span>
+            <span>{typeof article.author === 'string' ? article.author : article.author?.name}</span>
           </div>
         </div>
       </header>
@@ -149,6 +147,34 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
               className="prose-dark text-slate-200"
               dangerouslySetInnerHTML={{ __html: article.contentHtml }}
             />
+            <AccountabilityBox
+              reviewedBy={article.reviewedBy}
+              reviewedAt={article.reviewedAt}
+              trustLevel={article.trustLevel}
+            />
+            <div className="mt-8 rounded-2xl border border-cyan-900/30 bg-gradient-to-br from-cyan-900/15 to-slate-900 p-6">
+              <div className="text-xs font-mono uppercase tracking-[0.12em] mb-3 text-cyan-400">Primary offer</div>
+              <h3 className="text-lg font-bold text-white mb-2">Need an external read on this class of AI risk?</h3>
+              <p className="text-sm text-slate-300 leading-relaxed mb-4">
+                The readiness review is the fastest paid path for teams that need a threat map, top risks, remediation memo, and a 60-minute readout before rollout problems become incidents.
+              </p>
+              <div className="flex flex-wrap gap-2 mb-4">
+                {assessmentHighlights.map((item) => (
+                  <span
+                    key={item}
+                    className="px-2.5 py-1 rounded-full border border-cyan-900/40 bg-slate-950/60 text-xs font-mono text-cyan-300"
+                  >
+                    {item}
+                  </span>
+                ))}
+              </div>
+              <Link
+                href={assessment.path}
+                className="inline-flex items-center gap-2 rounded-lg bg-cyan-500 px-4 py-3 text-sm font-bold text-slate-950 transition-colors hover:bg-cyan-400"
+              >
+                View the readiness review
+              </Link>
+            </div>
             {article.isPaywalled && <PaywallCTA />}
             <div className="flex flex-wrap gap-2 mt-12 pt-8 border-t border-slate-800">
               <span className="text-xs text-slate-500 self-center">Filed under:</span>
@@ -161,8 +187,9 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
                 <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path fillRule="evenodd" d="M15 8a.5.5 0 00-.5-.5H2.707l3.147-3.146a.5.5 0 10-.708-.708l-4 4a.5.5 0 000 .708l4 4a.5.5 0 00.708-.708L2.707 8.5H14.5A.5.5 0 0015 8z" /></svg>
                 Back to all articles
               </Link>
-              <ShareButtons title={article.title} slug={article.slug} />
+              <ShareButtons title={article.title} slug={article.slug} path={article.routePath} />
             </div>
+            <RepurposeCTA title={article.title} url={articleUrl} />
           </article>
 
           <aside className="space-y-6" aria-label="Article sidebar">
@@ -189,11 +216,27 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
               </div>
             </div>
             <div className="p-6 rounded-xl bg-gradient-to-br from-cyan-900/10 to-transparent border border-cyan-900/30">
-              <div className="text-xs font-mono uppercase mb-3 text-cyan-400">Recommended</div>
-              <h3 className="text-sm font-bold text-white mb-2">Security tools</h3>
-              <p className="text-xs text-slate-400 mb-4">Recommended tools may include affiliate links and are selected to match the threats and privacy topics covered in the archive.</p>
-              <Link href="/tools" className="text-xs font-semibold flex items-center gap-1 transition-colors text-cyan-400">
-                Browse tools
+              <div className="text-xs font-mono uppercase mb-3 text-cyan-400">Primary offer</div>
+              <h3 className="text-sm font-bold text-white mb-2">{assessment.name}</h3>
+              <p className="text-xs text-slate-400 mb-4">
+                If this briefing maps to your live AI surface area, start with the fixed-scope review before reaching for a broader retainer.
+              </p>
+              <div className="flex flex-wrap gap-2 mb-4">
+                {assessmentHighlights.map((item) => (
+                  <span
+                    key={item}
+                    className="px-2 py-1 rounded-full border border-cyan-900/40 bg-slate-950/60 text-[11px] font-mono text-cyan-300"
+                  >
+                    {item}
+                  </span>
+                ))}
+              </div>
+              <Link href={assessment.path} className="text-xs font-semibold flex items-center gap-1 transition-colors text-cyan-400">
+                View the readiness review
+                <svg width="10" height="10" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path fillRule="evenodd" d="M1 8a.5.5 0 01.5-.5h11.793l-3.147-3.146a.5.5 0 01.708-.708l4 4a.5.5 0 010 .708l-4 4a.5.5 0 01-.708-.708L13.293 8.5H1.5A.5.5 0 011 8z" /></svg>
+              </Link>
+              <Link href={assessment.previewReportPath} className="mt-3 text-xs font-semibold flex items-center gap-1 transition-colors text-slate-400 hover:text-cyan-400">
+                Preview the report first
                 <svg width="10" height="10" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path fillRule="evenodd" d="M1 8a.5.5 0 01.5-.5h11.793l-3.147-3.146a.5.5 0 01.708-.708l4 4a.5.5 0 010 .708l-4 4a.5.5 0 01-.708-.708L13.293 8.5H1.5A.5.5 0 011 8z" /></svg>
               </Link>
             </div>
@@ -201,7 +244,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
         </div>
 
         <div className="mt-16 pt-12 border-t border-slate-800">
-          <div className="section-label mb-6">Related Intelligence</div>
+          <div className="section-label mb-6">Related Briefings</div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
             {relatedArticles.map((relatedArticle, index) => (
               <ArticleCard key={relatedArticle.slug} article={relatedArticle} variant="default" index={index} />

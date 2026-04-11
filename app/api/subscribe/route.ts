@@ -1,21 +1,33 @@
 import { NextResponse } from 'next/server';
+import { DEFAULT_BEEHIIV_API_BASE_URL, resolveBeehiivApiBaseUrl } from '@/lib/beehiiv-api.mjs';
 import { ratelimit } from '@/lib/rate-limit';
+import { sanitizeNewsletterSource } from '@/lib/newsletter-source.mjs';
+import {
+  getAllowedOrigins,
+  getRequestIp,
+  getSubmittedOrigin,
+  isVerifiedSameSiteRequest,
+  parseJsonRequestBody,
+} from '@/lib/request-security.mjs';
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const DEFAULT_SOURCE = 'unknown';
-const DEFAULT_API_BASE_URL = 'https://api.beehiiv.com';
 const REQUEST_TIMEOUT_MS = 10000;
 const MAX_RETRY_ATTEMPTS = 2;
 const RETRY_BASE_DELAY_MS = 250;
 const RETRY_JITTER_MS = 100;
+const MAX_RETRY_DELAY_MS = 3000;
 const INVALID_REQUEST_MESSAGE = 'This signup request could not be verified. Refresh the page and try again.';
 const RETRYABLE_STATUS_CODES = new Set<number>([429, 503]);
+const JSON_BODY_LIMIT_BYTES = 4 * 1024;
+const AUTOMATION_ID_PATTERN = /^[a-z0-9_-]+$/i;
 
 type BeehiivConfig = {
   apiKey: string | undefined;
   publicationId: string | undefined;
   apiBaseUrl: string;
   configured: boolean;
+  invalidApiBaseUrl: boolean;
 };
 
 type SubscribeRequestPayload = {
@@ -68,31 +80,16 @@ class BeehiivRequestNetworkError extends Error {
 function getBeehiivConfig(): BeehiivConfig {
   const apiKey = process.env.BEEHIIV_API_KEY?.trim();
   const publicationId = process.env.BEEHIIV_PUBLICATION_ID?.trim();
-  const apiBaseUrl = (process.env.BEEHIIV_API_BASE_URL?.trim() || DEFAULT_API_BASE_URL).replace(/\/$/, '');
+  const rawApiBaseUrl = process.env.BEEHIIV_API_BASE_URL?.trim();
+  const resolvedApiBaseUrl = resolveBeehiivApiBaseUrl(rawApiBaseUrl);
 
   return {
     apiKey,
     publicationId,
-    apiBaseUrl,
-    configured: Boolean(apiKey && publicationId),
+    apiBaseUrl: resolvedApiBaseUrl ?? DEFAULT_BEEHIIV_API_BASE_URL,
+    configured: Boolean(apiKey && publicationId && resolvedApiBaseUrl),
+    invalidApiBaseUrl: Boolean(rawApiBaseUrl && !resolvedApiBaseUrl),
   };
-}
-
-function getRequestIp(request: Request): string {
-  const forwardedFor = request.headers.get('x-forwarded-for');
-
-  if (!forwardedFor) {
-    return 'anonymous';
-  }
-
-  const [requestIp] = forwardedFor.split(',');
-  const normalizedRequestIp = requestIp?.trim();
-
-  if (!normalizedRequestIp) {
-    return 'anonymous';
-  }
-
-  return normalizedRequestIp;
 }
 
 function getRetryAfterSeconds(resetAt: number): string {
@@ -101,57 +98,18 @@ function getRetryAfterSeconds(resetAt: number): string {
   return String(Math.max(secondsUntilReset, 1));
 }
 
-function getAllowedOrigins(request: Request): string[] {
-  const allowedOrigins = new Set<string>([new URL(request.url).origin]);
-  const configuredSiteUrl = process.env.NEXT_PUBLIC_SITE_URL?.trim();
+function jsonResponse(body: Record<string, unknown>, init: ResponseInit): Response {
+  const headers = new Headers(init.headers);
+  headers.set('Cache-Control', 'no-store');
 
-  if (configuredSiteUrl) {
-    try {
-      allowedOrigins.add(new URL(configuredSiteUrl).origin);
-    } catch {
-      return Array.from(allowedOrigins);
-    }
-  }
-
-  return Array.from(allowedOrigins);
-}
-
-function getSubmittedOrigin(request: Request): string | null {
-  const originHeader = request.headers.get('origin');
-
-  if (originHeader) {
-    try {
-      return new URL(originHeader).origin;
-    } catch {
-      return null;
-    }
-  }
-
-  const refererHeader = request.headers.get('referer');
-
-  if (!refererHeader) {
-    return null;
-  }
-
-  try {
-    return new URL(refererHeader).origin;
-  } catch {
-    return null;
-  }
+  return NextResponse.json(body, {
+    ...init,
+    headers,
+  });
 }
 
 function normalizeSource(source: unknown): string {
-  if (typeof source !== 'string') {
-    return DEFAULT_SOURCE;
-  }
-
-  const normalizedSource = source.trim().toLowerCase();
-
-  if (!normalizedSource) {
-    return DEFAULT_SOURCE;
-  }
-
-  return normalizedSource.replace(/\s+/g, '-');
+  return sanitizeNewsletterSource(source) ?? DEFAULT_SOURCE;
 }
 
 function getReferringSite(request: Request): string {
@@ -161,21 +119,11 @@ function getReferringSite(request: Request): string {
 function getBeehiivWelcomeAutomationIds(): string[] {
   const automationId = process.env.BEEHIIV_WELCOME_AUTOMATION_ID?.trim();
 
-  if (!automationId) {
+  if (!automationId || !AUTOMATION_ID_PATTERN.test(automationId)) {
     return [];
   }
 
   return [automationId];
-}
-
-function isVerifiedSignupRequest(request: Request): boolean {
-  const submittedOrigin = getSubmittedOrigin(request);
-
-  if (!submittedOrigin) {
-    return false;
-  }
-
-  return getAllowedOrigins(request).includes(submittedOrigin);
 }
 
 function hasFilledHoneypot(value: unknown): boolean {
@@ -223,13 +171,13 @@ function getRetryDelayMs(attemptNumber: number, headers: Headers): number {
   const headerDelayMs = getRetryDelayFromHeaders(headers);
 
   if (headerDelayMs !== null) {
-    return headerDelayMs;
+    return Math.min(headerDelayMs, MAX_RETRY_DELAY_MS);
   }
 
   const exponentialDelayMs = RETRY_BASE_DELAY_MS * 2 ** (attemptNumber - 1);
   const jitterMs = Math.floor(Math.random() * RETRY_JITTER_MS);
 
-  return exponentialDelayMs + jitterMs;
+  return Math.min(exponentialDelayMs + jitterMs, MAX_RETRY_DELAY_MS);
 }
 
 function logRetryWarning(attemptNumber: number, responseStatus: number, retryDelayMs: number): void {
@@ -342,25 +290,43 @@ function getUpstreamMessage(upstreamPayload: unknown): string {
   return '';
 }
 
-export async function POST(request: Request): Promise<Response> {
-  let payload: SubscribeRequestPayload | null = null;
+function getPublicUpstreamMessage(status: number): string {
+  if (status === 429) {
+    return 'Too many signup attempts are being processed right now. Please try again in a minute.';
+  }
 
-  try {
-    payload = (await request.json()) as SubscribeRequestPayload;
-  } catch {
-    return NextResponse.json(
-      { ok: false, message: 'The signup request body was invalid JSON.' },
-      { status: 400 },
+  if (status >= 400 && status < 500) {
+    return 'The signup request was rejected. Double-check the submitted details and try again.';
+  }
+
+  return 'Newsletter signup is temporarily unavailable. Try again shortly.';
+}
+
+export async function POST(request: Request): Promise<Response> {
+  const parsedBody = await parseJsonRequestBody(request, {
+    maxBytes: JSON_BODY_LIMIT_BYTES,
+    invalidJsonMessage: 'The signup request body was invalid JSON.',
+    invalidShapeMessage: 'The signup request body must be a JSON object.',
+    unsupportedMediaTypeMessage: 'This signup endpoint only accepts application/json payloads.',
+    tooLargeMessage: 'The signup request body is too large.',
+  });
+
+  if (!parsedBody.ok) {
+    return jsonResponse(
+      { ok: false, message: parsedBody.message },
+      { status: parsedBody.status },
     );
   }
+
+  const payload = parsedBody.value as SubscribeRequestPayload;
 
   const email = payload?.email?.trim().toLowerCase();
   const source = normalizeSource(payload?.source);
   const honeypotFilled = hasFilledHoneypot(payload?.website);
 
-  if (!isVerifiedSignupRequest(request)) {
+  if (!isVerifiedSameSiteRequest(request)) {
     logRequestRejection('origin_mismatch', request, source);
-    return NextResponse.json(
+    return jsonResponse(
       { ok: false, message: INVALID_REQUEST_MESSAGE },
       { status: 403 },
     );
@@ -368,14 +334,14 @@ export async function POST(request: Request): Promise<Response> {
 
   if (honeypotFilled) {
     logRequestRejection('honeypot_filled', request, source);
-    return NextResponse.json(
+    return jsonResponse(
       { ok: false, message: INVALID_REQUEST_MESSAGE },
       { status: 400 },
     );
   }
 
   if (!email || !EMAIL_REGEX.test(email)) {
-    return NextResponse.json(
+    return jsonResponse(
       { ok: false, message: 'Enter a valid email address to subscribe.' },
       { status: 400 },
     );
@@ -388,7 +354,7 @@ export async function POST(request: Request): Promise<Response> {
     rateLimitResult = (await ratelimit.limit(requestIp)) as RateLimitResponse;
   } catch (error) {
     logFailure('rate_limit', error instanceof Error ? error.message : String(error));
-    return NextResponse.json(
+    return jsonResponse(
       {
         ok: false,
         message:
@@ -399,7 +365,7 @@ export async function POST(request: Request): Promise<Response> {
   }
 
   if (!rateLimitResult.success) {
-    return NextResponse.json(
+    return jsonResponse(
       { ok: false, message: 'Too many signup attempts. Please try again in a minute.' },
       {
         status: 429,
@@ -410,14 +376,17 @@ export async function POST(request: Request): Promise<Response> {
     );
   }
 
-  const { apiKey, publicationId, apiBaseUrl, configured } = getBeehiivConfig();
+  const { apiKey, publicationId, apiBaseUrl, configured, invalidApiBaseUrl } = getBeehiivConfig();
 
   if (!configured || !apiKey || !publicationId) {
-    return NextResponse.json(
+    if (invalidApiBaseUrl) {
+      logFailure('config', 'Invalid BEEHIIV_API_BASE_URL configuration.');
+    }
+
+    return jsonResponse(
       {
         ok: false,
-        message:
-          'Newsletter signup is not configured yet. Add BEEHIIV_API_KEY and BEEHIIV_PUBLICATION_ID first.',
+        message: 'Newsletter signup is temporarily unavailable. Try again shortly.',
       },
       { status: 503 },
     );
@@ -444,11 +413,10 @@ export async function POST(request: Request): Promise<Response> {
   } catch (error) {
     if (error instanceof BeehiivRequestTimeoutError) {
       logFailure('timeout', error.message);
-      return NextResponse.json(
+      return jsonResponse(
         {
           ok: false,
-          message:
-            'Beehiiv did not respond before the signup request timed out. Wait a moment and try again. If the delay continues, check Beehiiv API availability and publication settings.',
+          message: 'Newsletter signup is temporarily unavailable. Try again shortly.',
         },
         { status: 504 },
       );
@@ -456,19 +424,19 @@ export async function POST(request: Request): Promise<Response> {
 
     if (error instanceof BeehiivRequestNetworkError) {
       logFailure('network', error.message);
-      return NextResponse.json(
+      return jsonResponse(
         {
           ok: false,
-          message: 'Beehiiv could not be reached. Check network access and publication settings, then try again.',
+          message: 'Newsletter signup is temporarily unavailable. Try again shortly.',
         },
         { status: 502 },
       );
     }
 
-    return NextResponse.json(
+    return jsonResponse(
       {
         ok: false,
-        message: 'Beehiiv could not be reached. Check network access and publication settings, then try again.',
+        message: 'Newsletter signup is temporarily unavailable. Try again shortly.',
       },
       { status: 502 },
     );
@@ -484,19 +452,18 @@ export async function POST(request: Request): Promise<Response> {
 
   if (!upstreamResponse.ok) {
     const upstreamMessage = getUpstreamMessage(upstreamPayload);
+    logFailure('beehiiv_upstream', upstreamMessage || `HTTP ${upstreamResponse.status}`);
 
-    return NextResponse.json(
+    return jsonResponse(
       {
         ok: false,
-        message:
-          upstreamMessage ||
-          'Beehiiv rejected the signup request. Double-check the publication settings and try again.',
+        message: getPublicUpstreamMessage(upstreamResponse.status),
       },
       { status: upstreamResponse.status },
     );
   }
 
-  return NextResponse.json(
+  return jsonResponse(
     {
       ok: true,
       message: "You're in. Check your inbox for Beehiiv's confirmation email.",
