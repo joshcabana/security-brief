@@ -169,7 +169,7 @@ function normalizeSource(source: unknown): string {
 }
 
 function isAllowedApiBaseUrl(url: string): boolean {
-  return url === DEFAULT_API_BASE_URL || url.startsWith(`${DEFAULT_API_BASE_URL}/`);
+  return url === DEFAULT_API_BASE_URL;
 }
 
 function getReferringSite(request: Request): string {

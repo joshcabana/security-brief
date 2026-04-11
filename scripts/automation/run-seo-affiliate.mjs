@@ -32,6 +32,8 @@ function validateSeoPayload(payload) {
   }
 }
 
+const AFFILIATE_EXCLUDED_CATEGORIES = ['AI Threats', 'Incident Analysis', 'Vulnerabilities'];
+
 async function main() {
   requireEnvVars(['GITHUB_TOKEN']);
 
@@ -94,8 +96,7 @@ async function main() {
     }
 
     const category = String(parsed.data.category || '');
-    const AFFILIATE_EXCLUDED = ['AI Threats', 'Incident Analysis', 'Vulnerabilities'];
-    const injected = AFFILIATE_EXCLUDED.includes(category)
+    const injected = AFFILIATE_EXCLUDED_CATEGORIES.includes(category)
       ? { markdown: parsed.content, injected: [] }
       : injectAffiliatePlaceholders(parsed.content, placeholders);
     const nextContent = injected.markdown;
