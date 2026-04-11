@@ -5,6 +5,7 @@ import ArticleCard from '@/components/ArticleCard';
 import NewsletterForm from '@/components/NewsletterForm';
 import ShareButtons from '@/components/ShareButtons';
 import PaywallCTA from '@/components/PaywallCTA';
+import PrimarySources from '@/components/PrimarySources';
 import { getAllArticles, getArticleBySlug } from '@/lib/articles';
 import { siteUrl, siteName } from '@/lib/site';
 
@@ -163,6 +164,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
               </Link>
               <ShareButtons title={article.title} slug={article.slug} />
             </div>
+            <PrimarySources sources={article.primarySources} />
           </article>
 
           <aside className="space-y-6" aria-label="Article sidebar">
