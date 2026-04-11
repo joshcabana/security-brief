@@ -164,13 +164,21 @@ export default function PricingTiers({
             )}
           </div>
 
-          <Link
-            href="/api/stripe/checkout?plan=pro"
+          <button
+            onClick={async () => {
+              const res = await fetch('/api/stripe/checkout', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ priceId: yearly ? 'price_pro_yearly_id' : 'price_pro_monthly_id' })
+              });
+              const { url } = await res.json();
+              if (url) window.location.href = url;
+            }}
             id="pricing-pro-cta"
             className="w-full text-center py-3.5 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-sm transition-all shadow-[0_0_20px_rgba(34,211,238,0.3)] hover:shadow-[0_0_30px_rgba(34,211,238,0.5)]"
           >
             Start Pro — {proPrice}{proPeriod}
-          </Link>
+          </button>
 
           <ul className="space-y-3">
             {PRO_FEATURES.map((f) => (

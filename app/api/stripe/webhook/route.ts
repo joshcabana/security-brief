@@ -1,70 +1,56 @@
-/**
- * POST /api/stripe/webhook
- *
- * Handles Stripe webhook events. Verifies the Stripe-Signature header.
- * Currently handles:
- *   - checkout.session.completed   → provision Pro access
- *   - customer.subscription.deleted → revoke Pro access
- *   - invoice.payment_failed       → send dunning signal
- *
- * The body must be read as raw bytes for signature verification — this
- * route must NOT apply body parsing middleware. The next.config.mjs
- * bodyParser: false pattern is not needed in App Router; reading
- * request.text() gives us the raw body directly.
- */
-
 import { NextRequest, NextResponse } from 'next/server';
-import { getStripe } from '@/lib/stripe';
+import { stripe } from '@/lib/stripe';
 import type Stripe from 'stripe';
+import { createClient } from '@supabase/supabase-js';
 
 export const dynamic = 'force-dynamic';
 
-// ---------------------------------------------------------------------------
-// Event handlers — extend these as your auth/DB layer grows
-// ---------------------------------------------------------------------------
+// Supabase client specifically for Server-Side API bypassing RLS
+const supabaseAdmin = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+);
 
-async function handleCheckoutCompleted(
-  session: Stripe.Checkout.Session,
-): Promise<void> {
-  // TODO: when you add a database layer —
-  //   1. Look up the user by session.customer_email
-  //   2. Set their membership tier to 'pro'
-  //   3. Store session.subscription as their subscription ID
-  console.log('[stripe/webhook] checkout.session.completed', {
-    sessionId: session.id,
-    customerId: session.customer,
-    subscriptionId: session.subscription,
-    tier: session.metadata?.tier,
-  });
+async function handleCheckoutCompleted(session: Stripe.Checkout.Session): Promise<void> {
+  const userId = session.metadata?.userId;
+  if (!userId) {
+    console.warn('[stripe/webhook] Missing userId in metadata');
+    return;
+  }
+
+  // Determine tier based on the Price ID (could also map directly comparing environment vars)
+  // Default to pro_monthly if not explicitly mapped.
+  const tier = session.metadata?.tier || 'pro_monthly';
+
+  const { error } = await supabaseAdmin
+    .from('profiles')
+    .update({
+      subscription_status: 'active',
+      subscription_tier: tier,
+      stripe_customer_id: session.customer as string,
+      stripe_subscription_id: session.subscription as string,
+    })
+    .eq('id', userId);
+
+  if (error) {
+    console.error('[stripe/webhook] Failed to update profile:', error);
+  }
 }
 
-async function handleSubscriptionDeleted(
-  subscription: Stripe.Subscription,
-): Promise<void> {
-  // TODO: find user by subscription.customer and downgrade tier
-  console.log('[stripe/webhook] customer.subscription.deleted', {
-    subscriptionId: subscription.id,
-    customerId: subscription.customer,
-  });
-}
+async function handleSubscriptionDeleted(subscription: Stripe.Subscription): Promise<void> {
+  const { error } = await supabaseAdmin
+    .from('profiles')
+    .update({ subscription_status: 'canceled', subscription_tier: 'free' })
+    .eq('stripe_subscription_id', subscription.id);
 
-async function handlePaymentFailed(invoice: Stripe.Invoice): Promise<void> {
-  // TODO: trigger dunning email / Beehiiv tag update
-  console.log('[stripe/webhook] invoice.payment_failed', {
-    invoiceId: invoice.id,
-    customerId: invoice.customer,
-    attemptCount: invoice.attempt_count,
-  });
+  if (error) {
+    console.error('[stripe/webhook] Failed to downgrade profile:', error);
+  }
 }
-
-// ---------------------------------------------------------------------------
-// Route handler
-// ---------------------------------------------------------------------------
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
   const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
   if (!webhookSecret) {
-    console.error('[stripe/webhook] STRIPE_WEBHOOK_SECRET not set');
     return NextResponse.json({ error: 'Webhook secret not configured' }, { status: 500 });
   }
 
@@ -73,19 +59,16 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     return NextResponse.json({ error: 'Missing Stripe-Signature header' }, { status: 400 });
   }
 
-  // Read raw body for signature verification
   const rawBody = await request.text();
 
   let event: Stripe.Event;
   try {
-    event = getStripe().webhooks.constructEvent(rawBody, signature, webhookSecret);
+    event = stripe.webhooks.constructEvent(rawBody, signature, webhookSecret);
   } catch (err) {
     const message = err instanceof Error ? err.message : 'Invalid signature';
-    console.error('[stripe/webhook] signature verification failed:', message);
     return NextResponse.json({ error: `Webhook signature invalid: ${message}` }, { status: 400 });
   }
 
-  // Dispatch
   try {
     switch (event.type) {
       case 'checkout.session.completed':
@@ -94,18 +77,12 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       case 'customer.subscription.deleted':
         await handleSubscriptionDeleted(event.data.object as Stripe.Subscription);
         break;
-      case 'invoice.payment_failed':
-        await handlePaymentFailed(event.data.object as Stripe.Invoice);
-        break;
       default:
-        // Silently ignore unhandled events
         break;
     }
   } catch (err) {
-    const message = err instanceof Error ? err.message : 'Handler error';
-    console.error('[stripe/webhook] handler error:', event.type, message);
-    // Return 200 to prevent Stripe from retrying — log and handle separately
-    return NextResponse.json({ received: true, warning: message }, { status: 200 });
+    console.error('[stripe/webhook] handler error:', err);
+    return NextResponse.json({ received: true }, { status: 200 });
   }
 
   return NextResponse.json({ received: true });
