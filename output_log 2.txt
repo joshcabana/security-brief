@@ -1,0 +1,1198 @@
+
+> ai-security-brief@0.1.0 test:unit
+> node --import tsx --test tests/*.test.ts
+
+TAP version 13
+# Subtest: getAffiliateUrl returns null for missing and blank environment values
+ok 1 - getAffiliateUrl returns null for missing and blank environment values
+  ---
+  duration_ms: 0.794042
+  ...
+# Subtest: getAffiliateUrl trims configured environment values
+ok 2 - getAffiliateUrl trims configured environment values
+  ---
+  duration_ms: 0.597417
+  ...
+# Subtest: getAffiliateUrl returns null for malformed urls with unresolved placeholders
+ok 3 - getAffiliateUrl returns null for malformed urls with unresolved placeholders
+  ---
+  duration_ms: 0.073208
+  ...
+# Subtest: getAffiliateUrl returns null for invalid urls
+ok 4 - getAffiliateUrl returns null for invalid urls
+  ---
+  duration_ms: 0.076084
+  ...
+# Subtest: getAffiliateUrl rejects insecure http affiliate urls
+ok 5 - getAffiliateUrl rejects insecure http affiliate urls
+  ---
+  duration_ms: 0.050667
+  ...
+# Subtest: getAffiliateUrl rejects hostname mismatches and credentialed urls
+ok 6 - getAffiliateUrl rejects hostname mismatches and credentialed urls
+  ---
+  duration_ms: 0.057417
+  ...
+# Subtest: normalizeOutboundUrl only allows absolute https targets without placeholders
+ok 7 - normalizeOutboundUrl only allows absolute https targets without placeholders
+  ---
+  duration_ms: 0.211667
+  ...
+# Subtest: getAffiliateUrlByPriority returns the first configured affiliate url
+ok 8 - getAffiliateUrlByPriority returns the first configured affiliate url
+  ---
+  duration_ms: 0.242917
+  ...
+# Subtest: getAffiliateUrlByPriority falls back to later configured affiliate urls
+ok 9 - getAffiliateUrlByPriority falls back to later configured affiliate urls
+  ---
+  duration_ms: 0.212875
+  ...
+# Subtest: getArticleSourceCacheKey changes when article content changes
+ok 10 - getArticleSourceCacheKey changes when article content changes
+  ---
+  duration_ms: 133.420375
+  ...
+# Subtest: getArticleCacheSignature keeps source and affiliate invalidation explicit
+ok 11 - getArticleCacheSignature keeps source and affiliate invalidation explicit
+  ---
+  duration_ms: 14.936542
+  ...
+# Subtest: getArticleCacheSignature changes when affiliate env values change
+ok 12 - getArticleCacheSignature changes when affiliate env values change
+  ---
+  duration_ms: 1.885875
+  ...
+# Subtest: replaceAffiliateTokens resolves configured markdown affiliate links
+ok 13 - replaceAffiliateTokens resolves configured markdown affiliate links
+  ---
+  duration_ms: 0.48
+  ...
+# Subtest: replaceAffiliateTokens degrades markdown links to plain text when env vars are missing
+ok 14 - replaceAffiliateTokens degrades markdown links to plain text when env vars are missing
+  ---
+  duration_ms: 0.276125
+  ...
+# Subtest: replaceAffiliateTokens only resolves bare placeholders with configured urls
+ok 15 - replaceAffiliateTokens only resolves bare placeholders with configured urls
+  ---
+  duration_ms: 0.182166
+  ...
+# Subtest: parseArticleSource renders resolved affiliate links into article html for allowed categories
+ok 16 - parseArticleSource renders resolved affiliate links into article html for allowed categories
+  ---
+  duration_ms: 131.20725
+  ...
+# Subtest: parseArticleSource strips affiliate links for AI Threats category
+ok 17 - parseArticleSource strips affiliate links for AI Threats category
+  ---
+  duration_ms: 2.690667
+  ...
+# Subtest: analytics state resolution reflects the configured tracking stack
+ok 18 - analytics state resolution reflects the configured tracking stack
+  ---
+  duration_ms: 1.258959
+  ...
+# Subtest: privacy analytics contract passes for plausible-only, linkedin-only, and disabled states
+ok 19 - privacy analytics contract passes for plausible-only, linkedin-only, and disabled states
+  ---
+  duration_ms: 0.459959
+  ...
+# Subtest: privacy analytics contract flags mismatches between disclosure and rendered script state
+ok 20 - privacy analytics contract flags mismatches between disclosure and rendered script state
+  ---
+  duration_ms: 0.281917
+  ...
+# Subtest: article route stays dynamically rendered so runtime affiliate links are current
+ok 21 - article route stays dynamically rendered so runtime affiliate links are current
+  ---
+  duration_ms: 0.767333
+  ...
+# Subtest: loadArticlesFromDirectory sorts articles by descending date and then slug
+ok 22 - loadArticlesFromDirectory sorts articles by descending date and then slug
+  ---
+  duration_ms: 252.213666
+  ...
+# Subtest: parseArticleSource rejects malformed read_time values
+ok 23 - parseArticleSource rejects malformed read_time values
+  ---
+  duration_ms: 0.752583
+  ...
+# Subtest: parseArticleSource rejects invalid dates
+ok 24 - parseArticleSource rejects invalid dates
+  ---
+  duration_ms: 0.604667
+  ...
+# Subtest: parseArticleSource rejects scalar author values
+ok 25 - parseArticleSource rejects scalar author values
+  ---
+  duration_ms: 0.65275
+  ...
+# Subtest: parseArticleSource rejects brand-level author names
+ok 26 - parseArticleSource rejects brand-level author names
+  ---
+  duration_ms: 0.678334
+  ...
+# Subtest: parseArticleSource rejects invalid author profile URLs
+ok 27 - parseArticleSource rejects invalid author profile URLs
+  ---
+  duration_ms: 0.569875
+  ...
+# Subtest: parseArticleSource rejects missing primary sources
+ok 28 - parseArticleSource rejects missing primary sources
+  ---
+  duration_ms: 0.700167
+  ...
+# Subtest: parseArticleSource rejects invalid primary source urls
+ok 29 - parseArticleSource rejects invalid primary source urls
+  ---
+  duration_ms: 0.895584
+  ...
+# Subtest: loadArticlesFromDirectory rejects duplicate slugs
+ok 30 - loadArticlesFromDirectory rejects duplicate slugs
+  ---
+  duration_ms: 16.301916
+  ...
+# Subtest: parseArticleSource rejects empty categories
+ok 31 - parseArticleSource rejects empty categories
+  ---
+  duration_ms: 0.857208
+  ...
+# Subtest: parseArticleSource rejects unsafe slugs that could break routing and metadata contexts
+ok 32 - parseArticleSource rejects unsafe slugs that could break routing and metadata contexts
+  ---
+  duration_ms: 0.559541
+  ...
+# Subtest: parseArticleSource strips unsafe HTML from rendered article content and metadata fields
+ok 33 - parseArticleSource strips unsafe HTML from rendered article content and metadata fields
+  ---
+  duration_ms: 113.392041
+  ...
+# Subtest: weekly-harvest.yml wires the scheduled model workflow with dispatch controls and a schedule gate
+ok 34 - weekly-harvest.yml wires the scheduled model workflow with dispatch controls and a schedule gate
+  ---
+  duration_ms: 1.049
+  ...
+# Subtest: article-factory.yml wires the scheduled model workflow with dispatch controls and a schedule gate
+ok 35 - article-factory.yml wires the scheduled model workflow with dispatch controls and a schedule gate
+  ---
+  duration_ms: 0.960792
+  ...
+# Subtest: newsletter-compiler.yml wires the scheduled model workflow with dispatch controls and a schedule gate
+ok 36 - newsletter-compiler.yml wires the scheduled model workflow with dispatch controls and a schedule gate
+  ---
+  duration_ms: 0.4915
+  ...
+# Subtest: seo-affiliate.yml wires the scheduled model workflow with dispatch controls and a schedule gate
+ok 37 - seo-affiliate.yml wires the scheduled model workflow with dispatch controls and a schedule gate
+  ---
+  duration_ms: 0.640208
+  ...
+# Subtest: performance-logger.yml wires Beehiiv-backed performance logging with schedule gating and manual dispatch support
+ok 38 - performance-logger.yml wires Beehiiv-backed performance logging with schedule gating and manual dispatch support
+  ---
+  duration_ms: 0.6795
+  ...
+# Subtest: schedule gate respects Australia/Sydney local hours across DST boundaries
+ok 39 - schedule gate respects Australia/Sydney local hours across DST boundaries
+  ---
+  duration_ms: 24.728708
+  ...
+# Subtest: schedule gate accepts same-day runs within the configured one-hour grace window
+ok 40 - schedule gate accepts same-day runs within the configured one-hour grace window
+  ---
+  duration_ms: 0.694959
+  ...
+# Subtest: automation identity uses ISO week naming for content and performance branches
+ok 41 - automation identity uses ISO week naming for content and performance branches
+  ---
+  duration_ms: 1.068833
+  ...
+# Subtest: automation commit allowlists reject unsafe path roots and isolate disallowed changes
+ok 42 - automation commit allowlists reject unsafe path roots and isolate disallowed changes
+  ---
+  duration_ms: 2.116292
+  ...
+# Subtest: GitHub Models client retries once when the first response is invalid JSON
+ok 43 - GitHub Models client retries once when the first response is invalid JSON
+  ---
+  duration_ms: 63.205
+  ...
+# Subtest: GitHub Models guarded text mode isolates untrusted source material inside TEXT tags
+ok 44 - GitHub Models guarded text mode isolates untrusted source material inside TEXT tags
+  ---
+  duration_ms: 0.429833
+  ...
+# Subtest: feed parser and selector keep AI security stories and drop low-signal items
+ok 45 - feed parser and selector keep AI security stories and drop low-signal items
+  ---
+  duration_ms: 18.104833
+  ...
+# Subtest: feed parser strips hidden prompt injection content before building summaries
+ok 46 - feed parser strips hidden prompt injection content before building summaries
+  ---
+  duration_ms: 2.151666
+  ...
+# Subtest: harvest renderer round-trips structured findings
+ok 47 - harvest renderer round-trips structured findings
+  ---
+  duration_ms: 3.608708
+  ...
+# Subtest: article plan resolves duplicate slugs deterministically
+ok 48 - article plan resolves duplicate slugs deterministically
+  ---
+  duration_ms: 1.210709
+  ...
+# Subtest: article plan reuses current-week slugs on rerun before creating new duplicates
+ok 49 - article plan reuses current-week slugs on rerun before creating new duplicates
+  ---
+  duration_ms: 0.606917
+  ...
+# Subtest: current-week stale article duplicates are identified for cleanup
+ok 50 - current-week stale article duplicates are identified for cleanup
+  ---
+  duration_ms: 0.271083
+  ...
+# Subtest: affiliate placeholder injection only annotates the first matching vendor mention
+ok 51 - affiliate placeholder injection only annotates the first matching vendor mention
+  ---
+  duration_ms: 0.539542
+  ...
+# Subtest: affiliate placeholder injection ignores unsupported legacy vendors
+ok 52 - affiliate placeholder injection ignores unsupported legacy vendors
+  ---
+  duration_ms: 0.271583
+  ...
+# Subtest: affiliate program parser derives deterministic rotation names and placeholder keys
+ok 53 - affiliate program parser derives deterministic rotation names and placeholder keys
+  ---
+  duration_ms: 0.378125
+  ...
+# Subtest: newsletter issue helpers parse issue numbers and advance from the highest existing issue
+ok 54 - newsletter issue helpers parse issue numbers and advance from the highest existing issue
+  ---
+  duration_ms: 0.342084
+  ...
+# Subtest: newsletter issue helper preserves the existing issue number on force-regeneration
+ok 55 - newsletter issue helper preserves the existing issue number on force-regeneration
+  ---
+  duration_ms: 0.132459
+  ...
+# Subtest: article renderer appends a slug-specific newsletter CTA link
+ok 56 - article renderer appends a slug-specific newsletter CTA link
+  ---
+  duration_ms: 0.841917
+  ...
+# Subtest: newsletter renderer tags the forwarded subscribe CTA with the issue source
+ok 57 - newsletter renderer tags the forwarded subscribe CTA with the issue source
+  ---
+  duration_ms: 0.698
+  ...
+# Subtest: prompt builders preserve JSON contracts while keeping untrusted content out of the instruction prompt
+ok 58 - prompt builders preserve JSON contracts while keeping untrusted content out of the instruction prompt
+  ---
+  duration_ms: 1.63475
+  ...
+# Subtest: article, newsletter, and SEO automations keep untrusted context inside guarded TEXT boundaries
+ok 59 - article, newsletter, and SEO automations keep untrusted context inside guarded TEXT boundaries
+  ---
+  duration_ms: 2.052417
+  ...
+# Subtest: performance log upsert replaces placeholder row and updates same-date entries
+ok 60 - performance log upsert replaces placeholder row and updates same-date entries
+  ---
+  duration_ms: 0.696917
+  ...
+# Subtest: performance helpers count active subscribers and gracefully handle empty post stats
+ok 61 - performance helpers count active subscribers and gracefully handle empty post stats
+  ---
+  duration_ms: 0.721875
+  ...
+# Subtest: Beehiiv API base URL resolver falls back to the default for empty values
+ok 62 - Beehiiv API base URL resolver falls back to the default for empty values
+  ---
+  duration_ms: 0.785458
+  ...
+# Subtest: Beehiiv API base URL resolver only accepts the official Beehiiv API host or explicit loopback mocks
+ok 63 - Beehiiv API base URL resolver only accepts the official Beehiiv API host or explicit loopback mocks
+  ---
+  duration_ms: 0.697625
+  ...
+# Subtest: expected Monday pipeline branches follow the content-plus-prior-Sunday performance model
+ok 64 - expected Monday pipeline branches follow the content-plus-prior-Sunday performance model
+  ---
+  duration_ms: 2.869083
+  ...
+# Subtest: run dates are resolved in Australia/Sydney local time
+ok 65 - run dates are resolved in Australia/Sydney local time
+  ---
+  duration_ms: 64.184667
+  ...
+# Subtest: pipeline evaluation passes when both PRs exist and all workflows succeed
+ok 66 - pipeline evaluation passes when both PRs exist and all workflows succeed
+  ---
+  duration_ms: 0.623917
+  ...
+# Subtest: pipeline evaluation reports missing PRs and gate-skipped runs
+ok 67 - pipeline evaluation reports missing PRs and gate-skipped runs
+  ---
+  duration_ms: 0.456875
+  ...
+# Subtest: content-manifest writes a sorted manifest for a valid workspace
+ok 68 - content-manifest writes a sorted manifest for a valid workspace
+  ---
+  duration_ms: 187.917875
+  ...
+# Subtest: content-manifest rejects duplicate slugs
+ok 69 - content-manifest rejects duplicate slugs
+  ---
+  duration_ms: 154.217417
+  ...
+# Subtest: content-manifest rejects malformed read_time values
+ok 70 - content-manifest rejects malformed read_time values
+  ---
+  duration_ms: 197.193709
+  ...
+# Subtest: content-manifest rejects invalid dates
+ok 71 - content-manifest rejects invalid dates
+  ---
+  duration_ms: 197.444917
+  ...
+# Subtest: content-manifest rejects empty category values
+ok 72 - content-manifest rejects empty category values
+  ---
+  duration_ms: 195.705167
+  ...
+# Subtest: content-manifest rejects brand-level author names
+ok 73 - content-manifest rejects brand-level author names
+  ---
+  duration_ms: 237.87775
+  ...
+# Subtest: content-manifest rejects missing primary sources
+ok 74 - content-manifest rejects missing primary sources
+  ---
+  duration_ms: 111.731
+  ...
+# Subtest: deploy workflow verifies preview deployments on pull requests and uploads a preview artifact
+ok 75 - deploy workflow verifies preview deployments on pull requests and uploads a preview artifact
+  ---
+  duration_ms: 1.642375
+  ...
+# Subtest: deploy workflow sanitises the Vercel deploy URL and keeps production live verification warn-only
+ok 76 - deploy workflow sanitises the Vercel deploy URL and keeps production live verification warn-only
+  ---
+  duration_ms: 0.986667
+  ...
+# Subtest: workflows use pnpm action-setup v5 instead of the deprecated v4 runtime
+ok 77 - workflows use pnpm action-setup v5 instead of the deprecated v4 runtime
+  ---
+  duration_ms: 1.474959
+  ...
+# Subtest: deploy workflow keeps read-only permissions by default and disables checkout credential persistence on non-push jobs
+ok 78 - deploy workflow keeps read-only permissions by default and disables checkout credential persistence on non-push jobs
+  ---
+  duration_ms: 0.671334
+  ...
+# Subtest: README and STATUS reflect the published MIT license and canonical PR gate
+ok 79 - README and STATUS reflect the published MIT license and canonical PR gate
+  ---
+  duration_ms: 2.09525
+  ...
+# Subtest: README documents the full optional runtime env surface used by the app
+ok 80 - README documents the full optional runtime env surface used by the app
+  ---
+  duration_ms: 0.444084
+  ...
+# Subtest: README documents the status sync workflow and the analytics-aware live verification command
+ok 81 - README documents the status sync workflow and the analytics-aware live verification command
+  ---
+  duration_ms: 0.54275
+  ...
+# Subtest: STATUS documents the active distributed subscribe rate limit
+ok 82 - STATUS documents the active distributed subscribe rate limit
+  ---
+  duration_ms: 0.830791
+  ...
+# Subtest: Beehiiv setup guide includes the first live send runbook
+ok 83 - Beehiiv setup guide includes the first live send runbook
+  ---
+  duration_ms: 0.558375
+  ...
+# Subtest: affiliate status docs required by content verification are tracked in git
+ok 84 - affiliate status docs required by content verification are tracked in git
+  ---
+  duration_ms: 108.218333
+  ...
+# Subtest: generate-status records repository license metadata from LICENSE
+ok 85 - generate-status records repository license metadata from LICENSE
+  ---
+  duration_ms: 135.362166
+  ...
+# Subtest: generate-status prefers CI runtime identity over stale STATUS.md deploy prose
+ok 86 - generate-status prefers CI runtime identity over stale STATUS.md deploy prose
+  ---
+  duration_ms: 70.854667
+  ...
+# Subtest: decodeVercelCommentMetadata parses the embedded Vercel payload
+ok 87 - decodeVercelCommentMetadata parses the embedded Vercel payload
+  ---
+  duration_ms: 1.783125
+  ...
+# Subtest: normalisePreviewUrl adds https to bare Vercel hostnames and trims trailing slashes
+ok 88 - normalisePreviewUrl adds https to bare Vercel hostnames and trims trailing slashes
+  ---
+  duration_ms: 0.368959
+  ...
+# Subtest: extractPreviewUrlFromComments returns the deployed preview URL for the matching Vercel project
+ok 89 - extractPreviewUrlFromComments returns the deployed preview URL for the matching Vercel project
+  ---
+  duration_ms: 0.463916
+  ...
+# Subtest: extractPreviewUrlFromComments does not fall back to an older deployed preview when the latest Vercel comment is still building
+ok 90 - extractPreviewUrlFromComments does not fall back to an older deployed preview when the latest Vercel comment is still building
+  ---
+  duration_ms: 0.194542
+  ...
+# Subtest: waitForPreviewUrl retries until the Vercel preview metadata reports DEPLOYED
+ok 91 - waitForPreviewUrl retries until the Vercel preview metadata reports DEPLOYED
+  ---
+  duration_ms: 0.568709
+  ...
+# Subtest: waitForPreviewUrl raises a timeout error when the preview never reaches DEPLOYED
+ok 92 - waitForPreviewUrl raises a timeout error when the preview never reaches DEPLOYED
+  ---
+  duration_ms: 20.037833
+  ...
+# Subtest: getAutomationBypassToken returns the automation bypass token from the Vercel response shape
+ok 93 - getAutomationBypassToken returns the automation bypass token from the Vercel response shape
+  ---
+  duration_ms: 0.749792
+  ...
+# Subtest: vercelApiRequest scopes team requests with the teamId query parameter
+ok 94 - vercelApiRequest scopes team requests with the teamId query parameter
+  ---
+  duration_ms: 70.074333
+  ...
+# Subtest: resolveProtectionBypassToken reuses an existing automation bypass token without creating a new one
+ok 95 - resolveProtectionBypassToken reuses an existing automation bypass token without creating a new one
+  ---
+  duration_ms: 0.49975
+  ...
+# Subtest: resolveProtectionBypassToken creates an automation bypass token when the project has none configured
+ok 96 - resolveProtectionBypassToken creates an automation bypass token when the project has none configured
+  ---
+  duration_ms: 0.473959
+  ...
+# Subtest: resolveProtectionBypassToken honours an explicit bypass token without calling the Vercel API
+ok 97 - resolveProtectionBypassToken honours an explicit bypass token without calling the Vercel API
+  ---
+  duration_ms: 0.063209
+  ...
+# Subtest: vercelApiRequest includes status and body details when the Vercel API returns an error
+ok 98 - vercelApiRequest includes status and body details when the Vercel API returns an error
+  ---
+  duration_ms: 0.640791
+  ...
+# Subtest: health route requires authentication in production even when no token is configured
+ok 99 - health route requires authentication in production even when no token is configured
+  ---
+  duration_ms: 15.566417
+  ...
+# Subtest: health route returns detailed checks for authenticated requests
+ok 100 - health route returns detailed checks for authenticated requests
+  ---
+  duration_ms: 2.829916
+  ...
+# Subtest: default inbox triage policy locks the mailbox, connector, and reply-policy guardrails
+ok 101 - default inbox triage policy locks the mailbox, connector, and reply-policy guardrails
+  ---
+  duration_ms: 0.907709
+  ...
+# Subtest: profile prompt explicitly uses the Gmail app connector and forbids mailbox mutations
+ok 102 - profile prompt explicitly uses the Gmail app connector and forbids mailbox mutations
+  ---
+  duration_ms: 0.243958
+  ...
+# Subtest: triage prompt embeds memory and honors dry-run draft suppression
+ok 103 - triage prompt embeds memory and honors dry-run draft suppression
+  ---
+  duration_ms: 0.683292
+  ...
+# Subtest: browser triage prompt uses supplied mailbox snapshot data and returns explicit draft requests
+ok 104 - browser triage prompt uses supplied mailbox snapshot data and returns explicit draft requests
+  ---
+  duration_ms: 0.356292
+  ...
+# Subtest: browser search queries include recent project, priority, ops, and memory follow-up scans
+ok 105 - browser search queries include recent project, priority, ops, and memory follow-up scans
+  ---
+  duration_ms: 0.641708
+  ...
+# Subtest: failure result renders as a visible failed operator brief
+ok 106 - failure result renders as a visible failed operator brief
+  ---
+  duration_ms: 17.979625
+  ...
+# Subtest: memory merge tracks handled threads, drafts, follow-ups, and advice history
+ok 107 - memory merge tracks handled threads, drafts, follow-ups, and advice history
+  ---
+  duration_ms: 0.57125
+  ...
+# Subtest: report paths use the dated timestamp under the gmail-triage reports directory
+ok 108 - report paths use the dated timestamp under the gmail-triage reports directory
+  ---
+  duration_ms: 2.578291
+  ...
+# Subtest: serializeJsonForHtml escapes script-breaking and parser-breaking characters
+ok 109 - serializeJsonForHtml escapes script-breaking and parser-breaking characters
+  ---
+  duration_ms: 0.796416
+  ...
+# {"level":"warn","event":"lead_capture_rejected","reason":"origin_mismatch","source":"lead-capture","submitted_origin":"https://attacker.example"}
+# {"level":"info","event":"lead_captured","email_domain":"example.com","job_title":"Security Engineer","source":"lead-capture","asset":"unknown","timestamp":"2026-04-08T17:08:21.705Z"}
+# {"level":"info","event":"lead_captured","email_domain":"example.com","job_title":"Security Engineer","source":"linkedin-document-ad","asset":"report-teaser","timestamp":"2026-04-08T17:08:21.709Z"}
+# {"level":"error","event":"lead_capture_failed","failure":"beehiiv_upstream","error_message":"Mock Beehiiv lead rejection."}
+# {"level":"error","event":"lead_capture_failed","failure":"config","error_message":"Invalid BEEHIIV_API_BASE_URL configuration."}
+# Subtest: lead capture rejects off-site requests
+ok 110 - lead capture rejects off-site requests
+  ---
+  duration_ms: 9.148792
+  ...
+# Subtest: lead capture rejects non-json content types, oversized bodies, and non-object json payloads
+ok 111 - lead capture rejects non-json content types, oversized bodies, and non-object json payloads
+  ---
+  duration_ms: 2.158917
+  ...
+# Subtest: lead capture sanitises source and asset fields before sending them upstream
+ok 112 - lead capture sanitises source and asset fields before sending them upstream
+  ---
+  duration_ms: 5.593875
+  ...
+# Subtest: lead capture preserves valid assessment campaign source fields
+ok 113 - lead capture preserves valid assessment campaign source fields
+  ---
+  duration_ms: 1.80425
+  ...
+# Subtest: lead capture does not expose upstream Beehiiv errors to clients
+ok 114 - lead capture does not expose upstream Beehiiv errors to clients
+  ---
+  duration_ms: 2.593333
+  ...
+# Subtest: lead capture rejects invalid Beehiiv API base URLs before making an upstream request
+ok 115 - lead capture rejects invalid Beehiiv API base URLs before making an upstream request
+  ---
+  duration_ms: 1.754792
+  ...
+# Subtest: newsletter source sanitization accepts only lowercase letters digits and hyphens
+ok 116 - newsletter source sanitization accepts only lowercase letters digits and hyphens
+  ---
+  duration_ms: 0.819166
+  ...
+# Subtest: newsletter source resolution falls back to the page default when query values are invalid
+ok 117 - newsletter source resolution falls back to the page default when query values are invalid
+  ---
+  duration_ms: 0.339917
+  ...
+# Subtest: search param coercion keeps a single string value from App Router search params
+ok 118 - search param coercion keeps a single string value from App Router search params
+  ---
+  duration_ms: 0.111375
+  ...
+# Subtest: newsletter path builder encodes tagged entry points
+ok 119 - newsletter path builder encodes tagged entry points
+  ---
+  duration_ms: 0.07575
+  ...
+# Subtest: lint script uses eslint CLI instead of interactive next lint
+ok 120 - lint script uses eslint CLI instead of interactive next lint
+  ---
+  duration_ms: 0.824125
+  ...
+# Subtest: verify:pr script runs the canonical PR QA gate in sequence
+ok 121 - verify:pr script runs the canonical PR QA gate in sequence
+  ---
+  duration_ms: 0.169666
+  ...
+# Subtest: verify:live:matrix script points at the local matrix runner
+ok 122 - verify:live:matrix script points at the local matrix runner
+  ---
+  duration_ms: 0.101667
+  ...
+# Subtest: status:sync script points at the repo-local status sync runner
+ok 123 - status:sync script points at the repo-local status sync runner
+  ---
+  duration_ms: 51.899292
+  ...
+# Subtest: automation:inbox-triage script points at the repo-local Gmail triage runner
+ok 124 - automation:inbox-triage script points at the repo-local Gmail triage runner
+  ---
+  duration_ms: 2.5465
+  ...
+# Subtest: repo pins Node.js 20.x for local, CI, and Vercel builds
+ok 125 - repo pins Node.js 20.x for local, CI, and Vercel builds
+  ---
+  duration_ms: 0.469833
+  ...
+# Subtest: trust and production verification scripts point at the new repo-local runners
+ok 126 - trust and production verification scripts point at the new repo-local runners
+  ---
+  duration_ms: 0.124334
+  ...
+# Subtest: eslint flat config exists and extends next core web vitals
+ok 127 - eslint flat config exists and extends next core web vitals
+  ---
+  duration_ms: 0.774791
+  ...
+# Subtest: dependency versions stay on patched security releases
+ok 128 - dependency versions stay on patched security releases
+  ---
+  duration_ms: 0.313584
+  ...
+# Subtest: createPageMetadata applies a self-canonical path to static pages
+ok 129 - createPageMetadata applies a self-canonical path to static pages
+  ---
+  duration_ms: 1.288708
+  ...
+# Subtest: createPageMetadata preserves page-specific social metadata overrides
+ok 130 - createPageMetadata preserves page-specific social metadata overrides
+  ---
+  duration_ms: 0.120125
+  ...
+# Subtest: verified metadata and privacy analytics declarations match the live contract
+ok 131 - verified metadata and privacy analytics declarations match the live contract
+  ---
+  duration_ms: 0.267625
+  ...
+# Subtest: privacy page discloses Upstash abuse-prevention handling
+ok 132 - privacy page discloses Upstash abuse-prevention handling
+  ---
+  duration_ms: 23.811667
+  ...
+# Subtest: rate limiting disables Upstash analytics collection
+ok 133 - rate limiting disables Upstash analytics collection
+  ---
+  duration_ms: 1.402083
+  ...
+# Subtest: dry-run mode reports tokens without writing files
+ok 134 - dry-run mode reports tokens without writing files
+  ---
+  duration_ms: 143.884292
+  ...
+# Subtest: --include-drafts processes draft tokens when drafts are present
+ok 135 - --include-drafts processes draft tokens when drafts are present
+  ---
+  duration_ms: 68.262125
+  ...
+# Subtest: --write mode replaces populated tokens across files and duplicates
+ok 136 - --write mode replaces populated tokens across files and duplicates
+  ---
+  duration_ms: 118.694708
+  ...
+# Subtest: --include-drafts does not fail when drafts directory is missing
+ok 137 - --include-drafts does not fail when drafts directory is missing
+  ---
+  duration_ms: 65.700625
+  ...
+# Subtest: local affiliate-links.json overrides the repo template when HOME is set
+ok 138 - local affiliate-links.json overrides the repo template when HOME is set
+  ---
+  duration_ms: 77.084167
+  ...
+# Subtest: AFFILIATE_LINKS_PATH takes precedence over local and repo mappings
+ok 139 - AFFILIATE_LINKS_PATH takes precedence over local and repo mappings
+  ---
+  duration_ms: 112.913334
+  ...
+# Subtest: tokens with empty mappings are skipped in write mode
+ok 140 - tokens with empty mappings are skipped in write mode
+  ---
+  duration_ms: 65.787208
+  ...
+# Subtest: missing affiliate-links.json exits with a clear error
+ok 141 - missing affiliate-links.json exits with a clear error
+  ---
+  duration_ms: 91.873167
+  ...
+# Subtest: malformed JSON and missing blog directory exit clearly
+ok 142 - malformed JSON and missing blog directory exit clearly
+  ---
+  duration_ms: 115.311792
+  ...
+# Subtest: invalid affiliate mapping urls fail closed before replacements are applied
+ok 143 - invalid affiliate mapping urls fail closed before replacements are applied
+  ---
+  duration_ms: 47.5565
+  ...
+# Subtest: getRequestIp prefers x-vercel-forwarded-for over other proxy headers
+ok 144 - getRequestIp prefers x-vercel-forwarded-for over other proxy headers
+  ---
+  duration_ms: 54.573667
+  ...
+# Subtest: getRequestIp falls back to the next valid proxy header when earlier values are malformed
+ok 145 - getRequestIp falls back to the next valid proxy header when earlier values are malformed
+  ---
+  duration_ms: 5.451625
+  ...
+# Subtest: getRequestIp returns the anonymous fallback when no valid proxy headers are present
+ok 146 - getRequestIp returns the anonymous fallback when no valid proxy headers are present
+  ---
+  duration_ms: 8.639791
+  ...
+# Subtest: sanitizeMarketingField lowercases valid values and falls back for invalid tokens
+ok 147 - sanitizeMarketingField lowercases valid values and falls back for invalid tokens
+  ---
+  duration_ms: 0.463459
+  ...
+# Subtest: parseJsonRequestBody rejects non-json content types, oversized bodies, and non-object payloads
+ok 148 - parseJsonRequestBody rejects non-json content types, oversized bodies, and non-object payloads
+  ---
+  duration_ms: 4.010583
+  ...
+# Subtest: README surfaces the new revenue ops docs and manual CRM starter
+ok 149 - README surfaces the new revenue ops docs and manual CRM starter
+  ---
+  duration_ms: 27.796834
+  ...
+# Subtest: launch checklist includes live assessment booking and payment env setup
+ok 150 - launch checklist includes live assessment booking and payment env setup
+  ---
+  duration_ms: 0.617
+  ...
+# Subtest: revenue ops runbook covers follow-up rules, payment rules, testimonial capture, retainer timing, and reporting
+ok 151 - revenue ops runbook covers follow-up rules, payment rules, testimonial capture, retainer timing, and reporting
+  ---
+  duration_ms: 0.486458
+  ...
+# Subtest: founder sales asset pack contains the promised LinkedIn, outreach, proposal, payment, testimonial, and upsell templates
+ok 152 - founder sales asset pack contains the promised LinkedIn, outreach, proposal, payment, testimonial, and upsell templates
+  ---
+  duration_ms: 0.448375
+  ...
+# Subtest: manual CRM template is tracked and keeps the core revenue-stage columns
+ok 153 - manual CRM template is tracked and keeps the core revenue-stage columns
+  ---
+  duration_ms: 0.578875
+  ...
+# Subtest: security headers expose the expected baseline response protections
+ok 154 - security headers expose the expected baseline response protections
+  ---
+  duration_ms: 1.34375
+  ...
+# Subtest: content security policy blocks embedding and unsafe object execution
+ok 155 - content security policy blocks embedding and unsafe object execution
+  ---
+  duration_ms: 0.213
+  ...
+# Subtest: security header helpers return fresh header objects
+ok 156 - security header helpers return fresh header objects
+  ---
+  duration_ms: 0.34375
+  ...
+# Subtest: next config applies the static fallback security headers to every route
+ok 157 - next config applies the static fallback security headers to every route
+  ---
+  duration_ms: 0.488
+  ...
+# Subtest: Beehiiv runtime config targets the AI Security Brief publication host
+ok 158 - Beehiiv runtime config targets the AI Security Brief publication host
+  ---
+  duration_ms: 0.689167
+  ...
+# Subtest: Beehiiv runtime config uses the same publication hostname for member flows
+ok 159 - Beehiiv runtime config uses the same publication hostname for member flows
+  ---
+  duration_ms: 0.16125
+  ...
+# Subtest: Beehiiv checkout stays disabled by default until public checkout is explicitly enabled
+ok 160 - Beehiiv checkout stays disabled by default until public checkout is explicitly enabled
+  ---
+  duration_ms: 0.095459
+  ...
+# Subtest: founder LinkedIn URL defaults to the current public profile and ignores invalid overrides
+ok 161 - founder LinkedIn URL defaults to the current public profile and ignores invalid overrides
+  ---
+  duration_ms: 0.371959
+  ...
+# Subtest: assessment booking and payment URLs only accept public https links
+ok 162 - assessment booking and payment URLs only accept public https links
+  ---
+  duration_ms: 0.326833
+  ...
+# Subtest: site url contract falls back safely and only accepts https or explicit localhost development urls
+ok 163 - site url contract falls back safely and only accepts https or explicit localhost development urls
+  ---
+  duration_ms: 0.320875
+  ...
+# Subtest: buildStatusSnapshot overlays deploy identity from runtime and reports drift when STATUS.md lags
+ok 164 - buildStatusSnapshot overlays deploy identity from runtime and reports drift when STATUS.md lags
+  ---
+  duration_ms: 4.146584
+  ...
+# Subtest: buildStatusSnapshot does not report drift when STATUS.md and runtime deploy identity match
+ok 165 - buildStatusSnapshot does not report drift when STATUS.md and runtime deploy identity match
+  ---
+  duration_ms: 0.366834
+  ...
+# Subtest: buildStatusSnapshot leaves STATUS.md deploy identity untouched when runtime metadata is unavailable
+ok 166 - buildStatusSnapshot leaves STATUS.md deploy identity untouched when runtime metadata is unavailable
+  ---
+  duration_ms: 0.607542
+  ...
+# Subtest: buildStatusSnapshot drops malformed runtime urls and falls back to the canonical public production url
+ok 167 - buildStatusSnapshot drops malformed runtime urls and falls back to the canonical public production url
+  ---
+  duration_ms: 0.245542
+  ...
+# Subtest: status.json route returns the public status snapshot with no-store caching
+ok 168 - status.json route returns the public status snapshot with no-store caching
+  ---
+  duration_ms: 7.607625
+  ...
+# Subtest: formatStatusDate renders operator-friendly Sydney dates
+ok 169 - formatStatusDate renders operator-friendly Sydney dates
+  ---
+  duration_ms: 21.755917
+  ...
+# Subtest: header and latest deploy summary builders use the current status contract
+ok 170 - header and latest deploy summary builders use the current status contract
+  ---
+  duration_ms: 0.200333
+  ...
+# Subtest: syncStatusDocumentSource updates machine-managed STATUS fields and preserves open PR lines
+ok 171 - syncStatusDocumentSource updates machine-managed STATUS fields and preserves open PR lines
+  ---
+  duration_ms: 1.577291
+  ...
+# {"level":"error","event":"beehiiv_subscribe_failed","failure":"rate_limit","error_message":"upstash unavailable"}
+# {"level":"warn","event":"newsletter_subscribe_rejected","reason":"origin_mismatch","source":"unknown","submitted_origin":"https://attacker.example","allowed_origins":["http://localhost"]}
+# {"level":"warn","event":"newsletter_subscribe_rejected","reason":"honeypot_filled","source":"unknown","submitted_origin":"http://localhost","allowed_origins":["http://localhost"]}
+# {"level":"error","event":"beehiiv_subscribe_failed","failure":"beehiiv_upstream","error_message":"Mock Beehiiv rejected the signup request."}
+# {"level":"error","event":"beehiiv_subscribe_failed","failure":"network","error_message":"Beehiiv request failed before a response was received for https://api.beehiiv.com/v2/publications/test-publication/subscriptions. Cause: Error: network down. Check network access and Beehiiv publication settings."}
+# {"level":"warn","event":"beehiiv_subscribe_retry","attempt":1,"max_attempts":2,"status":429,"retry_delay_ms":0}
+# Subtest: subscribe route returns 503 when Beehiiv is not configured
+ok 172 - subscribe route returns 503 when Beehiiv is not configured
+  ---
+  duration_ms: 11.922666
+  ...
+# Subtest: subscribe route returns 503 when Upstash rate limiting is unreachable
+ok 173 - subscribe route returns 503 when Upstash rate limiting is unreachable
+  ---
+  duration_ms: 4.93025
+  ...
+# Subtest: subscribe route returns 400 for invalid JSON payloads
+ok 174 - subscribe route returns 400 for invalid JSON payloads
+  ---
+  duration_ms: 1.118625
+  ...
+# Subtest: subscribe route returns 400 for invalid JSON payloads before service configuration checks
+ok 175 - subscribe route returns 400 for invalid JSON payloads before service configuration checks
+  ---
+  duration_ms: 0.820125
+  ...
+# Subtest: subscribe route rejects non-json content types and oversized request bodies
+ok 176 - subscribe route rejects non-json content types and oversized request bodies
+  ---
+  duration_ms: 1.928833
+  ...
+# Subtest: subscribe route rejects json payloads that are not objects
+ok 177 - subscribe route rejects json payloads that are not objects
+  ---
+  duration_ms: 0.781333
+  ...
+# Subtest: subscribe route returns 400 for invalid email addresses
+ok 178 - subscribe route returns 400 for invalid email addresses
+  ---
+  duration_ms: 1.021541
+  ...
+# Subtest: subscribe route returns 400 for invalid email addresses before rate limiting runs
+ok 179 - subscribe route returns 400 for invalid email addresses before rate limiting runs
+  ---
+  duration_ms: 1.212333
+  ...
+# Subtest: subscribe route enforces rate limits before Beehiiv configuration checks
+ok 180 - subscribe route enforces rate limits before Beehiiv configuration checks
+  ---
+  duration_ms: 1.334166
+  ...
+# Subtest: subscribe route returns 403 for off-site requests
+ok 181 - subscribe route returns 403 for off-site requests
+  ---
+  duration_ms: 1.102708
+  ...
+# Subtest: subscribe route accepts same-site referer headers when origin is absent
+ok 182 - subscribe route accepts same-site referer headers when origin is absent
+  ---
+  duration_ms: 2.004208
+  ...
+# Subtest: subscribe route returns 400 when the honeypot field is filled
+ok 183 - subscribe route returns 400 when the honeypot field is filled
+  ---
+  duration_ms: 1.274333
+  ...
+# Subtest: subscribe route does not expose upstream Beehiiv errors to clients
+ok 184 - subscribe route does not expose upstream Beehiiv errors to clients
+  ---
+  duration_ms: 1.48575
+  ...
+# Subtest: subscribe route returns 502 when Beehiiv cannot be reached
+ok 185 - subscribe route returns 502 when Beehiiv cannot be reached
+  ---
+  duration_ms: 0.745333
+  ...
+# {"level":"error","event":"beehiiv_subscribe_failed","failure":"timeout","error_message":"Beehiiv request timed out after 10000ms for https://api.beehiiv.com/v2/publications/test-publication/subscriptions. Try again shortly or verify Beehiiv API availability."}
+# {"level":"error","event":"beehiiv_subscribe_failed","failure":"config","error_message":"Invalid BEEHIIV_API_BASE_URL configuration."}
+# Subtest: subscribe route retries once when Beehiiv responds with 429 before succeeding
+ok 186 - subscribe route retries once when Beehiiv responds with 429 before succeeding
+  ---
+  duration_ms: 6.282667
+  ...
+# Subtest: subscribe route prefers the Vercel forwarded IP header for distributed rate limiting
+ok 187 - subscribe route prefers the Vercel forwarded IP header for distributed rate limiting
+  ---
+  duration_ms: 1.073
+  ...
+# Subtest: subscribe route returns 429 after five rapid requests from the same IP
+ok 188 - subscribe route returns 429 after five rapid requests from the same IP
+  ---
+  duration_ms: 3.546833
+  ...
+# Subtest: subscribe route returns 504 when Beehiiv times out
+ok 189 - subscribe route returns 504 when Beehiiv times out
+  ---
+  duration_ms: 1.638083
+  ...
+# Subtest: subscribe route returns 200 on a successful Beehiiv response
+ok 190 - subscribe route returns 200 on a successful Beehiiv response
+  ---
+  duration_ms: 3.818625
+  ...
+# Subtest: subscribe route defaults the placement source to unknown when omitted
+ok 191 - subscribe route defaults the placement source to unknown when omitted
+  ---
+  duration_ms: 0.707333
+  ...
+# Subtest: subscribe route falls back to unknown when the placement source contains invalid characters
+ok 192 - subscribe route falls back to unknown when the placement source contains invalid characters
+  ---
+  duration_ms: 0.457917
+  ...
+# Subtest: subscribe route falls back to unknown when the placement source exceeds the allowed length
+ok 193 - subscribe route falls back to unknown when the placement source exceeds the allowed length
+  ---
+  duration_ms: 0.314
+  ...
+# Subtest: subscribe route rejects invalid Beehiiv API base URLs before making an upstream request
+ok 194 - subscribe route rejects invalid Beehiiv API base URLs before making an upstream request
+  ---
+  duration_ms: 1.2805
+  ...
+# Subtest: subscribe route enrolls the Beehiiv welcome automation when configured
+ok 195 - subscribe route enrolls the Beehiiv welcome automation when configured
+  ---
+  duration_ms: 1.10775
+  ...
+# Subtest: update-completion-guide handles Beehiiv evidence safely
+    # Subtest: no evidence stays inert when values are absent or blank
+    ok 1 - no evidence stays inert when values are absent or blank
+      ---
+      duration_ms: 247.907417
+      ...
+    # Subtest: partial or invalid evidence exits non-zero without mutating the guide
+    ok 2 - partial or invalid evidence exits non-zero without mutating the guide
+      ---
+      duration_ms: 143.881375
+      ...
+    # Subtest: valid evidence is escaped before writing to the guide
+    ok 3 - valid evidence is escaped before writing to the guide
+      ---
+      duration_ms: 50.731667
+      ...
+    # Subtest: already-updated guides fail fast on rerun
+    ok 4 - already-updated guides fail fast on rerun
+      ---
+      duration_ms: 55.004291
+      ...
+    # Subtest: unexpected guide structure fails fast instead of silently succeeding
+    ok 5 - unexpected guide structure fails fast instead of silently succeeding
+      ---
+      duration_ms: 93.235958
+      ...
+    1..5
+ok 196 - update-completion-guide handles Beehiiv evidence safely
+  ---
+  duration_ms: 592.259708
+  ...
+# Subtest: verify-content-integrity passes for valid drafts and aligned live affiliate docs
+ok 197 - verify-content-integrity passes for valid drafts and aligned live affiliate docs
+  ---
+  duration_ms: 165.938583
+  ...
+# Subtest: verify-content-integrity fails on duplicate newsletter issue numbers
+ok 198 - verify-content-integrity fails on duplicate newsletter issue numbers
+  ---
+  duration_ms: 105.942916
+  ...
+# Subtest: verify-content-integrity fails on newsletter links to missing article slugs
+ok 199 - verify-content-integrity fails on newsletter links to missing article slugs
+  ---
+  duration_ms: 131.0185
+  ...
+# Subtest: verify-content-integrity fails when live affiliate programmes drift between ops docs
+ok 200 - verify-content-integrity fails when live affiliate programmes drift between ops docs
+  ---
+  duration_ms: 101.832458
+  ...
+# Subtest: verify-live matrix defines the disabled and enabled analytics states
+ok 201 - verify-live matrix defines the disabled and enabled analytics states
+  ---
+  duration_ms: 1.196416
+  ...
+# Subtest: verify-live matrix builds loopback base urls for local app boots
+ok 202 - verify-live matrix builds loopback base urls for local app boots
+  ---
+  duration_ms: 0.180667
+  ...
+# Subtest: verify-live matrix injects affiliate and analytics env for each app state
+ok 203 - verify-live matrix injects affiliate and analytics env for each app state
+  ---
+  duration_ms: 0.14925
+  ...
+# Subtest: getDeploymentProtectionHeaders returns no headers when no bypass secret is configured
+ok 204 - getDeploymentProtectionHeaders returns no headers when no bypass secret is configured
+  ---
+  duration_ms: 0.573125
+  ...
+# Subtest: getDeploymentProtectionHeaders returns the Vercel bypass header when a secret is configured
+ok 205 - getDeploymentProtectionHeaders returns the Vercel bypass header when a secret is configured
+  ---
+  duration_ms: 0.094541
+  ...
+# Subtest: getDeploymentProtectionHeaders falls back to Vercel automation bypass secret env var
+ok 206 - getDeploymentProtectionHeaders falls back to Vercel automation bypass secret env var
+  ---
+  duration_ms: 0.063791
+  ...
+# Subtest: mergeRequestHeaders preserves Vercel bypass headers when no additional headers are provided
+ok 207 - mergeRequestHeaders preserves Vercel bypass headers when no additional headers are provided
+  ---
+  duration_ms: 0.04975
+  ...
+# Subtest: mergeRequestHeaders keeps the Vercel bypass header alongside request-specific headers
+ok 208 - mergeRequestHeaders keeps the Vercel bypass header alongside request-specific headers
+  ---
+  duration_ms: 0.05075
+  ...
+# Subtest: resolveCanonicalBaseUrl uses an explicit override when provided
+ok 209 - resolveCanonicalBaseUrl uses an explicit override when provided
+  ---
+  duration_ms: 0.183291
+  ...
+# Subtest: resolveCanonicalBaseUrl falls back to the request base url when no override is provided
+ok 210 - resolveCanonicalBaseUrl falls back to the request base url when no override is provided
+  ---
+  duration_ms: 0.160625
+  ...
+# Subtest: assertBodyIncludesAll accepts bodies containing every required snippet
+ok 211 - assertBodyIncludesAll accepts bodies containing every required snippet
+  ---
+  duration_ms: 0.329167
+  ...
+# Subtest: assertBodyIncludesAll throws when a required snippet is missing
+ok 212 - assertBodyIncludesAll throws when a required snippet is missing
+  ---
+  duration_ms: 0.459416
+  ...
+# Subtest: assertAffiliateAnchor accepts a rendered affiliate anchor
+ok 213 - assertAffiliateAnchor accepts a rendered affiliate anchor
+  ---
+  duration_ms: 0.667042
+  ...
+# Subtest: assertAffiliateAnchor matches the tools-page anchor text and aria-label
+ok 214 - assertAffiliateAnchor matches the tools-page anchor text and aria-label
+  ---
+  duration_ms: 0.396959
+  ...
+# Subtest: getAffiliateAnchorHref returns the rendered href for a matching tools-page anchor
+ok 215 - getAffiliateAnchorHref returns the rendered href for a matching tools-page anchor
+  ---
+  duration_ms: 0.22375
+  ...
+# Subtest: assertToolsAffiliateAnchor accepts an approved rendered affiliate url when no local affiliate env is configured
+ok 216 - assertToolsAffiliateAnchor accepts an approved rendered affiliate url when no local affiliate env is configured
+  ---
+  duration_ms: 0.4955
+  ...
+# Subtest: assertAffiliateAnchor rejects anchors with extra visible text
+ok 217 - assertAffiliateAnchor rejects anchors with extra visible text
+  ---
+  duration_ms: 0.299125
+  ...
+# Subtest: assertAffiliateAnchor rejects plain-text brand mentions
+ok 218 - assertAffiliateAnchor rejects plain-text brand mentions
+  ---
+  duration_ms: 0.136666
+  ...
+# Subtest: assertAffiliateAnchor rejects tools anchors with the wrong aria-label
+ok 219 - assertAffiliateAnchor rejects tools anchors with the wrong aria-label
+  ---
+  duration_ms: 0.131208
+  ...
+# Subtest: getTokenizedAffiliateArticleChecks derives checks from supplied tokenized source markdown
+ok 220 - getTokenizedAffiliateArticleChecks derives checks from supplied tokenized source markdown
+  ---
+  duration_ms: 1.013167
+  ...
+# Subtest: getTokenizedAffiliateArticleChecks throws when no published articles include the token marker
+ok 221 - getTokenizedAffiliateArticleChecks throws when no published articles include the token marker
+  ---
+  duration_ms: 0.331417
+  ...
+# Subtest: getTokenizedAffiliateArticleChecks accepts plain-text degradation when source links still mention the brand
+ok 222 - getTokenizedAffiliateArticleChecks accepts plain-text degradation when source links still mention the brand
+  ---
+  duration_ms: 0.495708
+  ...
+# Subtest: getTokenizedAffiliateArticleChecks rejects responses that only contain linked brand mentions when no affiliate url is configured
+ok 223 - getTokenizedAffiliateArticleChecks rejects responses that only contain linked brand mentions when no affiliate url is configured
+  ---
+  duration_ms: 0.328541
+  ...
+# Subtest: verify:ops --contract-only ignores .env.local and passes for the current contract
+ok 224 - verify:ops --contract-only ignores .env.local and passes for the current contract
+  ---
+  duration_ms: 59.545333
+  ...
+# Subtest: verify:ops --contract-only reports contract drift without failing
+ok 225 - verify:ops --contract-only reports contract drift without failing
+  ---
+  duration_ms: 48.313667
+  ...
+# Subtest: verify:ops --contract-only allows documented optional env keys
+ok 226 - verify:ops --contract-only allows documented optional env keys
+  ---
+  duration_ms: 88.380542
+  ...
+# Subtest: verify:ops exits 1 when required runtime vars are missing
+ok 227 - verify:ops exits 1 when required runtime vars are missing
+  ---
+  duration_ms: 44.821166
+  ...
+# Subtest: verify:ops warns on banned runtime vars but stays ready when required vars are set
+ok 228 - verify:ops warns on banned runtime vars but stays ready when required vars are set
+  ---
+  duration_ms: 53.020875
+  ...
+# Subtest: verify:ops flags missing assessment booking and payment urls as revenue-readiness warnings
+ok 229 - verify:ops flags missing assessment booking and payment urls as revenue-readiness warnings
+  ---
+  duration_ms: 93.725042
+  ...
+1..229
+# tests 234
+# suites 0
+# pass 234
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 3167.772792
