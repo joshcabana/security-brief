@@ -5,6 +5,7 @@ import ArticleCard from '@/components/ArticleCard';
 import AccountabilityBox from '@/components/AccountabilityBox';
 import ShareButtons from '@/components/ShareButtons';
 import ArticleTOC from '@/components/ArticleTOC';
+import UpgradeWall from '@/components/UpgradeWall';
 import { generateArticleSchema } from '@/lib/seo';
 import { getAllReviewArticles, getReviewBySlug } from '@/lib/articles';
 import { siteName, siteUrl } from '@/lib/site';
@@ -145,10 +146,19 @@ export default async function ReviewPage({ params }: ReviewPageProps) {
               </p>
             </div>
             <p className="text-lg text-slate-300 leading-relaxed mb-8 pb-8 border-b border-slate-800 italic">{article.excerpt}</p>
-            <div
-              className="prose-dark text-slate-200"
-              dangerouslySetInnerHTML={{ __html: article.contentHtml }}
-            />
+            {article.isPaywalled ? (
+              <UpgradeWall type="content">
+                <div
+                  className="prose-dark text-slate-200"
+                  dangerouslySetInnerHTML={{ __html: article.contentHtml }}
+                />
+              </UpgradeWall>
+            ) : (
+              <div
+                className="prose-dark text-slate-200"
+                dangerouslySetInnerHTML={{ __html: article.contentHtml }}
+              />
+            )}
             <AccountabilityBox
               reviewedBy={article.reviewedBy}
               reviewedAt={article.reviewedAt}
