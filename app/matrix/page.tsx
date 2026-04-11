@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { createPageMetadata } from '@/lib/page-metadata.mjs';
 import { serializeJsonForHtml } from '@/lib/json-escape.mjs';
 import InteractiveMatrix from './InteractiveMatrix';
+import UpgradeWall from '@/components/UpgradeWall';
 
 export const metadata: Metadata = createPageMetadata({
   canonicalPath: '/matrix',
@@ -108,10 +109,12 @@ export default function MatrixPage() {
         </div>
       </section>
 
-      {/* Interactive Matrix */}
-      <section className="py-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <InteractiveMatrix tools={TOOLS} categories={CATEGORIES} />
+      {/* Interactive Matrix Section */}
+      <section className="py-8">
+        <div className="max-w-[90rem] mx-auto px-4 sm:px-6 lg:px-8">
+          <UpgradeWall type="matrix">
+            <InteractiveMatrix tools={TOOLS} categories={CATEGORIES} />
+          </UpgradeWall>
         </div>
       </section>
     </div>

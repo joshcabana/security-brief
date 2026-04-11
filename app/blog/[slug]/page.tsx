@@ -9,6 +9,7 @@ import ShareButtons from '@/components/ShareButtons';
 import PaywallCTA from '@/components/PaywallCTA';
 import AccountabilityBox from '@/components/AccountabilityBox';
 import ArticleTOC from '@/components/ArticleTOC';
+import UpgradeWall from '@/components/UpgradeWall';
 import { getAllArticles, getArticleBySlug } from '@/lib/articles';
 import { siteConfig, siteUrl, siteName } from '@/lib/site';
 import { serializeJsonForHtml } from '@/lib/json-escape.mjs';
@@ -144,10 +145,19 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-12">
           <article>
             <p className="text-lg text-slate-300 leading-relaxed mb-8 pb-8 border-b border-slate-800 italic">{article.excerpt}</p>
-            <div
-              className="prose-dark text-slate-200"
-              dangerouslySetInnerHTML={{ __html: article.contentHtml }}
-            />
+            {article.isPaywalled ? (
+              <UpgradeWall type="content">
+                <div
+                  className="prose-dark text-slate-200"
+                  dangerouslySetInnerHTML={{ __html: article.contentHtml }}
+                />
+              </UpgradeWall>
+            ) : (
+              <div
+                className="prose-dark text-slate-200"
+                dangerouslySetInnerHTML={{ __html: article.contentHtml }}
+              />
+            )}
             <AccountabilityBox
               reviewedBy={article.reviewedBy}
               reviewedAt={article.reviewedAt}
@@ -176,7 +186,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
                 View the readiness review
               </Link>
             </div>
-            {article.isPaywalled && <PaywallCTA />}
+
             <div className="flex flex-wrap gap-2 mt-12 pt-8 border-t border-slate-800">
               <span className="text-xs text-slate-500 self-center">Filed under:</span>
               {tags.map((tag) => (
