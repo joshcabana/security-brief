@@ -49,7 +49,7 @@ export async function generateMetadata({ params }: ArticlePageProps): Promise<Me
       description: article.metaDescription,
       type: 'article',
       publishedTime: article.date,
-      authors: [article.author],
+      authors: [article.author.name],
       url: articleUrl,
     },
     twitter: {
