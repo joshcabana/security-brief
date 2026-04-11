@@ -39,10 +39,6 @@ type BeehiivSubscribeBody = {
   automation_ids?: string[];
 };
 
-type BeehiivErrorPayload = {
-  errors?: Array<{ message?: string }>;
-};
-
 type RateLimitResponse = {
   success: boolean;
   reset: number;
@@ -344,22 +340,6 @@ async function createBeehiivSubscription(
   throw new Error('Beehiiv subscription request exhausted its retry loop without returning a response.');
 }
 
-function getUpstreamMessage(upstreamPayload: unknown): string {
-  if (
-    typeof upstreamPayload === 'object' &&
-    upstreamPayload !== null &&
-    'errors' in upstreamPayload &&
-    Array.isArray((upstreamPayload as BeehiivErrorPayload).errors)
-  ) {
-    return ((upstreamPayload as BeehiivErrorPayload).errors ?? [])
-      .map((error) => error.message)
-      .filter(Boolean)
-      .join(' ');
-  }
-
-  return '';
-}
-
 export async function POST(request: Request): Promise<Response> {
   const contentType = request.headers.get('content-type') ?? '';
 
@@ -515,14 +495,6 @@ export async function POST(request: Request): Promise<Response> {
       },
       { status: 502 },
     );
-  }
-
-  let upstreamPayload: unknown = null;
-
-  try {
-    upstreamPayload = await upstreamResponse.json();
-  } catch {
-    upstreamPayload = null;
   }
 
   if (!upstreamResponse.ok) {
